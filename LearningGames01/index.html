@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>普贤行愿 · 净心修证 - Trilingual Samantabhadra Vows Game</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#fef3c7',
+                            300: '#fcd34d',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                        },
+                        lotus: {
+                            light: '#fce7f3',
+                            pink: '#f472b6',
+                            deep: '#db2777',
+                        },
+                        buddha: {
+                            dark: '#111827',
+                            card: '#1f2937',
+                            accent: '#fef08a'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', 'serif'],
+                        calligraphy: ['"Ma Shan Zheng"', 'cursive'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: radial-gradient(circle at center, #1e1b2e 0%, #0d0b14 100%);
+            color: #f3f4f6;
+            user-select: none;
+        }
+        .calligraphy {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+        .gold-glow {
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 0 30px rgba(245, 158, 11, 0.3);
+        }
+        .lotus-glow {
+            box-shadow: 0 0 25px rgba(244, 114, 182, 0.35);
+        }
+        .glass-panel {
+            background: rgba(30, 27, 46, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(245, 158, 11, 0.5);
+            transform: translateY(-2px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.4);
+            border-radius: 3px;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .pulse-bg {
+            animation: pulseGlow 4s infinite;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Dynamic Background Canvas -->
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Top Navigation Header -->
+    <header class="relative z-10 w-full px-4 py-3 border-b border-gold-500/20 glass-panel flex flex-wrap justify-between items-center gap-2">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-gold-500/20 border border-gold-500/50 flex items-center justify-center text-gold-300 font-bold text-xl calligraphy shrink-0">
+                普
+            </div>
+            <div>
+                <h1 id="uiHeaderTitle" class="text-base md:text-xl font-bold tracking-wider text-gold-300 flex items-center gap-2">
+                    普贤行愿 · 净心修证
+                    <span class="text-xs px-2 py-0.5 rounded bg-gold-500/20 text-gold-400 border border-gold-500/30 font-normal">华严妙法</span>
+                </h1>
+                <p id="uiHeaderSubtitle" class="text-xs text-gray-400 hidden sm:block">《大方广佛华严经普贤行愿品》互动修学与胜愿探索</p>
+            </div>
+        </div>
+
+        <!-- Language Selector, Audio & User Stats -->
+        <div class="flex items-center space-x-2 md:space-x-3">
+            <!-- Language Selector -->
+            <div class="flex items-center space-x-1 bg-amber-950/80 px-2 py-1 rounded-lg border border-gold-500/40 text-xs">
+                <i class="fas fa-globe text-gold-400"></i>
+                <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-transparent text-gold-300 outline-none cursor-pointer font-sans text-xs">
+                    <option value="zh" class="bg-gray-900 text-gold-300">中文 (Chinese)</option>
+                    <option value="en" class="bg-gray-900 text-gold-300">English</option>
+                    <option value="vi" class="bg-gray-900 text-gold-300">Tiếng Việt</option>
+                </select>
+            </div>
+
+            <!-- Audio Toggle -->
+            <button id="audioBtn" onclick="toggleAudio()" class="px-2.5 py-1 rounded-lg bg-gold-500/10 hover:bg-gold-500/20 border border-gold-500/30 text-gold-300 text-xs flex items-center space-x-1.5 transition">
+                <i class="fas fa-volume-up" id="audioIcon"></i>
+                <span id="audioText">清音开</span>
+            </button>
+
+            <!-- Accumulated Merit Score -->
+            <div class="flex items-center space-x-1 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-500/40 text-xs">
+                <i class="fas fa-dharmachakra text-gold-400 animate-spin" style="animation-duration: 12s;"></i>
+                <span id="uiMeritLabel" class="text-gray-300">功德:</span>
+                <span id="totalMeritDisplay" class="font-bold text-gold-300">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Viewport -->
+    <main id="appContainer" class="relative z-10 flex-grow max-w-4xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+        <!-- SCREEN 1: Home / Mode Selector -->
+        <div id="homeScreen" class="space-y-6 text-center animate-fade-in">
+            <!-- Central Lotus Graphic / Title Hero -->
+            <div class="relative py-4 md:py-6 flex flex-col items-center">
+                <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-b from-amber-500/20 to-pink-500/20 border border-gold-500/40 flex items-center justify-center relative lotus-glow animate-float">
+                    <i class="fas fa-spa text-4xl md:text-5xl text-gold-300 gold-glow"></i>
+                    <div class="absolute inset-0 rounded-full border border-gold-400/20 pulse-bg"></div>
+                </div>
+                <h2 id="uiHeroTitle" class="text-2xl md:text-4xl font-bold calligraphy text-gold-300 mt-4 gold-glow">
+                    十大愿王 · 导归极乐
+                </h2>
+                <p id="uiHeroDesc" class="mt-2 text-xs md:text-sm text-gray-300 max-w-xl mx-auto leading-relaxed">
+                    “入普贤行愿海，成无上菩提果。”<br>
+                    请选择修学模式，深入《普贤行愿品》妙义，聚无量功德，开启净土菩提智慧。
+                </p>
+            </div>
+
+            <!-- Mode Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                <!-- Mode 1 -->
+                <button onclick="startGame('vows')" class="glass-card p-5 rounded-xl border border-gold-500/30 hover:border-gold-400 group flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-gold-500/5 rounded-full blur-xl group-hover:bg-gold-500/15 transition"></div>
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-gold-500/20 flex items-center justify-center text-gold-300 mb-3 group-hover:scale-110 transition">
+                            <i class="fas fa-dharmachakra text-lg"></i>
+                        </div>
+                        <h3 id="uiMode1Title" class="text-base md:text-lg font-bold text-gold-200 group-hover:text-gold-300">十大愿王 · 圆满行</h3>
+                        <p id="uiMode1Desc" class="text-xs text-gray-400 mt-1">依次修持从“礼敬诸佛”至“普皆回向”的十种广大愿海。</p>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center text-xs text-gold-400 font-semibold">
+                        <span id="uiMode1Badge">10 题巡礼 · 专精解疑</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </button>
+
+                <!-- Mode 2 -->
+                <button onclick="startGame('speed')" class="glass-card p-5 rounded-xl border border-pink-500/30 hover:border-pink-400 group flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-pink-500/5 rounded-full blur-xl group-hover:bg-pink-500/15 transition"></div>
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-300 mb-3 group-hover:scale-110 transition">
+                            <i class="fas fa-bolt text-lg"></i>
+                        </div>
+                        <h3 id="uiMode2Title" class="text-base md:text-lg font-bold text-pink-200 group-hover:text-pink-300">菩提速答 · 觉照挑战</h3>
+                        <p id="uiMode2Desc" class="text-xs text-gray-400 mt-1">限时随机抽取经典难题，考量念念相续、敏锐定慧之功。</p>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center text-xs text-pink-400 font-semibold">
+                        <span id="uiMode2Badge">8 题限时 · 积分加倍</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </button>
+
+                <!-- Mode 3 -->
+                <button onclick="startGame('random')" class="glass-card p-5 rounded-xl border border-purple-500/30 hover:border-purple-400 group flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/15 transition"></div>
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-300 mb-3 group-hover:scale-110 transition">
+                            <i class="fas fa-book-open text-lg"></i>
+                        </div>
+                        <h3 id="uiMode3Title" class="text-base md:text-lg font-bold text-purple-200 group-hover:text-purple-300">无量法海 · 全卷深研</h3>
+                        <p id="uiMode3Desc" class="text-xs text-gray-400 mt-1">涵盖单选、多选及判断题，包含偈颂、喻义与功德福报。</p>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center text-xs text-purple-400 font-semibold">
+                        <span id="uiMode3Badge">12 题随机 · 极高复玩</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Bottom Quick Buttons: Dharma Gallery & Sutra Reading -->
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+                <button onclick="openGallery()" class="px-4 py-2 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-300 border border-gray-600 text-xs flex items-center gap-2 transition">
+                    <i class="fas fa-scroll text-gold-400"></i> <span id="uiBtnGallery">智慧法语卡包</span> <span id="galleryBadge" class="bg-gold-500/30 text-gold-300 px-1.5 py-0.5 rounded text-[10px]">0/10</span>
+                </button>
+                <button onclick="openSutraModal()" class="px-4 py-2 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-300 border border-gray-600 text-xs flex items-center gap-2 transition">
+                    <i class="fas fa-book-bible text-amber-400"></i> <span id="uiBtnSutra">经文对照阅览</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: Quiz Gameplay Interface -->
+        <div id="quizScreen" class="hidden space-y-4">
+            <!-- Quiz Progress & Vow Indicator Header -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-3 border border-gold-500/30">
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <div id="vowBadge" class="w-9 h-9 rounded-full bg-gold-500/20 border border-gold-400 flex items-center justify-center text-gold-300 font-bold text-sm shrink-0">
+                        1
+                    </div>
+                    <div>
+                        <div class="text-xs text-gold-400 font-semibold" id="questionCategory">第一大愿：礼敬诸佛</div>
+                        <div class="text-xs text-gray-400" id="questionCount">进度 1 / 10</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar & Timer -->
+                <div class="w-full md:w-1/2 flex items-center space-x-3">
+                    <div class="flex-grow bg-gray-800 rounded-full h-2.5 overflow-hidden border border-gray-700">
+                        <div id="progressBar" class="bg-gradient-to-r from-gold-500 to-amber-300 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                    <!-- Timer (Visible in speed mode) -->
+                    <div id="timerContainer" class="hidden flex items-center space-x-1 text-xs text-pink-400 font-mono font-bold bg-pink-950/50 px-2 py-1 rounded border border-pink-500/30">
+                        <i class="fas fa-clock"></i>
+                        <span id="timerText">20s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-panel p-5 md:p-6 rounded-2xl border border-gold-500/30 relative overflow-hidden">
+                <!-- Question Type Tag -->
+                <div class="flex items-center justify-between mb-3">
+                    <span id="typeTag" class="text-[11px] px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
+                        单选题
+                    </span>
+                    <span id="scoreMultiplierTag" class="text-xs text-gold-400 font-medium">
+                        <span id="uiStreakLabel">连胜加成</span>: x<span id="streakCount">1.0</span>
+                    </span>
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="questionText" class="text-base md:text-xl font-semibold leading-relaxed text-gray-100 mb-6">
+                    加载题目中...
+                </h3>
+
+                <!-- Answer Options Container -->
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Dynamic Answer Options inserted via JS -->
+                </div>
+
+                <!-- Multiple Select Submit Button -->
+                <div id="multiSubmitBtnContainer" class="hidden mt-5 text-right">
+                    <button id="uiSubmitMultiBtn" onclick="submitMultiAnswer()" class="px-6 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-gold-600 hover:from-amber-600 hover:to-gold-700 text-gray-900 font-bold text-sm shadow-lg transition">
+                        确认提交选项 <i class="fas fa-check-circle ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Answer Explanation Panel -->
+                <div id="explanationPanel" class="hidden mt-6 pt-5 border-t border-gray-700/80 animate-fade-in">
+                    <div id="resultStatus" class="flex items-center space-x-2 text-base font-bold mb-2">
+                        <!-- Correct/Incorrect message -->
+                    </div>
+                    <div class="bg-black/30 p-4 rounded-xl border border-gold-500/20 text-xs md:text-sm text-gray-300 space-y-2">
+                        <div id="uiScriptureProofTitle" class="text-gold-400 font-semibold flex items-center gap-1.5">
+                            <i class="fas fa-quote-left"></i> 经文印证与阐释：
+                        </div>
+                        <p id="explanationText" class="leading-relaxed text-gray-200">
+                            <!-- Explanation text -->
+                        </p>
+                    </div>
+
+                    <div class="mt-4 flex justify-end">
+                        <button id="uiNextQuestionBtn" onclick="nextQuestion()" class="px-6 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-gray-900 font-bold text-sm flex items-center gap-2 transition shadow-lg">
+                            <span>继续下一愿</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: Completion & Results Summary -->
+        <div id="resultScreen" class="hidden space-y-6 text-center animate-fade-in">
+            <div class="glass-panel p-6 md:p-8 rounded-2xl border border-gold-500/40 relative overflow-hidden">
+                <div class="w-20 h-20 mx-auto rounded-full bg-gold-500/20 border border-gold-400 flex items-center justify-center text-gold-300 text-4xl mb-4 gold-glow">
+                    <i class="fas fa-award"></i>
+                </div>
+
+                <h2 id="uiResultTitle" class="text-3xl font-bold calligraphy text-gold-300 gold-glow">
+                    修学功德圆满
+                </h2>
+                <p class="text-sm text-gray-300 mt-1" id="uiResultSubtitle">入普贤愿海，得胜妙庄严</p>
+
+                <!-- Statistics Box -->
+                <div class="grid grid-cols-3 gap-3 my-6 max-w-md mx-auto">
+                    <div class="bg-black/30 p-3 rounded-xl border border-gold-500/20">
+                        <div id="uiStatAccuracy" class="text-xs text-gray-400">正确率</div>
+                        <div id="accuracyStat" class="text-lg md:text-xl font-bold text-gold-300 mt-1">100%</div>
+                    </div>
+                    <div class="bg-black/30 p-3 rounded-xl border border-gold-500/20">
+                        <div id="uiStatMerit" class="text-xs text-gray-400">本次功德</div>
+                        <div id="meritGainedStat" class="text-lg md:text-xl font-bold text-amber-400 mt-1">+1200</div>
+                    </div>
+                    <div class="bg-black/30 p-3 rounded-xl border border-gold-500/20">
+                        <div id="uiStatRank" class="text-xs text-gray-400">菩提位次</div>
+                        <div id="rankStat" class="text-xs md:text-sm font-bold text-pink-300 mt-2">圆满普贤行</div>
+                    </div>
+                </div>
+
+                <!-- Scripture Blessing Card Generator -->
+                <div class="bg-gradient-to-br from-amber-950/80 to-purple-950/80 p-5 rounded-xl border border-gold-500/40 text-left relative my-4">
+                    <div class="text-xs text-gold-400 font-semibold mb-1 flex justify-between items-center">
+                        <span id="uiBlessingHeader"><i class="fas fa-star mr-1"></i> 普贤愿王敕赐法语：</span>
+                        <span id="uiBlessingSubHeader" class="text-[10px] text-gray-400">临终引导 · 速往极乐</span>
+                    </div>
+                    <p id="blessingQuote" class="text-xs md:text-sm italic text-amber-100 font-serif leading-relaxed">
+                        “唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。”
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 mt-6">
+                    <button id="uiRestartBtn" onclick="restartGame()" class="px-6 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-gray-900 font-bold text-sm flex items-center gap-2 transition">
+                        <i class="fas fa-redo"></i> 再次修学
+                    </button>
+                    <button id="uiOpenGalleryBtn" onclick="openGallery()" class="px-6 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gold-300 border border-gold-500/40 font-semibold text-xs flex items-center gap-2 transition">
+                        <i class="fas fa-layer-group"></i> 检视智海图鉴
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL 1: Wisdom Dharma Cards Gallery -->
+    <div id="galleryModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-2xl w-full rounded-2xl border border-gold-500/40 max-h-[85vh] flex flex-col">
+            <div class="p-4 border-b border-gold-500/20 flex justify-between items-center">
+                <h3 id="uiGalleryModalTitle" class="text-lg font-bold text-gold-300 flex items-center gap-2">
+                    <i class="fas fa-scroll"></i> 普贤十大愿王法印图鉴
+                </h3>
+                <button onclick="closeGallery()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 overflow-y-auto custom-scrollbar flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3" id="cardsGrid">
+                <!-- Cards dynamically populated via JS -->
+            </div>
+
+            <div id="uiGalleryFooter" class="p-3 border-t border-gold-500/20 text-center text-xs text-gray-400">
+                答对对应愿王题目即可解锁该愿精粹法印图鉴
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Full Scripture Reader -->
+    <div id="sutraModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-3xl w-full rounded-2xl border border-gold-500/40 max-h-[85vh] flex flex-col">
+            <div class="p-4 border-b border-gold-500/20 flex justify-between items-center">
+                <h3 id="uiSutraModalTitle" class="text-lg font-bold text-gold-300 flex items-center gap-2">
+                    <i class="fas fa-book-open"></i> 《普贤行愿品》经文核验
+                </h3>
+                <button onclick="closeSutraModal()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="sutraModalBody" class="p-6 overflow-y-auto custom-scrollbar flex-grow text-xs md:text-sm leading-relaxed space-y-4 text-gray-300 font-serif">
+                <!-- Populated via JS according to language -->
+            </div>
+
+            <div class="p-3 border-t border-gold-500/20 text-right">
+                <button id="uiSutraCloseBtn" onclick="closeSutraModal()" class="px-4 py-1.5 rounded bg-gold-500 text-gray-900 font-bold text-xs">
+                    信受奉行
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="uiFooter" class="relative z-10 w-full py-2.5 text-center text-[11px] text-gray-500 border-t border-gold-500/10 bg-black/40">
+        愿以此功德，普及于一切。我等与众生，皆共成佛道。
+    </footer>
+
+    <script>
+        /* =========================================================================
+           1. TRILINGUAL UI DICTIONARY (ZH / EN / VI)
+           ========================================================================= */
+        const translations = {
+            zh: {
+                headerTitle: "普贤行愿 · 净心修证",
+                headerSubtitle: "《大方广佛华严经普贤行愿品》互动修学与胜愿探索",
+                meritLabel: "功德:",
+                heroTitle: "十大愿王 · 导归极乐",
+                heroDesc: "“入普贤行愿海，成无上菩提果。”<br>请选择修学模式，深入《普贤行愿品》妙义，聚无量功德，开启净土菩提智慧。",
+                mode1Title: "十大愿王 · 圆满行",
+                mode1Desc: "依次修持从“礼敬诸佛”至“普皆回向”的十种广大愿海。",
+                mode1Badge: "10 题巡礼 · 专精解疑",
+                mode2Title: "菩提速答 · 觉照挑战",
+                mode2Desc: "限时随机抽取经典难题，考量念念相续、敏锐定慧之功。",
+                mode2Badge: "8 题限时 · 积分加倍",
+                mode3Title: "无量法海 · 全卷深研",
+                mode3Desc: "涵盖单选、多选及判断题，包含偈颂、喻义与功德福报。",
+                mode3Badge: "12 题随机 · 极高复玩",
+                btnGallery: "智慧法语卡包",
+                btnSutra: "经文对照阅览",
+                streakLabel: "连胜加成",
+                typeSingle: "单选题",
+                typeMulti: "多选题",
+                typeBool: "判断题",
+                submitMultiBtn: "确认提交选项",
+                scriptureProofTitle: "经文印证与阐释：",
+                nextQuestionBtn: "继续下一愿",
+                resultTitle: "修学功德圆满",
+                resultSubtitle: "入普贤愿海，得胜妙庄严",
+                statAccuracy: "正确率",
+                statMerit: "本次功德",
+                statRank: "菩提位次",
+                blessingHeader: "普贤愿王敕赐法语：",
+                blessingSubHeader: "临终引导 · 速往极乐",
+                restartBtn: "再次修学",
+                openGalleryBtn: "检视智海图鉴",
+                galleryModalTitle: "普贤十大愿王法印图鉴",
+                galleryFooter: "答对对应愿王题目即可解锁该愿精粹法印图鉴",
+                sutraModalTitle: "《普贤行愿品》经文核验",
+                sutraCloseBtn: "信受奉行",
+                footer: "愿以此功德，普及于一切。我等与众生，皆共成佛道。",
+                audioOn: "清音开",
+                audioOff: "静音",
+                correctMsg: "契合妙理！获得功德",
+                incorrectMsg: "尚需领会！正解见经文印证",
+                rank100: "圆满普贤尊",
+                rank80: "菩提妙智慧",
+                rank60: "修学精进者",
+                rankBase: "广大行愿心"
+            },
+            en: {
+                headerTitle: "Vows of Samantabhadra",
+                headerSubtitle: "Chapter 39 of the Avataṁsaka Sūtra Interactive Dharma Quiz",
+                meritLabel: "Merit:",
+                heroTitle: "Ten Great Kingly Vows",
+                heroDesc: "“Enter the ocean of Samantabhadra’s practices and vows to attain supreme Bodhi.”<br>Choose a mode to study the sublime vows, accumulate merit, and awaken pure wisdom.",
+                mode1Title: "Ten Great Vows • Sequential",
+                mode1Desc: "Systematically study from 'Revering All Buddhas' to 'Universal Dedication'.",
+                mode1Badge: "10 Vows Journey • In-depth",
+                mode2Title: "Bodhi Challenge • Speed",
+                mode2Desc: "Test your continuous mindfulness against time with randomized scriptural questions.",
+                mode2Badge: "8 Speed Questions • 2x Bonus",
+                mode3Title: "Ocean of Dharma • Full Study",
+                mode3Desc: "Covers single-choice, multiple-choice, verses, and merit benefits.",
+                mode3Badge: "12 Random Questions • Full",
+                btnGallery: "Dharma Card Gallery",
+                btnSutra: "Sutra Text Reader",
+                streakLabel: "Streak Bonus",
+                typeSingle: "Single Choice",
+                typeMulti: "Multiple Choice",
+                typeBool: "True / False",
+                submitMultiBtn: "Submit Selections",
+                scriptureProofTitle: "Scriptural Proof & Explanation:",
+                nextQuestionBtn: "Next Vow Question",
+                resultTitle: "Practice Accomplished",
+                resultSubtitle: "Entered the Ocean of Vows, Adorned with Sublime Merit",
+                statAccuracy: "Accuracy",
+                statMerit: "Merit Gained",
+                statRank: "Spiritual Rank",
+                blessingHeader: "King of Vows Blessing:",
+                blessingSubHeader: "Guidance at Death • Pure Land Rebirth",
+                restartBtn: "Practice Again",
+                openGalleryBtn: "View Wisdom Cards",
+                galleryModalTitle: "Samantabhadra's Ten Vows Cards",
+                galleryFooter: "Correctly answer vows questions to unlock corresponding wisdom cards",
+                sutraModalTitle: "The Conduct & Vows of Samantabhadra",
+                sutraCloseBtn: "Faithfully Accepted & Upheld",
+                footer: "May this merit spread everywhere, and may all beings attain Buddha Enlightenment together.",
+                audioOn: "Sound On",
+                audioOff: "Sound Off",
+                correctMsg: "Accord with Sublime Truth! Merit +",
+                incorrectMsg: "Reflect Further! See Scriptural Proof below",
+                rank100: "Perfect Samantabhadra",
+                rank80: "Sublime Bodhi Wisdom",
+                rank60: "Diligent Practitioner",
+                rankBase: "Mind of Vast Vows"
+            },
+            vi: {
+                headerTitle: "Hạnh Nguyện Phổ Hiền",
+                headerSubtitle: "Kinh Đại Phương Quảng Phật Hoa Nghiêm - Phẩm Phổ Hiền Hạnh Nguyện",
+                meritLabel: "Công Đức:",
+                heroTitle: "Thập Đại Nguyện Vương",
+                heroDesc: "“Vào biển hạnh nguyện Phổ Hiền, thành tựu quả Bồ-đề vô thượng.”<br>Hãy chọn chế độ tu học để thâm nhập diệu nghĩa Kinh Hoa Nghiêm và tích lũy công đức.",
+                mode1Title: "Thập Đại Nguyện • Tuần Tự",
+                mode1Desc: "Tu tập tuần tự từ 'Lễ Kính Chư Phật' đến 'Phổ Giai Hồi Hướng'.",
+                mode1Badge: "10 Nguyện Tuần Tự • Thâm Nhập",
+                mode2Title: "Bồ Đề Tốc Đáp • Thử Thách",
+                mode2Desc: "Thử thách định lực và trí tuệ trong thời gian giới hạn với câu hỏi ngẫu nhiên.",
+                mode2Badge: "8 Câu Giới Hạn • Nhân Đôi",
+                mode3Title: "Vô Lượng Pháp Hải • Tổng Hợp",
+                mode3Desc: "Bao gồm câu hỏi đơn, nhiều lựa chọn, đúng/sai, kệ tụng và công đức.",
+                mode3Badge: "12 Câu Ngẫu Nhiên • Toàn Diện",
+                btnGallery: "Bộ Thẻ Pháp Ấn",
+                btnSutra: "Đọc Nguyên Văn Kinh",
+                streakLabel: "Thưởng Liên Tiếp",
+                typeSingle: "Đơn Chọn",
+                typeMulti: "Đa Chọn",
+                typeBool: "Đúng / Sai",
+                submitMultiBtn: "Xác Nhận Chọn",
+                scriptureProofTitle: "Kinh Văn Ấn Chứng & Giải Thích:",
+                nextQuestionBtn: "Tiếp Tục Đại Nguyện",
+                resultTitle: "Công Đức Viên Mãn",
+                resultSubtitle: "Vào Biển Nguyện Phổ Hiền, Thắng Diệu Trang Nghiêm",
+                statAccuracy: "Độ Chính Xác",
+                statMerit: "Công Đức Đạt",
+                statRank: "Bối Vị Bồ Đề",
+                blessingHeader: "Phổ Hiền Nguyện Vương Sắc Ban:",
+                blessingSubHeader: "Lâm Chung Dẫn Độ • Tốc Sinh Cực Lạc",
+                restartBtn: "Tu Học Lại",
+                openGalleryBtn: "Xem Pháp Ấn Đồ Giám",
+                galleryModalTitle: "Phổ Hiền Thập Đại Nguyện Vương Pháp Ấn",
+                galleryFooter: "Trả lời đúng câu hỏi tương ứng để mở khóa Pháp Ấn đồ giám",
+                sutraModalTitle: "Kinh Phổ Hiền Hạnh Nguyện Phẩm",
+                sutraCloseBtn: "Tín Thọ Phụng Hành",
+                footer: "Nguyện dĩ thử công đức, phổ cập ư nhất thiết. Ngã đẳng dữ chúng sinh, giai cộng thành Phật đạo.",
+                audioOn: "Âm Thanh Mở",
+                audioOff: "Tắt Âm",
+                correctMsg: "Khế Hợp Diệu Lý! Nhận Công Đức +",
+                incorrectMsg: "Cần Tỉnh Giác! Xem Ấn Chứng Kinh Văn",
+                rank100: "Viên Mãn Phổ Hiền Tôn",
+                rank80: "Bồ Đề Diệu Trí Tuệ",
+                rank60: "Tinh Tiến Tu Học Giả",
+                rankBase: "Quảng Đại Hạnh Nguyện Tâm"
+            }
+        };
+
+        /* =========================================================================
+           2. QUESTION DATABASE (ZH / EN / VI)
+           ========================================================================= */
+        const questionBank = [
+            // Question 1: Vow 1
+            {
+                id: "q1", vowIndex: 1, type: "single", correct: [0],
+                zh: {
+                    vowName: "第一大愿：礼敬诸佛",
+                    text: "在《普贤行愿品》中，普贤菩萨教导修“礼敬诸佛”时，应当以何种心与身量来进行礼拜？",
+                    options: [
+                        "深心信解如对目前，化现不可说不可说佛刹极微尘数身",
+                        "仅在每日晨昏以凡夫一身向东方恭敬一拜",
+                        "专心礼拜娑婆世界现在释迦牟尼一佛",
+                        "待成佛之后方能圆满礼拜十方世界诸佛"
+                    ],
+                    explanation: "经文云：『我以普贤行愿力故，深心信解，如对目前，悉以清净身语意业，常修礼敬。一一佛所，皆现不可说不可说佛刹极微尘数身。一一身，遍礼不可说不可说佛刹极微尘数佛。』"
+                },
+                en: {
+                    vowName: "First Vow: Revering All Buddhas",
+                    text: "According to Samantabhadra, how should one cultivate 'Revering all buddhas' with respect to body and mind?",
+                    options: [
+                        "Arouse deep resolute faith as if they were right before one's eyes, manifesting bodies as numerous as atoms in ineffable buddha fields",
+                        "Simply bow once to the East every morning as an ordinary human",
+                        "Focus solely on bowing to Śākyamuni Buddha of the Sahā World",
+                        "Wait until one becomes a Buddha before bowing to the buddhas of the ten directions"
+                    ],
+                    explanation: "Sūtra text: 'Through the power of Samantabhadra's practices and vows, I arouse deeply resolute faith in all buddhas... as if they were right before my very eyes, with pure actions of body, speech, and mind... Manifesting before every one of those buddhas bodies as numerous as atoms in an ineffable number of buddha kṣetras.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Nhất: Lễ Kính Chư Phật",
+                    text: "Trong Kinh Phổ Hiền Hạnh Nguyện, Ngài Phổ Hiền dạy khi tu 'Lễ kính chư Phật' cần dụng tâm và hóa thân như thế nào?",
+                    options: [
+                        "Phát lòng tin sâu như đối trước chư Phật, hóa hiện thân nhiều như số vi trần của bất khả thuyết bất khả thuyết Phật sát",
+                        "Chỉ dùng một thân phàm phu lạy về hướng Đông mỗi sáng tối",
+                        "Chỉ chuyên tâm lễ bái một Đức Phật Thích Ca Mâu Ni ở cõi Ta Bà",
+                        "Chờ đến khi thành Phật mới có thể lễ bái chư Phật mười phương"
+                    ],
+                    explanation: "Kinh văn ghi: 'Ta do sức hạnh nguyện Phổ Hiền, phát lòng tin sâu như đối trước chư Phật, thảy đều dùng ba nghiệp thân, khẩu, ý thanh tịnh mà thường tu lễ kính. Ở mỗi chỗ Phật, hóa hiện thân nhiều như số vi trần của bất khả thuyết bất khả thuyết Phật sát, mỗi thân lễ khắp chư Phật nhiều như số vi trần.'"
+                }
+            },
+            // Question 2: Vow 2
+            {
+                id: "q2", vowIndex: 2, type: "single", correct: [1],
+                zh: {
+                    vowName: "第二大愿：称赞如来",
+                    text: "关于“称赞如来”，普贤菩萨说要以怎样的辩才与音声来赞叹一切如来诸功德海？",
+                    options: [
+                        "以世间普通歌乐，赞叹百劫",
+                        "出过辩才天女微妙舌根，一一舌根出无尽音声海与言辞海",
+                        "以默默无言的默照禅心，不发任何音声",
+                        "仅在佛诞日诵唱梵呗三升"
+                    ],
+                    explanation: "经文云：『各以出过辩才天女微妙舌根，一一舌根，出无尽音声海，一一音声，出一切言辞海，称扬赞叹一切如来诸功德海。穷未来际，相续不断。』"
+                },
+                en: {
+                    vowName: "Second Vow: Proclaiming Praises of the Tathāgata",
+                    text: "How does Samantabhadra Bodhisattva describe praising the oceans of Tathāgatas' meritorious qualities?",
+                    options: [
+                        "Using ordinary worldly songs for a hundred kalpas",
+                        "Bringing forth tongues surpassing Goddess Sarasvatī's tongue, each tongue sending forth an inexhaustible ocean of voices and words",
+                        "Remaining completely silent in silent illumination without uttering any voice",
+                        "Chanting sutras only three times on Buddha's Birthday"
+                    ],
+                    explanation: "Sūtra text: 'I shall bring forth faculties of the tongue surpassing even those of the Goddess Sarasvatī's marvelous tongue. Each one of those tongues shall send forth an inexhaustible ocean of voices and words proclaiming the praises of all tathāgatas' oceans of meritorious qualities.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Hai: Xưng Tán Như Lai",
+                    text: "Về nguyện 'Xưng tán Như Lai', Bồ-tát Phổ Hiền dạy dùng biện tài và âm thanh như thế nào để ngợi khen công đức chư Phật?",
+                    options: [
+                        "Dùng âm nhạc thế gian khen ngợi trong trăm kiếp",
+                        "Xuất lưỡi vi diệu vượt hơn Biện Tài Thiên Nữ, mỗi lưỡi phát ra vô tận biển âm thanh và biển ngôn từ",
+                        "Giữ tâm thiền lặng lẽ không phát ra bất kỳ âm thanh nào",
+                        "Chỉ xưng tụng vào ngày Phật Đản"
+                    ],
+                    explanation: "Kinh văn ghi: 'Dùng lưỡi vi diệu vượt hơn Biện Tài Thiên Nữ, mỗi lưỡi phát ra vô tận biển âm thanh, mỗi âm thanh phát ra biển ngôn từ, khen ngợi công đức của tất cả Như Lai. Đột cùng bờ cõi vị lai, nối tiếp không ngắt quãng.'"
+                }
+            },
+            // Question 3: Vow 3 (Multi-select)
+            {
+                id: "q3", vowIndex: 3, type: "multi", correct: [0, 1, 2, 3],
+                zh: {
+                    vowName: "第三大愿：广修供养",
+                    text: "【多选题】经中明确指出“诸供养中，法供养最”。下列哪些属于经文所列的“法供养”内容？",
+                    options: [
+                        "如说修行供养与利益众生供养",
+                        "代众生苦供养与摄受众生供养",
+                        "勤修善根供养与不舍菩萨业供养",
+                        "不离菩提心供养"
+                    ],
+                    explanation: "经文云：『诸供养中，法供养最。所谓如说修行供养，利益众生供养，摄受众生供养，代众生苦供养，勤修善根供养，不舍菩萨业供养，不离菩提心供养。』以上四项全属于法供养。"
+                },
+                en: {
+                    vowName: "Third Vow: Extensively Cultivating Offerings",
+                    text: "[Multiple Choice] The sutra states 'Among all offerings, the offering of Dharma is supreme'. Which of the following are included in Dharma offerings?",
+                    options: [
+                        "Offering of cultivating in accordance with teachings & offering of benefiting beings",
+                        "Offering of substituting for beings in taking on suffering & offering of gathering in beings",
+                        "Offering of diligently cultivating roots of goodness & offering of never forsaking bodhisattva works",
+                        "Offering of never abandoning the bodhi resolve"
+                    ],
+                    explanation: "Sūtra text: 'Among all offerings, the offering of Dharma is supreme, including for instance the offering of cultivating in accordance with what was taught, benefiting beings, gathering in beings, substituting for beings in suffering, cultivating roots of goodness, never forsaking bodhisattva works, and never abandoning bodhi resolve.' (All 4 options are correct!)"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Ba: Quảng Tu Cúng Ràng",
+                    text: "【Đa Chọn】Kinh văn nêu rõ 'Trong các sự cúng ràng, Pháp cúng ràng là hơn hết'. Những điều nào sau đây thuộc Pháp cúng ràng?",
+                    options: [
+                        "Như thuyết tu hành cúng ràng & Lợi ích chúng sinh cúng ràng",
+                        "Thay chúng sinh chịu khổ cúng ràng & Nhiếp thọ chúng sinh cúng ràng",
+                        "Siêng tu căn lành cúng ràng & Không bỏ nghiệp Bồ-tát cúng ràng",
+                        "Không rời tâm Bồ-đề cúng ràng"
+                    ],
+                    explanation: "Kinh văn ghi: 'Trong các sự cúng ràng, Pháp cúng ràng là hơn hết. Đó là: Như thuyết tu hành cúng ràng, Lợi ích chúng sinh cúng ràng, Nhiếp thọ chúng sinh cúng ràng, Thay chúng sinh chịu khổ cúng ràng, Siêng tu căn lành cúng ràng, Không bỏ nghiệp Bồ-tát cúng ràng, Không rời tâm Bồ-đề cúng ràng.' (Cả 4 phương án đều đúng!)"
+                }
+            },
+            // Question 4: Vow 3 (Single)
+            {
+                id: "q4", vowIndex: 3, type: "single", correct: [0],
+                zh: {
+                    vowName: "第三大愿：广修供养",
+                    text: "普贤菩萨说，前述一切财物上妙供养的无量功德，比法供养一念功德：",
+                    options: [
+                        "百分不及一，千分不及一，乃至优波尼沙陀分亦不及一",
+                        "两者功德完全相等",
+                        "财供养功德大于法供养功德",
+                        "若财物价值连城，则可超越法供养"
+                    ],
+                    explanation: "经文云：『如前供养无量功德，比法供养一念功德，百分不及一，千分不及一...亦不及一。何以故？以诸如来尊重法故。』"
+                },
+                en: {
+                    vowName: "Third Vow: Extensively Cultivating Offerings",
+                    text: "Compared to a single moment of Dharma offering, how does the merit of all previous material offerings compare?",
+                    options: [
+                        "It does not amount to even a hundredth part, a thousandth part, or an upaniṣad part of it",
+                        "Both merits are completely equal",
+                        "Material offerings bring greater merit than Dharma offerings",
+                        "If material goods are infinitely precious, they surpass Dharma offerings"
+                    ],
+                    explanation: "Sūtra text: 'When compared with the merit of but a single mind-moment of Dharma giving, the measureless merit from making all the aforementioned material offerings would not amount to even a hundredth part, a thousandth part... or an upaniṣad part of it.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Ba: Quảng Tu Cúng Ràng",
+                    text: "Bồ-tát Phổ Hiền dạy: Công đức của vô lượng cúng ràng của cải vật chất so với một niệm Pháp cúng ràng thì:",
+                    options: [
+                        "Trăm phần không bằng một, ngàn phần không bằng một, cho đến phần Ưu-ba-ni-sa-đà cũng không bằng một",
+                        "Hai loại công đức hoàn toàn bằng nhau",
+                        "Cúng ràng tài vật lớn hơn cúng ràng Pháp",
+                        "Nếu của cải vô giá thì có thể vượt qua Pháp cúng ràng"
+                    ],
+                    explanation: "Kinh văn ghi: 'Ví như công đức cúng ràng vật chất ở trước, so với một niệm Pháp cúng ràng, trăm phần không bằng một, ngàn phần không bằng một... Vì sao? Vì chư Phật Như Lai tôn trọng Pháp.'"
+                }
+            },
+            // Question 5: Vow 4
+            {
+                id: "q5", vowIndex: 4, type: "single", correct: [2],
+                zh: {
+                    vowName: "第四大愿：忏悔业障",
+                    text: "普贤菩萨描述，菩萨自念过去无始劫中由贪嗔痴所造恶业，“若此恶业有体相者”，会产生什么现象？",
+                    options: [
+                        "如须弥山高",
+                        "如四大海水深",
+                        "尽虚空界不能容受",
+                        "凝结为铁围山"
+                    ],
+                    explanation: "经文云：『我于过去无始劫中，由贪嗔痴，发身口意，作诸恶业，无量无边。若此恶业有体相者，尽虚空界不能容受。』"
+                },
+                en: {
+                    vowName: "Fourth Vow: Repenting of Karmic Obstacles",
+                    text: "Samantabhadra states that if bad karmic actions committed since beginningless time through greed, anger, and delusion had physical form, what would happen?",
+                    options: [
+                        "They would be as high as Mount Sumeru",
+                        "They would be as deep as the four great oceans",
+                        "Even all the realms of space would be unable to contain them",
+                        "They would solidify into the Iron Enclosing Mountains"
+                    ],
+                    explanation: "Sūtra text: 'Due to greed, hatred, and delusion manifesting in body, speech, and mind, I have committed measurelessly many bad karmic actions. If these bad karmic actions had substance and signs, even all the realms of space would be unable to contain them.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Tư: Sám Hối Nghiệp Chướng",
+                    text: "Bồ-tát Phổ Hiền mô tả ác nghiệp vô始 kiếp do tham, sân, si gây ra: 'Nếu ác nghiệp này mà có hình tướng' thì sẽ ra sao?",
+                    options: [
+                        "Cao như núi Tu Mộc",
+                        "Sâu như bốn biển lớn",
+                        "Tận hư không giới cũng không thể chứa hết",
+                        "Đông đặc thành núi Thiết Vi"
+                    ],
+                    explanation: "Kinh văn ghi: 'Tôi ở trong quá khứ vô始 kiếp, do tham sân si phát ra thân miệng ý làm các ác nghiệp vô lượng vô biên. Nếu các ác nghiệp này mà có hình tướng thì tận hư không giới cũng không thể chứa hết.'"
+                }
+            },
+            // Question 6: Vow 5
+            {
+                id: "q6", vowIndex: 5, type: "multi", correct: [0, 1, 2, 3],
+                zh: {
+                    vowName: "第五大愿：随喜功德",
+                    text: "【多选题】普贤菩萨在“随喜功德”中，随喜的对象包括哪些？",
+                    options: [
+                        "十方一切诸佛从初发心舍头目手足等一切难行苦行",
+                        "十方一切六趣四生所有功德乃至一尘",
+                        "声闻及辟支佛、有学无学所有功德",
+                        "一切菩萨志求无上菩提所修广大功德"
+                    ],
+                    explanation: "经文明确记载：随喜诸佛因地苦行善根、六趣四生一切功德、二乘圣人功德以及菩萨无量难行苦行功德，全无遗漏。"
+                },
+                en: {
+                    vowName: "Fifth Vow: Rejoicing in Others' Merit",
+                    text: "[Multiple Choice] In 'Rejoicing in others' merit', whose merits does Samantabhadra rejoice in?",
+                    options: [
+                        "All buddhas sacrificing heads, eyes, hands, and feet in practicing austerities",
+                        "All sentient beings of six destinies and four types of birth, down to a single dust mote",
+                        "Śrāvaka disciples, Pratyekabuddhas, those in training and beyond training",
+                        "All bodhisattvas cultivating vast merit seeking supreme bodhi"
+                    ],
+                    explanation: "Sūtra text: Includes all buddhas' vows, merits of all beings in six paths, Arhats/Pratyekabuddhas, and Bodhisattvas practicing difficulties. (All 4 are correct!)"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Năm: Tùy Hỷ Công Đức",
+                    text: "【Đa Chọn】Trong nguyện 'Tùy hỷ công đức', Bồ-tát Phổ Hiền tùy hỷ công đức của những ai?",
+                    options: [
+                        "Tất cả chư Phật mười phương từ khi mới phát tâm xả đầu, mắt, tay, chân tu hành khổ hạnh",
+                        "Tất cả chúng sinh trong sáu đường bốn loài cho đến một hạt bụi công đức",
+                        "Thanh Văn, Duyên Giác, hữu học và vô học",
+                        "Tất cả Bồ-tát chí cầu Bồ-đề vô thượng"
+                    ],
+                    explanation: "Kinh văn ghi rõ tùy hỷ công đức chư Phật, chúng sinh 6 đường, Nhị thừa Thánh nhân và chư Bồ-tát tu hành khổ hạnh. (Cả 4 phương án đều đúng!)"
+                }
+            },
+            // Question 7: Vow 6
+            {
+                id: "q7", vowIndex: 6, type: "single", correct: [1],
+                zh: {
+                    vowName: "第六大愿：请转法轮",
+                    text: "在“请转法轮”愿中，普贤菩萨劝请的对象是：",
+                    options: [
+                        "仅劝请释迦牟尼佛一人",
+                        "十方三世一切刹土中念念成等正觉的一切诸佛",
+                        "世间所有有智慧的学者与哲学家",
+                        "天宫中的帝释天与大梵天王"
+                    ],
+                    explanation: "经文云：『一一刹中，念念有不可说不可说佛刹极微尘数一切诸佛成等正觉...而我悉以身口意业，种种方便，殷勤劝请，转妙法轮。』"
+                },
+                en: {
+                    vowName: "Sixth Vow: Requesting the Turning of the Dharma Wheel",
+                    text: "Whom does Samantabhadra request to turn the sublime wheel of Dharma?",
+                    options: [
+                        "Only Śākyamuni Buddha alone",
+                        "All buddhas in all worlds of ten directions and three periods who attain enlightenment in each thought-moment",
+                        "All worldly wise scholars and philosophers",
+                        "Sakra and Mahābrahmā in the heavenly realms"
+                    ],
+                    explanation: "Sūtra text: 'In every one of those kṣetras, there are all those buddhas... who in each successive mind-moment are attaining universal and right enlightenment... I earnestly request them to turn the wheel of sublime Dharma.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Sáu: Thỉnh Chuyển Pháp Luân",
+                    text: "Trong nguyện 'Thỉnh chuyển pháp luân', Bồ-tát Phổ Hiền ân cần thỉnh nguyện đối tượng nào?",
+                    options: [
+                        "Chỉ thỉnh Đức Phật Thích Ca Mâu Ni",
+                        "Tất cả chư Phật trong mười phương ba đời ở mỗi niệm đang thành Đẳng Chánh Giác",
+                        "Tất cả các nhà hiền triết và học giả thế gian",
+                        "Đế Thích Thiên và Đại Phạm Thiên Vương"
+                    ],
+                    explanation: "Kinh văn ghi: 'Trong mỗi cõi Phật, trong mỗi niệm có vô số chư Phật thành Đẳng Chánh Giác... Tôi đều dùng thân miệng ý ân cần thỉnh chuyển bánh xe Pháp diệu.'"
+                }
+            },
+            // Question 8: Vow 7 (True/False)
+            {
+                id: "q8", vowIndex: 7, type: "single", correct: [0],
+                zh: {
+                    vowName: "第七大愿：请佛住世",
+                    text: "【判断题】“请佛住世”愿中，普贤菩萨不仅劝请将欲示现般涅槃的诸佛莫入涅槃，也劝请菩萨、声闻、缘觉乃至一切诸善知识莫入涅槃。",
+                    options: [
+                        "正确 (符合经文)",
+                        "错误 (仅劝请诸佛，不劝请善知识)"
+                    ],
+                    explanation: "经文明确说明：『将欲示现般涅槃者，及诸菩萨、声闻、缘觉，有学无学，乃至一切诸善知识，我悉劝请莫入涅槃，经于一切佛刹极微尘数劫。』"
+                },
+                en: {
+                    vowName: "Seventh Vow: Requesting Buddhas to Remain in the World",
+                    text: "[True / False] In 'Requesting buddhas to remain in the world', Samantabhadra requests not only Buddhas about to enter Parinirvāṇa, but also Bodhisattvas, Śrāvakas, Pratyekabuddhas, and all Good Spiritual Friends.",
+                    options: [
+                        "True (Accurate to sutra text)",
+                        "False (Only requests Buddhas, not spiritual friends)"
+                    ],
+                    explanation: "Sūtra text: 'Whenever any buddhas are about to enter parinirvāṇa, including any such bodhisattvas, śrāvakas, pratyekabuddhas, and all good spiritual guides, I then beseech them all to refrain from entering nirvāṇa.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Bảy: Thỉnh Phật Trụ Thế",
+                    text: "【Đúng / Sai】Trong nguyện 'Thỉnh Phật trụ thế', Bồ-tát Phổ Hiền không chỉ thỉnh chư Phật sắp nhập Niết-bàn, mà còn thỉnh Bồ-tát, Thanh Văn, Duyên Giác cho đến tất cả chư Thiện Tri Thức không nhập Niết-bàn.",
+                    options: [
+                        "Đúng (Đúng theo kinh văn)",
+                        "Sai (Chỉ thỉnh chư Phật, không thỉnh Thiện Tri Thức)"
+                    ],
+                    explanation: "Kinh văn ghi rõ: 'Các Đức Phật Như Lai sắp muốn thị hiện nhập Niết-bàn, cho đến chư Bồ-tát, Thanh Văn, Duyên Giác, hữu học, vô học và tất cả chư Thiện Tri Thức, tôi đều khuyên thỉnh đừng nhập Niết-bàn.'"
+                }
+            },
+            // Question 9: Vow 8 (Multi-select)
+            {
+                id: "q9", vowIndex: 8, type: "multi", correct: [0, 1, 2, 3],
+                zh: {
+                    vowName: "第八大愿：常随佛学",
+                    text: "【多选题】经中以本师毗卢遮那如来（释迦牟尼佛）因地求法为例，提到了哪些难行苦行？",
+                    options: [
+                        "剥皮为纸",
+                        "析骨为笔",
+                        "刺血为墨",
+                        "书写经典积如须弥"
+                    ],
+                    explanation: "经文云：『剥皮为纸，析骨为笔，刺血为墨，书写经典，积如须弥。为重法故，不惜身命。』"
+                },
+                en: {
+                    vowName: "Eighth Vow: Always Following Buddhas' Course of Training",
+                    text: "[Multiple Choice] Which difficult austerities performed by Vairocana Tathāgata for the sake of Dharma are listed in the sutra?",
+                    options: [
+                        "Peeling off his own skin to serve as paper",
+                        "Breaking his own bones to serve as pens",
+                        "Drawing his own blood to serve as ink",
+                        "Writing scriptures accumulated as high as Mount Sumeru"
+                    ],
+                    explanation: "Sūtra text: 'Peeling off his own skin to serve as paper, breaking his own bones to serve as pens, drawing his own blood to serve as ink, doing so in order to write out copies of scriptures that reach as high as Mount Sumeru.' (All 4 are correct!)"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Tám: Thường Tùy Phật Học",
+                    text: "【Đa Chọn】Kinh văn dẫn tấm gương Đức Phật Tỳ-Lô-Giá-Na (Thích Ca) vì cầu Pháp mà làm những khổ hạnh nào?",
+                    options: [
+                        "Lột da làm giấy",
+                        "Chẻ xương làm bút",
+                        "Chích máu làm mực",
+                        "Viết chép kinh điển cao bằng núi Tu Mộc"
+                    ],
+                    explanation: "Kinh văn ghi: 'Lột da làm giấy, chẻ xương làm bút, chích máu làm mực, viết chép kinh điển cao bằng núi Tu Mộc. Vì coi trọng Pháp nên không tiếc thân mạng.' (Cả 4 phương án đều đúng!)"
+                }
+            },
+            // Question 10: Vow 9
+            {
+                id: "q10", vowIndex: 9, type: "single", correct: [1],
+                zh: {
+                    vowName: "第九大愿：恒顺众生",
+                    text: "经中比喻“生死旷野菩提树王”，其中“树根”和“华果”分别比喻什么？",
+                    options: [
+                        "诸佛菩萨为树根，一切众生为华果",
+                        "一切众生为树根，诸佛菩萨为华果",
+                        "大悲心为树根，清净戒为华果",
+                        "智慧为树根，神通为华果"
+                    ],
+                    explanation: "经文云：『生死旷野菩提树王，亦复如是。一切众生而为树根，诸佛菩萨而为华果，以大悲水饶益众生，则能成就诸佛菩萨智慧华果。』"
+                },
+                en: {
+                    vowName: "Ninth Vow: Constantly According with Beings",
+                    text: "In the famous metaphor of the 'King of Bodhi Trees in the wilderness of Saṃsāra', what do the 'roots' and 'flowers & fruits' represent?",
+                    options: [
+                        "Buddhas/Bodhisattvas are roots; sentient beings are flowers & fruits",
+                        "Sentient beings are the roots; Buddhas and Bodhisattvas are the flowers & fruits",
+                        "Great Compassion is roots; pure precepts are flowers & fruits",
+                        "Wisdom is roots; spiritual powers are flowers & fruits"
+                    ],
+                    explanation: "Sūtra text: 'It is all beings who form the roots of this tree and it is all buddhas and bodhisattvas who form its blossoms and fruit. Watering beings with great compassion produces wisdom fruits.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Chín: Hằng Thuận Chúng Sinh",
+                    text: "Trong ví dụ 'Cây Bồ-đề vương nơi hoang sa sinh tử', 'Rễ cây' và 'Hoa quả' biểu thị cho điều gì?",
+                    options: [
+                        "Chư Phật Bồ-tát là rễ, tất cả chúng sinh là hoa quả",
+                        "Tất cả chúng sinh là rễ cây, chư Phật Bồ-tát là hoa quả",
+                        "Tâm Đại bi là rễ cây, Thanh tịnh giới là hoa quả",
+                        "Trí tuệ là rễ cây, Thần thông là hoa quả"
+                    ],
+                    explanation: "Kinh văn ghi: 'Cây Bồ-đề vương nơi hoang sa sinh tử cũng lại như thế. Tất cả chúng sinh làm rễ cây, chư Phật Bồ-tát làm hoa quả. Dùng nước đại bi tưới rễ chúng sinh thì thành tựu hoa quả trí tuệ chư Phật.'"
+                }
+            },
+            // Question 11: Vow 9
+            {
+                id: "q11", vowIndex: 9, type: "single", correct: [0],
+                zh: {
+                    vowName: "第九大愿：恒顺众生",
+                    text: "为什么普贤菩萨说“菩提属于众生”？其内在逻辑是：",
+                    options: [
+                        "因于众生而起大悲，因于大悲生菩提心，因菩提心成等正觉",
+                        "因为众生本来就是佛，不需要修持",
+                        "因为成佛后必须住在众生家中",
+                        "因为众生的数量比诸佛还要少"
+                    ],
+                    explanation: "经文云：『诸佛如来以大悲心而为体故。因于众生，而起大悲；因于大悲，生菩提心；因菩提心，成等正觉...若无众生，一切菩萨终不能成无上正觉。』"
+                },
+                en: {
+                    vowName: "Ninth Vow: Constantly According with Beings",
+                    text: "Why does Samantabhadra say that 'Bodhi depends on sentient beings'?",
+                    options: [
+                        "Because of beings, great compassion is produced; because of great compassion, bodhi resolve is born; because of bodhi resolve, supreme enlightenment is attained",
+                        "Because sentient beings are already buddhas and need no practice",
+                        "Because after becoming a Buddha one must live in beings' houses",
+                        "Because the number of beings is less than buddhas"
+                    ],
+                    explanation: "Sūtra text: 'It is because of beings that they produce great compassion. It is because of great compassion that they produce resolve to attain bodhi. And because of resolve to attain bodhi they realize supreme enlightenment.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Chín: Hằng Thuận Chúng Sinh",
+                    text: "Tại sao Bồ-tát Phổ Hiền phán rằng 'Bồ-đề thuộc về chúng sinh'? Logic cốt lõi là:",
+                    options: [
+                        "Do vì chúng sinh mà sinh lòng Đại bi, do lòng Đại bi mà phát tâm Bồ-đề, do tâm Bồ-đề mà thành Đẳng Chánh Giác",
+                        "Vì chúng sinh vốn đã là Phật nên không cần tu",
+                        "Vì thành Phật rồi phải ở nhà của chúng sinh",
+                        "Vì số lượng chúng sinh ít hơn chư Phật"
+                    ],
+                    explanation: "Kinh văn ghi: 'Chư Phật Như Lai lấy tâm đại bi làm thể. Do vì chúng sinh mà sinh lòng đại bi, do lòng đại bi mà phát tâm Bồ-đề, do tâm Bồ-đề mà thành Đẳng Chánh Giác... Nếu không có chúng sinh, Bồ-tát không thể thành Vô Thượng Chánh Đẳng Chánh Giác.'"
+                }
+            },
+            // Question 12: Vow 10
+            {
+                id: "q12", vowIndex: 10, type: "single", correct: [1],
+                zh: {
+                    vowName: "第十大愿：普皆回向",
+                    text: "在“普皆回向”愿中，菩萨对于众生积集恶业所感得的极重苦果，发何等大愿？",
+                    options: [
+                        "愿众生自行承担业报",
+                        "我皆代受，令彼众生悉得解脱，究竟成就无上菩提",
+                        "请天神降罚造恶业者",
+                        "将苦果转移至无人的旷野"
+                    ],
+                    explanation: "经文云：『若诸众生，因其积集诸恶业故，所感一切极重苦果，我皆代受，令彼众生，悉得解脱，究竟成就无上菩提。』"
+                },
+                en: {
+                    vowName: "Tenth Vow: Universally Dedicating All Merit",
+                    text: "In 'Universally dedicating all merit', what vow does the Bodhisattva make regarding beings' severe sufferings caused by bad karma?",
+                    options: [
+                        "Wish that sentient beings bear their karma by themselves",
+                        "I shall substitute for them in experiencing those sufferings, enabling them to attain liberation and ultimate bodhi",
+                        "Ask heavenly gods to punish bad karma creators",
+                        "Transfer suffering to uninhabited deserts"
+                    ],
+                    explanation: "Sūtra text: 'Wherever beings bring on themselves extremely severe sufferings due to having accumulated all kinds of bad karma, I may then substitute for them in experiencing those sufferings.'"
+                },
+                vi: {
+                    vowName: "Đại Nguyện Thứ Mười: Phổ Giai Hồi Hướng",
+                    text: "Trong nguyện 'Phổ giai hồi hướng', đối với quả khổ nặng nề do chúng sinh tích tụ ác nghiệp cảm chịu, Bồ-tát phát nguyện gì?",
+                    options: [
+                        "Nguyện chúng sinh tự gánh chịu quả báo",
+                        "Tôi đều xin chịu thay, làm cho chúng sinh ấy thảy đều giải thoát, rốt ráo thành tựu Bồ-đề vô thượng",
+                        "Xin chư Thiên giáng phạt người làm ác",
+                        "Chuyển quả khổ sang nơi hoang vắng"
+                    ],
+                    explanation: "Kinh văn ghi: 'Nếu các chúng sinh do tích tụ các ác nghiệp mà cảm chịu tất cả quả khổ cực nặng, tôi đều xin chịu thay, làm cho chúng sinh ấy thảy đều giải thoát, rốt ráo thành tựu Vô Thượng Bồ-đề.'"
+                }
+            },
+            // Question 13: Benefit at death
+            {
+                id: "q13", vowIndex: 10, type: "single", correct: [1],
+                zh: {
+                    vowName: "愿王功德：临终引导",
+                    text: "经中文殊与普贤菩萨特别指出，人在临命终时，一切亲属、威势、珍宝皆悉舍离，唯有什么不相舍离，于一切时引导其前，一刹那中即得往生极乐世界？",
+                    options: [
+                        "生前积累的金银财宝",
+                        "此普贤大愿王",
+                        "平生的功名官爵",
+                        "眷属的悲哭追悼"
+                    ],
+                    explanation: "经文云：『又复是人临命终时，最后刹那，一切诸根悉皆散坏...唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。』"
+                },
+                en: {
+                    vowName: "Merit of Vows: Guidance at the End of Life",
+                    text: "When a person reaches the end of life, all relatives, power, and treasures leave them. What alone does not abandon them, leading them in a single kṣaṇa to be reborn in the Ultimate Bliss (Pure Land)?",
+                    options: [
+                        "Silver and gold treasures accumulated during life",
+                        "These Kings of Vows (Samantabhadra's Great Vows)",
+                        "High official titles and power",
+                        "Family members' weeping and mourning"
+                    ],
+                    explanation: "Sūtra text: 'When this person draws near to the end of life... all relatives leave him... it is only these kings of vows that do not abandon him. They always lead him forth so that, in but a single kṣaṇa, he is immediately reborn in the Land of Ultimate Bliss.'"
+                },
+                vi: {
+                    vowName: "Công Đức Nguyện Vương: Lâm Chung Dẫn Độ",
+                    text: "Kinh văn chỉ rõ: Khi con người lâm命 chung, thân quyến, uy thế, của cải thảy đều bỏ lại. Duy chỉ có điều gì không rời bỏ, tại mọi thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc?",
+                    options: [
+                        "Vàng bạc của cải tích lũy khi sống",
+                        "Mười Đại Nguyện Vương Phổ Hiền này",
+                        "Danh vọng và quyền lực thế gian",
+                        "Tiếng khóc thương của người thân"
+                    ],
+                    explanation: "Kinh văn ghi: 'Người ấy khi lâm命 chung, sát-na cuối cùng, tất cả căn thảy đều tan rã, tất cả thân quyến thảy đều xa rời... Duy có Nguyện Vương này không rời bỏ, ở trong tất cả thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc.'"
+                }
+            },
+            // Question 14: Verse Metaphor
+            {
+                id: "q14", vowIndex: 8, type: "single", correct: [0],
+                zh: {
+                    vowName: "偈颂精粹：处世无著",
+                    text: "偈颂中形容菩萨于世间道中得解脱，如同“莲华不著水”的下一句是：",
+                    options: [
+                        "亦如日月不住空",
+                        "亦如大风吹微尘",
+                        "犹如须弥出大海",
+                        "心如清净琉璃珠"
+                    ],
+                    explanation: "偈颂云：『于诸惑业及魔境，世间道中得解脱，犹如莲华不著水，亦如日月不住空。』"
+                },
+                en: {
+                    vowName: "Verse Essence: Liberation in the World",
+                    text: "In the verse describing liberation from worldly afflictions, following 'Like a lotus flower unattached to water', what is the next line?",
+                    options: [
+                        "And like the sun and moon not lingering in space",
+                        "Like strong winds blowing dust particles",
+                        "Like Mount Sumeru rising above the ocean",
+                        "With a mind pure like a lapis lazuli jewel"
+                    ],
+                    explanation: "Verse text: 'Liberated from afflictions, karma, Māra's realms, and worldly paths; Like a lotus flower unattached to water, and like the sun and moon not lingering in space.'"
+                },
+                vi: {
+                    vowName: "Kệ Tụng Tinh Túy: Xử Thế Không Dính Mắc",
+                    text: "Kệ tụng tả Bồ-tát giải thoát nơi thế gian: 'Như hoa sen không dính nước', câu tiếp theo là:",
+                    options: [
+                        "Cũng như nhật nguyệt chẳng dừng trên không",
+                        "Cũng như gió lớn thổi hạt bụi nhỏ",
+                        "Giống như Tu Mộc nhô lên khỏi biển",
+                        "Tâm như hạt châu lưu ly thanh tịnh"
+                    ],
+                    explanation: "Kệ tụng ghi: 'Ở trong hoạch nghiệp và cảnh ma, nơi đường thế gian được giải thoát, Như hoa sen không dính nước, Cũng như nhật nguyệt chẳng dừng trên không.'"
+                }
+            },
+            // Question 15: Sins Erasure
+            {
+                id: "q15", vowIndex: 4, type: "single", correct: [1],
+                zh: {
+                    vowName: "愿王功德：灭罪除障",
+                    text: "经中提及，若人以深信心受持读诵乃至书写此大愿王一四句偈，能速疾除灭什么极重恶业？",
+                    options: [
+                        "轻微偷盗业",
+                        "五无间业",
+                        "仅能消除今世小病",
+                        "无法消除过去世业障"
+                    ],
+                    explanation: "经文云：『或复有人，以深信心，于此大愿，受持读诵，乃至书写一四句偈，速能除灭五无间业。所有世间身心等病...皆得消除。』"
+                },
+                en: {
+                    vowName: "Merit of Vows: Eradicating Karma",
+                    text: "If one receives, recites, or writes even a single four-line verse of these Great Vows with deep faith, what severe bad karma can be swiftly eradicated?",
+                    options: [
+                        "Only minor theft karma",
+                        "Karma of the five deeds of immediate retribution (Five Incessant Evils)",
+                        "Only minor body ailments in this life",
+                        "No karma from past lives can be erased"
+                    ],
+                    explanation: "Sūtra text: 'If a person with deep faith accepts, upholds, recites, or merely writes out but one four-line verse, he would quickly be able to extinguish even the karma of five deeds of immediate retribution.'"
+                },
+                vi: {
+                    vowName: "Công Đức Nguyện Vương: Diệt Tội Trừ Chướng",
+                    text: "Nếu có người phát tâm tin sâu thọ trì, đọc tụng cho đến viết chép một bài kệ 4 câu của Đại Nguyện Vương này thì nhanh chóng diệt trừ được ác nghiệp cực nặng nào?",
+                    options: [
+                        "Chỉ diệt tội trộm cắp nhỏ",
+                        "Ngũ Vô Gián Nghiệp (5 tội cực ác)",
+                        "Chỉ trừ bệnh nhỏ đời này",
+                        "Không thể tiêu trừ nghiệp quá khứ"
+                    ],
+                    explanation: "Kinh văn ghi: 'Nếu lại có người với lòng tin sâu đối với đại nguyện này thọ trì đọc tụng cho đến viết chép một bài kệ bốn câu, thì mau chóng diệt trừ được Ngũ Vô Gián Nghiệp. Tất cả bệnh tật thân tâm thế gian thảy đều tiêu trừ.'"
+                }
+            }
+        ];
+
+        /* =========================================================================
+           3. DHARMA CARDS / WISDOM GALLERY DATA (ZH / EN / VI)
+           ========================================================================= */
+        const dharmaCards = [
+            { id: 1, vow: "1", 
+              zh: { title: "礼敬诸佛", subtitle: "一身复现刹尘身", text: "我以普贤行愿力故，深心信解，如对目前...悉现不可说不可说佛刹极微尘数身，遍礼不可说不可说佛刹极微尘数佛。" },
+              en: { title: "Revere All Buddhas", subtitle: "Manifesting Dust-mote Bodies", text: "Through Samantabhadra's vows, with deep faith as if right before my eyes, I manifest bodies as numerous as atoms to bow to all Buddhas." },
+              vi: { title: "Lễ Kính Chư Phật", subtitle: "Một Thân Hiện Hiện Bụi Thân", text: "Tôi do sức hạnh nguyện Phổ Hiền, phát lòng tin sâu như đối trước chư Phật... hóa hiện thân nhiều như số vi trần để lễ khắp chư Phật." }
+            },
+            { id: 2, vow: "2", 
+              zh: { title: "称赞如来", subtitle: "出无尽音声言辞海", text: "各以出过辩才天女微妙舌根，一一舌根出无尽音声海，一一音声出一切言辞海，称扬赞叹一切如来诸功德海。" },
+              en: { title: "Proclaim Praises", subtitle: "Ocean of Inexhaustible Voices", text: "Surpassing Sarasvati's tongue, sending forth inexhaustible oceans of voices and words to praise all Tathagatas' ocean of merits." },
+              vi: { title: "Xưng Tán Như Lai", subtitle: "Xuất Vô Tận Biển Âm Thanh", text: "Dùng lưỡi vi diệu vượt hơn Biện Tài Thiên Nữ, phát ra vô tận biển âm thanh và biển ngôn từ để khen ngợi biển công đức chư Phật." }
+            },
+            { id: 3, vow: "3", 
+              zh: { title: "广修供养", subtitle: "诸供养中法供养最", text: "所谓如说修行供养，利益众生供养，摄受众生供养，代众生苦供养，勤修善根供养，不舍菩萨业供养，不离菩提心供养。" },
+              en: { title: "Extensive Offerings", subtitle: "Dharma Offering Supreme", text: "Dharma offering includes practicing as taught, benefiting beings, taking on sufferings, cultivating roots of goodness, and keeping bodhi resolve." },
+              vi: { title: "Quảng Tu Cúng Ràng", subtitle: "Pháp Cúng Ràng Hơn Hết", text: "Đó là như thuyết tu hành cúng ràng, lợi ích chúng sinh, thay chúng sinh chịu khổ, siêng tu căn lành và không rời tâm Bồ-đề." }
+            },
+            { id: 4, vow: "4", 
+              zh: { title: "忏悔业障", subtitle: "清净三业诚心忏", text: "我于过去无始劫中，由贪嗔痴，发身口意，作诸恶业无量无边...我今悉以清净三业，诚心忏悔，后不复造。" },
+              en: { title: "Repent Obstacles", subtitle: "Pure Three Karma Repentance", text: "All bad karma committed through greed, anger, and delusion since beginningless time—I now sincerely repent with pure body, speech, and mind." },
+              vi: { title: "Sám Hối Nghiệp Chướng", subtitle: "Ba Nghiệp Thanh Tịnh Sám Hối", text: "Tôi từ vô始 kiếp do tham sân si phát ra thân miệng ý làm các ác nghiệp... Nay thảy đều dùng ba nghiệp thanh tịnh thành tâm sám hối." }
+            },
+            { id: 5, vow: "5", 
+              zh: { title: "随喜功德", subtitle: "六趣四生咸随喜", text: "十方一切诸众生，二乘有学及无学，一切如来与菩萨，所有功德我皆随喜。" },
+              en: { title: "Rejoice in Merit", subtitle: "Rejoicing in All Beings", text: "All merits of all buddhas, bodhisattvas, śrāvakas, pratyekabuddhas, and every single sentient being in six destinies—I rejoice in them all." },
+              vi: { title: "Tùy Hỷ Công Đức", subtitle: "Sáu Đường Bốn Loài Thảy Tùy Hỷ", text: "Tất cả công đức của chư Phật, Bồ-tát, Nhị thừa Thánh nhân và thảy cả chúng sinh trong năm loài sáu đường, tôi đều xin tùy hỷ." }
+            },
+            { id: 6, vow: "6", 
+              zh: { title: "请转法轮", subtitle: "殷勤劝请正法雷", text: "所有尽法界虚空界，十方三世一切佛刹...念念有一切诸佛成等正觉，我悉以身口意业，殷勤劝请转妙法轮。" },
+              en: { title: "Turn Dharma Wheel", subtitle: "Earnestly Requesting Teaching", text: "Before all buddhas realizing right enlightenment in every mind-moment throughout space, I earnestly request them to turn the sublime wheel of Dharma." },
+              vi: { title: "Thỉnh Chuyển Pháp Luân", subtitle: "Ân Cần Thỉnh Diệu Pháp Luân", text: "Mỗi niệm có chư Phật thành Đẳng Chánh Giác khắp pháp giới hư空, tôi đều dùng thân khẩu ý ân cần thỉnh chuyển bánh xe Pháp diệu." }
+            },
+            { id: 7, vow: "7", 
+              zh: { title: "请佛住世", subtitle: "利乐一切诸群生", text: "诸佛如来将欲示现般涅槃者，及诸菩萨、声闻、缘觉，乃至一切诸善知识，我悉劝请莫入涅槃。" },
+              en: { title: "Remain in World", subtitle: "Benefiting All Living Beings", text: "All Buddhas, Bodhisattvas, Śrāvakas, and Good Spiritual Friends about to enter Parinirvāṇa, I beseech them all to refrain from entering Nirvāṇa." },
+              vi: { title: "Thỉnh Phật Trụ Thế", subtitle: "Lợi Lạc Tất Cả Chúng Sinh", text: "Chư Phật Như Lai sắp thị hiện nhập Niết-bàn, cùng chư Bồ-tát, Nhị thừa, Thiện Tri Thức, tôi đều khuyên thỉnh đừng nhập Niết-bàn." }
+            },
+            { id: 8, vow: "8", 
+              zh: { title: "常随佛学", subtitle: "剥皮为纸刺血墨", text: "剥皮为纸，析骨为笔，刺血为墨，书写经典，积如须弥。为重法故，不惜身命。" },
+              en: { title: "Always Follow Buddhas", subtitle: "Peeling Skin and Drawing Blood", text: "Peeling skin as paper, breaking bones as pens, drawing blood as ink to write scriptures piled high as Sumeru; unsparing of life for the Dharma." },
+              vi: { title: "Thường Tùy Phật Học", subtitle: "Lột Da Làm Giấy Trích Máu Mực", text: "Lột da làm giấy, chẻ xương làm bút, chích máu làm mực, viết chép kinh điển cao bằng núi Tu Mộc. Vì coi trọng Pháp không tiếc thân mạng." }
+            },
+            { id: 9, vow: "9", 
+              zh: { title: "恒顺众生", subtitle: "菩提树王众生根", text: "因于众生而起大悲，因于大悲生菩提心，因菩提心成等正觉...菩提属于众生，若无众生，一切菩萨终不能成无上正觉。" },
+              en: { title: "Accord with Beings", subtitle: "Beings are Roots of Bodhi", text: "Great compassion arises because of beings, bodhi mind arises from compassion, enlightenment arises from bodhi mind. Bodhi depends on beings." },
+              vi: { title: "Hằng Thuận Chúng Sinh", subtitle: "Chúng Sinh Là Rễ Cây Bồ-Đề", text: "Vì chúng sinh mà sinh Đại bi, do Đại bi sinh tâm Bồ-đề, do tâm Bồ-đề thành Đẳng Chánh Giác. Bồ-đề thuộc về chúng sinh." }
+            },
+            { id: 10, vow: "10", 
+              zh: { title: "普皆回向", subtitle: "导归极乐成正觉", text: "唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。" },
+              en: { title: "Universal Dedication", subtitle: "Guiding to the Pure Land", text: "These Kings of Vows do not abandon one at death; in a single kṣaṇa, they lead one forth to immediate rebirth in the Land of Ultimate Bliss." },
+              vi: { title: "Phổ Giai Hồi Hướng", subtitle: "Dẫn Đường Sinh Cực Lạc", text: "Duy có Nguyện Vương này không rời bỏ, tại mọi thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc." }
+            }
+        ];
+
+        /* =========================================================================
+           4. GAME STATE MANAGEMENT & I18N SWITCHER
+           ========================================================================= */
+        let gameState = {
+            lang: localStorage.getItem('puxian_lang') || 'zh',
+            mode: 'vows',
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            totalMerit: parseInt(localStorage.getItem('puxian_merit') || '0'),
+            streak: 0,
+            correctCount: 0,
+            selectedMultiOptions: [],
+            unlockedCards: JSON.parse(localStorage.getItem('puxian_unlocked_cards') || '[]'),
+            timer: null,
+            timeLeft: 20,
+            audioEnabled: true
+        };
+
+        // Initialize UI on window load
+        window.onload = function() {
+            document.getElementById('langSelect').value = gameState.lang;
+            applyLanguageUI();
+            document.getElementById('totalMeritDisplay').innerText = gameState.totalMerit;
+            updateGalleryBadge();
+            initBackgroundCanvas();
+            initWebAudio();
+        };
+
+        function changeLanguage(lang) {
+            gameState.lang = lang;
+            localStorage.setItem('puxian_lang', lang);
+            applyLanguageUI();
+
+            // Refresh current question UI if in active quiz mode
+            if (!document.getElementById('quizScreen').classList.contains('hidden')) {
+                renderCurrentQuestionText();
+            }
+        }
+
+        function applyLanguageUI() {
+            const t = translations[gameState.lang];
+
+            document.getElementById('uiHeaderTitle').childNodes[0].nodeValue = t.headerTitle + " ";
+            document.getElementById('uiHeaderSubtitle').innerText = t.headerSubtitle;
+            document.getElementById('uiMeritLabel').innerText = t.meritLabel;
+            
+            document.getElementById('uiHeroTitle').innerText = t.heroTitle;
+            document.getElementById('uiHeroDesc').innerHTML = t.heroDesc;
+
+            document.getElementById('uiMode1Title').innerText = t.mode1Title;
+            document.getElementById('uiMode1Desc').innerText = t.mode1Desc;
+            document.getElementById('uiMode1Badge').innerText = t.mode1Badge;
+
+            document.getElementById('uiMode2Title').innerText = t.mode2Title;
+            document.getElementById('uiMode2Desc').innerText = t.mode2Desc;
+            document.getElementById('uiMode2Badge').innerText = t.mode2Badge;
+
+            document.getElementById('uiMode3Title').innerText = t.mode3Title;
+            document.getElementById('uiMode3Desc').innerText = t.mode3Desc;
+            document.getElementById('uiMode3Badge').innerText = t.mode3Badge;
+
+            document.getElementById('uiBtnGallery').innerText = t.btnGallery;
+            document.getElementById('uiBtnSutra').innerText = t.btnSutra;
+
+            document.getElementById('uiStreakLabel').innerText = t.streakLabel;
+            document.getElementById('uiSubmitMultiBtn').innerHTML = `${t.submitMultiBtn} <i class="fas fa-check-circle ml-1"></i>`;
+            document.getElementById('uiScriptureProofTitle').innerHTML = `<i class="fas fa-quote-left"></i> ${t.scriptureProofTitle}`;
+            document.getElementById('uiNextQuestionBtn').querySelector('span').innerText = t.nextQuestionBtn;
+
+            document.getElementById('uiResultTitle').innerText = t.resultTitle;
+            document.getElementById('uiResultSubtitle').innerText = t.resultSubtitle;
+            document.getElementById('uiStatAccuracy').innerText = t.statAccuracy;
+            document.getElementById('uiStatMerit').innerText = t.statMerit;
+            document.getElementById('uiStatRank').innerText = t.statRank;
+            
+            document.getElementById('uiBlessingHeader').innerHTML = `<i class="fas fa-star mr-1"></i> ${t.blessingHeader}`;
+            document.getElementById('uiBlessingSubHeader').innerText = t.blessingSubHeader;
+
+            document.getElementById('uiRestartBtn').innerHTML = `<i class="fas fa-redo"></i> ${t.restartBtn}`;
+            document.getElementById('uiOpenGalleryBtn').innerHTML = `<i class="fas fa-layer-group"></i> ${t.openGalleryBtn}`;
+
+            document.getElementById('uiGalleryModalTitle').innerHTML = `<i class="fas fa-scroll"></i> ${t.galleryModalTitle}`;
+            document.getElementById('uiGalleryFooter').innerText = t.galleryFooter;
+            document.getElementById('uiSutraModalTitle').innerHTML = `<i class="fas fa-book-open"></i> ${t.sutraModalTitle}`;
+            document.getElementById('uiSutraCloseBtn').innerText = t.sutraCloseBtn;
+            document.getElementById('uiFooter').innerText = t.footer;
+
+            document.getElementById('audioText').innerText = gameState.audioEnabled ? t.audioOn : t.audioOff;
+
+            // Update scripture reader modal content
+            updateSutraModalContent();
+        }
+
+        /* =========================================================================
+           5. AUDIO SYNTHESIZER (Web Audio API)
+           ========================================================================= */
+        let audioCtx = null;
+
+        function initWebAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            gameState.audioEnabled = !gameState.audioEnabled;
+            const icon = document.getElementById('audioIcon');
+            const text = document.getElementById('audioText');
+            const t = translations[gameState.lang];
+
+            if (gameState.audioEnabled) {
+                icon.className = 'fas fa-volume-up';
+                text.innerText = t.audioOn;
+                playChime(523.25, 'sine', 0.3);
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                text.innerText = t.audioOff;
+            }
+        }
+
+        function playChime(freq, type = 'sine', duration = 0.8) {
+            if (!gameState.audioEnabled) return;
+            if (!audioCtx) initWebAudio();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playCorrectSound() {
+            playChime(587.33, 'sine', 1.2);
+            setTimeout(() => playChime(880, 'sine', 1.5), 150);
+        }
+
+        function playIncorrectSound() {
+            playChime(220, 'triangle', 0.5);
+        }
+
+        /* =========================================================================
+           6. GAME LOOP & QUESTION LOADER
+           ========================================================================= */
+        function startGame(mode) {
+            gameState.mode = mode;
+            gameState.currentIndex = 0;
+            gameState.score = 0;
+            gameState.streak = 0;
+            gameState.correctCount = 0;
+
+            if (mode === 'vows') {
+                let vowQuestions = [];
+                for (let i = 1; i <= 10; i++) {
+                    let match = questionBank.filter(q => q.vowIndex === i);
+                    if (match.length > 0) {
+                        vowQuestions.push(match[Math.floor(Math.random() * match.length)]);
+                    }
+                }
+                gameState.questions = vowQuestions;
+            } else if (mode === 'speed') {
+                gameState.questions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 8);
+            } else {
+                gameState.questions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 12);
+            }
+
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(gameState.timer);
+            gameState.selectedMultiOptions = [];
+
+            document.getElementById('explanationPanel').classList.add('hidden');
+            document.getElementById('multiSubmitBtnContainer').classList.add('hidden');
+            
+            renderCurrentQuestionText();
+
+            // Speed Mode Timer Start
+            const timerContainer = document.getElementById('timerContainer');
+            if (gameState.mode === 'speed') {
+                timerContainer.classList.remove('hidden');
+                gameState.timeLeft = 20;
+                document.getElementById('timerText').innerText = `${gameState.timeLeft}s`;
+                gameState.timer = setInterval(() => {
+                    gameState.timeLeft--;
+                    document.getElementById('timerText').innerText = `${gameState.timeLeft}s`;
+                    if (gameState.timeLeft <= 0) {
+                        clearInterval(gameState.timer);
+                        handleTimeout();
+                    }
+                }, 1000);
+            } else {
+                timerContainer.classList.add('hidden');
+            }
+        }
+
+        function renderCurrentQuestionText() {
+            const q = gameState.questions[gameState.currentIndex];
+            const langData = q[gameState.lang] || q.zh;
+            const t = translations[gameState.lang];
+
+            document.getElementById('vowBadge').innerText = q.vowIndex || (gameState.currentIndex + 1);
+            document.getElementById('questionCategory').innerText = langData.vowName;
+            document.getElementById('questionCount').innerText = `${gameState.currentIndex + 1} / ${gameState.questions.length}`;
+            
+            const progPercent = ((gameState.currentIndex) / gameState.questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progPercent}%`;
+
+            const typeTag = document.getElementById('typeTag');
+            if (q.type === 'multi') {
+                typeTag.innerText = t.typeMulti;
+                typeTag.className = 'text-[11px] px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 font-semibold';
+            } else if (langData.text.includes('判断题') || langData.text.includes('True / False') || langData.text.includes('Đúng / Sai')) {
+                typeTag.innerText = t.typeBool;
+                typeTag.className = 'text-[11px] px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold';
+            } else {
+                typeTag.innerText = t.typeSingle;
+                typeTag.className = 'text-[11px] px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold';
+            }
+
+            const multiplier = (1 + gameState.streak * 0.2).toFixed(1);
+            document.getElementById('streakCount').innerText = multiplier;
+            document.getElementById('questionText').innerText = langData.text;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            const optionLetters = ['A', 'B', 'C', 'D'];
+
+            langData.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `opt-${idx}`;
+                btn.className = 'w-full text-left p-4 rounded-xl glass-card flex items-start space-x-3 transition border border-gray-700/60 hover:border-gold-500/50';
+                
+                if (q.type === 'multi') {
+                    btn.onclick = () => toggleMultiOption(idx);
+                    const isSelected = gameState.selectedMultiOptions.includes(idx);
+                    btn.innerHTML = `
+                        <div id="check-${idx}" class="w-6 h-6 rounded ${isSelected ? 'bg-purple-500 border-purple-300 text-white font-bold' : 'bg-gray-800 border-gray-600 text-gray-400'} border flex items-center justify-center text-xs shrink-0 mt-0.5">
+                            ${isSelected ? '<i class="fas fa-check"></i>' : optionLetters[idx]}
+                        </div>
+                        <span class="text-xs md:text-sm text-gray-200 leading-snug">${optText}</span>
+                    `;
+                } else {
+                    btn.onclick = () => selectSingleOption(idx);
+                    btn.innerHTML = `
+                        <div class="w-6 h-6 rounded-full bg-gold-500/20 border border-gold-400 flex items-center justify-center text-xs text-gold-300 font-bold shrink-0 mt-0.5">
+                            ${optionLetters[idx]}
+                        </div>
+                        <span class="text-xs md:text-sm text-gray-200 leading-snug">${optText}</span>
+                    `;
+                }
+                optionsContainer.appendChild(btn);
+            });
+
+            if (q.type === 'multi') {
+                document.getElementById('multiSubmitBtnContainer').classList.remove('hidden');
+            }
+        }
+
+        /* Option Selections */
+        function toggleMultiOption(idx) {
+            playChime(440, 'sine', 0.1);
+            const pos = gameState.selectedMultiOptions.indexOf(idx);
+            const checkElem = document.getElementById(`check-${idx}`);
+            const btnElem = document.getElementById(`opt-${idx}`);
+
+            if (pos > -1) {
+                gameState.selectedMultiOptions.splice(pos, 1);
+                checkElem.className = 'w-6 h-6 rounded bg-gray-800 border border-gray-600 flex items-center justify-center text-xs shrink-0 mt-0.5 text-gray-400';
+                checkElem.innerText = ['A','B','C','D'][idx];
+                btnElem.classList.remove('border-purple-500', 'bg-purple-950/30');
+            } else {
+                gameState.selectedMultiOptions.push(idx);
+                checkElem.className = 'w-6 h-6 rounded bg-purple-500 border border-purple-300 flex items-center justify-center text-xs shrink-0 mt-0.5 text-white font-bold';
+                checkElem.innerHTML = '<i class="fas fa-check"></i>';
+                btnElem.classList.add('border-purple-500', 'bg-purple-950/30');
+            }
+        }
+
+        function selectSingleOption(idx) {
+            clearInterval(gameState.timer);
+            evaluateAnswer([idx]);
+        }
+
+        function submitMultiAnswer() {
+            clearInterval(gameState.timer);
+            if (gameState.selectedMultiOptions.length === 0) {
+                return;
+            }
+            evaluateAnswer(gameState.selectedMultiOptions);
+        }
+
+        function handleTimeout() {
+            evaluateAnswer([]);
+        }
+
+        /* =========================================================================
+           7. ANSWER EVALUATION & MERIT SCORING
+           ========================================================================= */
+        function evaluateAnswer(userAnswers) {
+            const q = gameState.questions[gameState.currentIndex];
+            const langData = q[gameState.lang] || q.zh;
+            const t = translations[gameState.lang];
+
+            const resultStatus = document.getElementById('resultStatus');
+            const explanationPanel = document.getElementById('explanationPanel');
+            const explanationText = document.getElementById('explanationText');
+
+            userAnswers.sort();
+            const correctAnswers = [...q.correct].sort();
+
+            const isCorrect = userAnswers.length === correctAnswers.length && 
+                              userAnswers.every((val, index) => val === correctAnswers[index]);
+
+            const optionBtns = document.getElementById('optionsContainer').children;
+            for (let i = 0; i < optionBtns.length; i++) {
+                optionBtns[i].onclick = null;
+                optionBtns[i].classList.add('cursor-default');
+            }
+
+            for (let i = 0; i < langData.options.length; i++) {
+                const btn = document.getElementById(`opt-${i}`);
+                if (correctAnswers.includes(i)) {
+                    btn.className = 'w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 flex items-start space-x-3 text-emerald-200';
+                } else if (userAnswers.includes(i)) {
+                    btn.className = 'w-full text-left p-4 rounded-xl bg-rose-950/60 border-2 border-rose-500 flex items-start space-x-3 text-rose-200';
+                }
+            }
+
+            if (isCorrect) {
+                playCorrectSound();
+                gameState.streak++;
+                gameState.correctCount++;
+                
+                const baseMerit = 100;
+                const streakBonus = Math.floor(baseMerit * (gameState.streak * 0.2));
+                const gainedMerit = baseMerit + streakBonus;
+                gameState.score += gainedMerit;
+
+                resultStatus.className = 'flex items-center space-x-2 text-sm md:text-base font-bold text-emerald-400';
+                resultStatus.innerHTML = `<i class="fas fa-check-circle text-xl"></i> <span>${t.correctMsg} +${gainedMerit}</span>`;
+
+                if (q.vowIndex && !gameState.unlockedCards.includes(q.vowIndex)) {
+                    gameState.unlockedCards.push(q.vowIndex);
+                    localStorage.setItem('puxian_unlocked_cards', JSON.stringify(gameState.unlockedCards));
+                    updateGalleryBadge();
+                }
+
+                triggerCanvasLotusBurst();
+            } else {
+                playIncorrectSound();
+                gameState.streak = 0;
+                resultStatus.className = 'flex items-center space-x-2 text-sm md:text-base font-bold text-rose-400';
+                resultStatus.innerHTML = `<i class="fas fa-times-circle text-xl"></i> <span>${t.incorrectMsg}</span>`;
+            }
+
+            explanationText.innerText = langData.explanation;
+            explanationPanel.classList.remove('hidden');
+            document.getElementById('multiSubmitBtnContainer').classList.add('hidden');
+        }
+
+        function nextQuestion() {
+            gameState.currentIndex++;
+            if (gameState.currentIndex < gameState.questions.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        /* =========================================================================
+           8. QUIZ COMPLETION SUMMARY
+           ========================================================================= */
+        function finishQuiz() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const t = translations[gameState.lang];
+
+            gameState.totalMerit += gameState.score;
+            localStorage.setItem('puxian_merit', gameState.totalMerit.toString());
+            document.getElementById('totalMeritDisplay').innerText = gameState.totalMerit;
+
+            const accuracy = Math.round((gameState.correctCount / gameState.questions.length) * 100);
+            document.getElementById('accuracyStat').innerText = `${accuracy}%`;
+            document.getElementById('meritGainedStat').innerText = `+${gameState.score}`;
+
+            let rank = t.rankBase;
+            if (accuracy === 100) rank = t.rank100;
+            else if (accuracy >= 80) rank = t.rank80;
+            else if (accuracy >= 60) rank = t.rank60;
+            document.getElementById('rankStat').innerText = rank;
+
+            const quotes = {
+                zh: [
+                    "“唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。”",
+                    "“于诸惑业及魔境，世间道中得解脱，犹如莲华不著水，亦如日月不住空。”",
+                    "“因于众生，而起大悲；因于大悲，生菩提心；因菩提心，成等正觉。”",
+                    "“若有人闻此愿王，一经于耳，所有功德比前功德，百分不及一，千分不及一。”"
+                ],
+                en: [
+                    "“Only these kings of vows do not abandon him. They always lead him forth so that, in but a single kṣaṇa, he is immediately reborn in the Land of Ultimate Bliss.”",
+                    "“Liberated from afflictions, karma, Māra's realms, and worldly paths; Like a lotus flower unattached to water, and like the sun and moon not lingering in space.”",
+                    "“It is because of beings that they produce great compassion. It is because of great compassion that they produce the resolve to attain bodhi.”",
+                    "“If any person merely hears these kings of vows pass through their ears but once, the merit acquired is beyond measure.”"
+                ],
+                vi: [
+                    "“Duy có Nguyện Vương này không rời bỏ, tại mọi thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc.”",
+                    "“Ở trong hoạch nghiệp và cảnh ma, nơi đường thế gian được giải脱, Như hoa sen không dính nước, Cũng như nhật nguyệt chẳng dừng trên không.”",
+                    "“Do vì chúng sinh mà sinh lòng đại bi, do lòng đại bi mà phát tâm Bồ-đề, do tâm Bồ-đề mà thành Đẳng Chánh Giác.”",
+                    "“Nếu có người nghe Đại Nguyện Vương này qua tai dù chỉ một lần, công đức đạt được lớn không thể nghĩ bàn.”"
+                ]
+            };
+            const langQuotes = quotes[gameState.lang] || quotes.zh;
+            document.getElementById('blessingQuote').innerText = langQuotes[Math.floor(Math.random() * langQuotes.length)];
+
+            playChime(659.25, 'sine', 1.8);
+        }
+
+        function restartGame() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+        }
+
+        /* =========================================================================
+           9. GALLERY & SUTRA MODAL LOGIC
+           ========================================================================= */
+        function updateGalleryBadge() {
+            document.getElementById('galleryBadge').innerText = `${gameState.unlockedCards.length}/10`;
+        }
+
+        function openGallery() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            dharmaCards.forEach(card => {
+                const isUnlocked = gameState.unlockedCards.includes(card.id);
+                const langCard = card[gameState.lang] || card.zh;
+                const cardElem = document.createElement('div');
+                
+                if (isUnlocked) {
+                    cardElem.className = 'glass-panel p-4 rounded-xl border border-gold-500/40 relative overflow-hidden bg-gradient-to-br from-amber-950/40 to-purple-950/40';
+                    cardElem.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] text-gold-400 font-semibold px-2 py-0.5 rounded bg-gold-500/20">Vow ${card.vow}</span>
+                            <i class="fas fa-certificate text-gold-400 text-xs"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-gold-300 font-serif">${langCard.title}</h4>
+                        <p class="text-xs text-pink-300 font-medium mb-2">${langCard.subtitle}</p>
+                        <p class="text-xs text-gray-300 italic font-serif leading-relaxed line-clamp-3">“${langCard.text}”</p>
+                    `;
+                } else {
+                    cardElem.className = 'glass-card p-4 rounded-xl border border-gray-700/50 opacity-60 flex flex-col justify-center items-center text-center py-6';
+                    cardElem.innerHTML = `
+                        <i class="fas fa-lock text-gray-500 text-xl mb-2"></i>
+                        <span class="text-xs text-gray-400 font-semibold">Vow ${card.vow} Locked</span>
+                        <span class="text-[10px] text-gray-500 mt-1">Answer vow question correctly to unlock</span>
+                    `;
+                }
+                grid.appendChild(cardElem);
+            });
+
+            document.getElementById('galleryModal').classList.remove('hidden');
+        }
+
+        function closeGallery() {
+            document.getElementById('galleryModal').classList.add('hidden');
+        }
+
+        function openSutraModal() {
+            document.getElementById('sutraModal').classList.remove('hidden');
+        }
+
+        function closeSutraModal() {
+            document.getElementById('sutraModal').classList.add('hidden');
+        }
+
+        function updateSutraModalContent() {
+            const sutraBody = document.getElementById('sutraModalBody');
+            if (gameState.lang === 'en') {
+                sutraBody.innerHTML = `
+                    <div class="text-center font-bold text-gold-300 text-lg">Chapter 39: The Conduct and Vows of Samantabhadra</div>
+                    <div class="text-center text-xs text-gray-400">Translated by Kalapaśikṣa Prajña</div>
+                    <p>At that time, after Samantabhadra Bodhisattva-mahāsattva had praised the supreme qualities of the Tathāgata, he spoke to the bodhisattvas and Sudhana: 'Son of Good Family, if all buddhas of the ten directions were to continuously expound upon the meritorious qualities of the Tathāgata for kalpas as numerous as atoms in buddha kṣetras, they would still be unable to exhaust them. If one wishes to perfect these gateways, one should cultivate ten kinds of vast practices and vows: First, to revere all buddhas; Second, to proclaim praises of the Tathāgata; Third, to extensively cultivate offerings; Fourth, to repent karmic obstacles; Fifth, to rejoice in others’ merit; Sixth, to request turning the Dharma wheel; Seventh, to request buddhas to remain in the world; Eighth, to always follow buddhas’ course of training; Ninth, to constantly accord with beings; and Tenth, to universally dedicate all merit.'</p>
+                    <p class="text-xs bg-amber-950/40 p-3 rounded border border-amber-500/20 text-amber-200">
+                        【Dharma Offering Supreme】"Among all offerings, the offering of Dharma is supreme. Namely: cultivating in accordance with what was taught, benefiting beings, gathering in beings, substituting for beings in suffering, cultivating roots of goodness, never forsaking bodhisattva works, and never abandoning bodhi resolve."
+                    </p>
+                    <p class="text-xs bg-purple-950/40 p-3 rounded border border-purple-500/20 text-purple-200">
+                        【Guidance at Death】"When this person draws near to the end of life, at the last kṣaṇa, all relatives leave him... only these kings of vows do not abandon him. They always lead him forth so that, in but a single kṣaṇa, he is immediately reborn in the Land of Ultimate Bliss."
+                    </p>
+                `;
+            } else if (gameState.lang === 'vi') {
+                sutraBody.innerHTML = `
+                    <div class="text-center font-bold text-gold-300 text-lg">Đại Phương Quảng Phật Hoa Nghiêm Kinh - Phẩm Phổ Hiền Hạnh Nguyện</div>
+                    <div class="text-center text-xs text-gray-400">Đường Kiết-tân Quốc Tam Tạng Bát-nhã Phụng Chiếu Dịch</div>
+                    <p>Bấy giờ Bồ-tát Mạt-ha-tát Phổ Hiền xưng tán công đức thù thắng của Như Lai xong, bảo chư Bồ-tát và Thiện Tài rằng: 'Thiện nam tử! Nếu chư Phật ở mười phương dùng vô lượng kiếp nói công đức Như Lai cũng không thể hết. Nếu muốn thành tựu môn công đức này, nên tu mười điều đại nguyện广大: Một là lễ kính chư Phật, Hai là xưng tán Như Lai, Ba là quảng tu cúng ràng, Bốn là sám hối nghiệp chướng, Năm là tùy hỷ công đức, Sáu là thỉnh chuyển pháp luân, Bảy là thỉnh Phật trụ thế, Tám là thường tùy Phật học, Chín là hằng thuận chúng sinh, Mười là phổ giai hồi hướng.'</p>
+                    <p class="text-xs bg-amber-950/40 p-3 rounded border border-amber-500/20 text-amber-200">
+                        【Pháp Cúng Ràng Hơn Hết】"Trong các sự cúng ràng, Pháp cúng ràng là hơn hết. Đó là: Như thuyết tu hành cúng ràng, Lợi ích chúng sinh cúng ràng, Nhiếp thọ chúng sinh cúng ràng, Thay chúng sinh chịu khổ cúng ràng, Siêng tu căn lành cúng ràng, Không bỏ nghiệp Bồ-tát cúng ràng, Không rời tâm Bồ-đề cúng ràng."
+                    </p>
+                    <p class="text-xs bg-purple-950/40 p-3 rounded border border-purple-500/20 text-purple-200">
+                        【Lâm Chung Dẫn Độ】"Người ấy khi lâm命 chung, sát-na cuối cùng, tất cả thân quyến thảy đều xa rời... Duy có Nguyện Vương này không rời bỏ, ở trong tất cả thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc."
+                    </p>
+                `;
+            } else {
+                sutraBody.innerHTML = `
+                    <div class="text-center font-bold text-gold-300 text-lg">大方广佛华严经普贤行愿品</div>
+                    <div class="text-center text-xs text-gray-400">唐罽宾国三藏般若奉诏译</div>
+                    <p>尔时，普贤菩萨摩诃萨，称赞如来胜功德已，告诸菩萨及善财言：“善男子！如来功德，假使十方一切诸佛，经不可说不可说佛刹极微尘数劫，相续演说，不可穷尽！若欲成就此功德门，应修十种广大行愿。何等为十？一者、礼敬诸佛。二者、称赞如来。三者、广修供养。四者、忏悔业障。五者、随喜功德。六者、请转法轮。七者、请佛住世。八者、常随佛学。九者、恒顺众生。十者、普皆回向。”</p>
+                    <p class="text-xs bg-amber-950/40 p-3 rounded border border-amber-500/20 text-amber-200">
+                        【法供养最】“诸供养中，法供养最。所谓如说修行供养，利益众生供养，摄受众生供养，代众生苦供养，勤修善根供养，不舍菩萨业供养，不离菩提心供养。”
+                    </p>
+                    <p class="text-xs bg-purple-950/40 p-3 rounded border border-purple-500/20 text-purple-200">
+                        【临终引导】“又复是人临命终时，最后刹那，一切诸根悉皆散坏；一切亲属悉皆舍离...唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。”
+                    </p>
+                `;
+            }
+        }
+
+        /* =========================================================================
+           10. DYNAMIC CANVAS BACKGROUND
+           ========================================================================= */
+        let particles = [];
+        let canvas, ctx;
+
+        function initBackgroundCanvas() {
+            canvas = document.getElementById('bgCanvas');
+            ctx = canvas.getContext('2d');
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            for (let i = 0; i < 45; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2.5 + 1,
+                    color: Math.random() > 0.5 ? 'rgba(245, 158, 11, ' : 'rgba(244, 114, 182, ',
+                    alpha: Math.random() * 0.6 + 0.2,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4 - 0.2
+                });
+            }
+
+            animateCanvas();
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color + p.alpha + ')';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#f59e0b';
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        function triggerCanvasLotusBurst() {
+            for (let i = 0; i < 20; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    radius: Math.random() * 3 + 1.5,
+                    color: 'rgba(252, 211, 77, ',
+                    alpha: 1,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4
+                });
+            }
+        }
+    </script>
+</body>
+</html>
