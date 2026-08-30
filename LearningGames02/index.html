@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>普賢行願 Quest｜十願闖關</title>
+<style>
+:root{
+  --bg:#f7f3e9;--card:#fffdf8;--ink:#3d3428;--muted:#756b5d;
+  --gold:#c58b32;--gold2:#f0cf82;--green:#5d8064;--red:#b75c52;
+  --shadow:0 12px 35px rgba(73,55,28,.13);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+background:radial-gradient(circle at top,#fff8df 0,#f7f3e9 45%,#eee7d7 100%);color:var(--ink)}
+button{font:inherit}
+.app{max-width:980px;margin:auto;padding:22px 16px 50px}
+header{background:linear-gradient(135deg,#fff9e8,#f4e3b7);border:1px solid #ead29c;
+border-radius:28px;padding:28px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+header:after{content:"✦  ✧  ✦  ✧  ✦";position:absolute;right:18px;top:12px;color:#d3a34d;font-size:18px;opacity:.55}
+h1{margin:0;font-size:clamp(28px,5vw,48px);letter-spacing:2px}
+.subtitle{margin:8px 0 0;color:var(--muted)}
+.badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.badge{background:#fffdf7;border:1px solid #e3c984;border-radius:999px;padding:6px 12px;font-size:13px}
+.screen{display:none;margin-top:18px}.screen.active{display:block}
+.card{background:var(--card);border:1px solid #eadfca;border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.mode{border:1px solid #e5d4ae;background:#fffaf0;border-radius:20px;padding:20px;cursor:pointer;text-align:left;transition:.18s}
+.mode:hover{transform:translateY(-3px);box-shadow:0 8px 20px #d9c7a355}
+.mode strong{display:block;font-size:20px;margin-bottom:6px}.mode span{color:var(--muted);font-size:14px}
+button.primary{border:0;background:linear-gradient(135deg,#c58b32,#e1b95f);color:white;
+padding:13px 22px;border-radius:999px;cursor:pointer;font-weight:700;box-shadow:0 5px 14px #9e742d40}
+button.secondary{border:1px solid #d7c7a6;background:#fffdf8;color:var(--ink);padding:11px 18px;border-radius:999px;cursor:pointer}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.progress{height:10px;background:#e9e0cf;border-radius:99px;overflow:hidden;flex:1;min-width:180px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,#c58b32,#e6c46e);width:0;transition:.35s}
+.score{font-weight:800}.streak{color:#a66d21;font-weight:700}
+.qtype{display:inline-block;background:#edf2e7;color:#4d7054;border-radius:999px;padding:5px 10px;font-size:12px}
+.question{font-size:clamp(21px,3.4vw,30px);font-weight:800;line-height:1.55;margin:17px 0}
+.source{font-size:13px;color:var(--muted);background:#f8f2e5;padding:10px 12px;border-radius:12px}
+.answers{display:grid;gap:11px;margin-top:18px}
+.answer{border:2px solid #e4dac8;background:white;border-radius:17px;padding:15px;text-align:left;cursor:pointer;
+transition:.15s;line-height:1.5}.answer:hover{border-color:#d2a34e;transform:translateX(2px)}
+.answer.correct{border-color:#65936d;background:#edf7ee}.answer.wrong{border-color:#c77970;background:#fff0ee}
+.answer.disabled{pointer-events:none}
+.explain{display:none;margin-top:14px;padding:15px;border-radius:15px;background:#fff8df;border-left:4px solid var(--gold);line-height:1.65}
+.explain.show{display:block}
+.nextrow{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px}
+.mini{font-size:13px;color:var(--muted)}
+.result{text-align:center}.bigscore{font-size:58px;font-weight:900;color:#a87320}
+.stars{font-size:30px;letter-spacing:4px;margin:6px}
+.result h2{font-size:30px}.result p{line-height:1.7}
+.review{margin-top:18px;text-align:left}.review details{background:#fff;border:1px solid #eadfca;border-radius:13px;padding:10px;margin:8px 0}
+.tip{margin-top:16px;color:#6e604f;font-size:14px}
+@media(max-width:700px){.mode-grid{grid-template-columns:1fr}.card{padding:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>普賢行願 Quest</h1>
+  <div class="subtitle">十願闖關・每一次遊戲，都多懂一點《普賢行願品》</div>
+  <div class="badges">
+    <div class="badge">🌸 善財童子同行</div><div class="badge">✨ 連勝 Bonus</div>
+    <div class="badge">🪷 無限重玩</div><div class="badge">📖 經文學習</div>
+  </div>
+</header>
+
+<section id="home" class="screen active">
+ <div class="card">
+  <h2>選一種玩法</h2>
+  <p>不用死背。答題、看解釋，再挑戰一次。題目會從題庫中隨機抽取，所以每次都可能不一樣。</p>
+  <div class="mode-grid">
+   <button class="mode" onclick="startGame('quick')"><strong>⚡ 10 題快問快答</strong><span>適合第一次玩，約 3–5 分鐘。</span></button>
+   <button class="mode" onclick="startGame('deep')"><strong>🪷 20 題深度挑戰</strong><span>更多經文理解題，挑戰高分。</span></button>
+   <button class="mode" onclick="startGame('ten')"><strong>🌟 十大願修行</strong><span>專攻「十種廣大行願」與實踐意義。</span></button>
+  </div>
+  <div class="tip">小提示：答對會累積連勝；連勝越高，Bonus 越多。答錯也沒關係——解釋就是你的下一個小法寶。</div>
+ </div>
+</section>
+
+<section id="game" class="screen">
+ <div class="card">
+  <div class="topline"><div class="progress"><i id="bar"></i></div><div class="score">⭐ <span id="score">0</span></div><div class="streak">🔥 <span id="streak">0</span> 連勝</div></div>
+  <div class="topline"><span id="counter" class="mini"></span><span id="qtype" class="qtype"></span></div>
+  <div id="question" class="question"></div>
+  <div id="source" class="source"></div>
+  <div id="answers" class="answers"></div>
+  <div id="explain" class="explain"></div>
+  <div class="nextrow"><span id="feedback" class="mini"></span><button id="next" class="primary" onclick="nextQuestion()" style="display:none">下一題 →</button></div>
+ </div>
+</section>
+
+<section id="result" class="screen">
+ <div class="card result">
+  <div class="bigscore" id="finalScore">0</div>
+  <div class="stars" id="stars">☆☆☆☆☆</div>
+  <h2 id="resultTitle">完成！</h2>
+  <p id="resultText"></p>
+  <button class="primary" onclick="replay()">🔄 再玩一次</button>
+  <button class="secondary" onclick="goHome()">返回玩法</button>
+  <div class="review"><h3>📖 本局學習重點</h3><div id="reviewList"></div></div>
+ </div>
+</section>
+</div>
+
+<script>
+const bank=[
+{type:"單選",q:"普賢菩薩所說的十種廣大行願，第一願是什麼？",a:["稱讚如來","禮敬諸佛","廣修供養","隨喜功德"],c:1,e:"十願依次為：禮敬諸佛、稱讚如來、廣修供養、懺悔業障、隨喜功德、請轉法輪、請佛住世、常隨佛學、恒順眾生、普皆回向。",s:"「一者、禮敬諸佛。二者、稱讚如來……」"},
+{type:"單選",q:"十種行願中的最後一願是？",a:["恒順眾生","常隨佛學","普皆回向","請佛住世"],c:2,e:"第十願是「普皆回向」，把從禮拜到恒順眾生等一切功德，回向盡法界、虛空界一切眾生。",s:"「十者、普皆回向。」"},
+{type:"判斷",q:"《普賢行願品》說：在所有供養中，「法供養最」。",a:["正確","錯誤"],c:0,e:"經文特別指出法供養最勝，包括如說修行、利益眾生、攝受眾生、代眾生苦、勤修善根、不舍菩薩業、不離菩提心等。",s:"「善男子！諸供養中，法供養最。」"},
+{type:"單選",q:"以下哪一項屬於「法供養」？",a:["只供養珍寶","如說修行供養","只燃最貴的香","只供養天衣"],c:1,e:"真正重要的不只是外在供品，而是把佛法活出來：如說修行、利益眾生等。",s:"「所謂如說修行供養，利益眾生供養……」"},
+{type:"單選",q:"懺悔業障時，普賢菩薩說自己要做到什麼？",a:["懺悔後再犯也沒關係","誠心懺悔，後不復造","只向親友道歉","只懺悔身業"],c:1,e:"重點不只是後悔，而是「誠心懺悔，後不復造」，並恒住淨戒一切功德。",s:"「誠心懺悔，後不復造，恒住淨戒一切功德。」"},
+{type:"單選",q:"「隨喜功德」的意思最接近哪一項？",a:["看到別人成功就嫉妒","看到善行與功德，真心歡喜讚歎","只欣賞自己的功德","只在得到好處時才高興"],c:1,e:"普賢菩薩對諸佛、菩薩、聲聞、辟支佛乃至一切眾生的功德，都生歡喜心。",s:"「所有功德，我皆隨喜。」"},
+{type:"判斷",q:"「請轉法輪」是勸請諸佛宣說正法，利益眾生。",a:["正確","錯誤"],c:0,e:"普賢行願不只是自己學法，也殷勤勸請諸佛轉妙法輪，使正法廣大利益眾生。",s:"「殷勤勸請，轉妙法輪。」"},
+{type:"單選",q:"「請佛住世」的核心願望是什麼？",a:["請佛延長壽命只為自己","請佛及善知識不要急著入涅槃，長久利益眾生","請佛只住在寺院","請佛只教菩薩"],c:1,e:"經文說，對將欲示現般涅槃的諸佛、菩薩、聲聞、緣覺及善知識，都勸請莫入涅槃，為欲利樂一切眾生。",s:"「我悉勸請莫入涅槃。經於……劫，為欲利樂一切眾生。」"},
+{type:"單選",q:"「常隨佛學」最重要的精神是？",a:["只研究佛的神通","學習諸佛的發心、修行、利益眾生的行為","只背誦佛名","只模仿佛的外貌"],c:1,e:"經文列舉毗盧遮那如來從初發心、精進不退、難行苦行，到成道、轉法輪、成熟眾生的一切行，我皆隨學。",s:"「如是一切，我皆隨學。」"},
+{type:"判斷",q:"「恒順眾生」等於「無論別人做什麼都跟著做」。",a:["正確","錯誤"],c:1,e:"不是盲目跟從。經文說的是以平等心利益眾生、承事眾生、幫助病苦者、失道者、貧窮者，並引導眾生走向正道。",s:"「菩薩如是平等饒益一切眾生。」"},
+{type:"單選",q:"經文用什麼比喻說明「眾生」與「佛菩薩智慧華果」的關係？",a:["高山與流水","大樹的根與花果","明月與星辰","舟與大海"],c:1,e:"眾生如大樹的根，佛菩薩如花果；以大悲水利益眾生，才能成就佛菩薩智慧華果。",s:"「一切眾生而為樹根，諸佛菩薩而為華果。」"},
+{type:"多選",q:"哪些屬於經文所說的「恒順眾生」的具體做法？",a:["於病苦者為作良醫","於失道者示其正路","於闇夜中為作光明","只幫助自己喜歡的人"],c:[0,1,2],e:"恒順眾生是平等饒益：病苦者如良醫、失道者示正路、闇夜中作光明、貧窮者令得伏藏。",s:"「於諸病苦，為作良醫。於失道者，示其正路……」"},
+{type:"判斷",q:"經文說：「若無眾生，一切菩薩終不能成無上正覺。」",a:["正確","錯誤"],c:0,e:"這是恒順眾生願的核心：因眾生而起大悲，因大悲生菩提心，因菩提心成等正覺。",s:"「若無眾生，一切菩薩終不能成無上正覺。」"},
+{type:"單選",q:"「普皆回向」主要把功德回向給誰？",a:["只回向自己","只回向親人","盡法界、虛空界一切眾生","只回向有功德的人"],c:2,e:"普賢菩薩願把所有功德回向一切眾生，願眾生安樂、離苦、成就無上菩提。",s:"「皆悉回向，盡法界、虛空界一切眾生。」"},
+{type:"多選",q:"普皆回向所發的願，包括哪些？",a:["願眾生常得安樂","願惡業不能成就","願善業速成就","願一切眾生究竟成就無上菩提"],c:[0,1,2,3],e:"這一願非常廣大：安樂、離病苦、惡法不成、善業成就、關閉惡趣門、開示正路，乃至究竟成就無上菩提。",s:"「願令眾生，常得安樂，無諸病苦……究竟成就無上菩提。」"},
+{type:"單選",q:"普賢菩薩說，十願修行的共同特色是什麼？",a:["做一次就完成","念念相續，無有間斷，身語意業無有疲厭","只在佛前做","只在年輕時做"],c:1,e:"每一願後都反覆說明：念念相續、無有間斷，身語意業無有疲厭。這代表願心持續不斷。",s:"「念念相續，無有間斷，身語意業，無有疲厭。」"},
+{type:"判斷",q:"經文認為外在財物供養一定比法供養殊勝。",a:["正確","錯誤"],c:1,e:"經文反而明確說法供養最勝，因為如說修行能出生諸佛；菩薩行法供養，就是成就供養如來。",s:"「諸供養中，法供養最。」"},
+{type:"單選",q:"如果今天看到別人做了一件善事，你想練習普賢行願，最適合做什麼？",a:["找機會證明自己更好","真心隨喜，讚歎其善行","假裝沒看見","希望他失敗"],c:1,e:"這就是把「隨喜功德」帶入日常：看到善，不嫉妒；看到功德，心生歡喜。",s:"「一切菩薩所修無量難行苦行……廣大功德，我皆隨喜。」"},
+{type:"多選",q:"以下哪些可以算是日常生活中的「法供養」？",a:["照佛法修行並改變自己","幫助有需要的人","不捨菩薩業","不離菩提心"],c:[0,1,2,3],e:"法供養不是抽象概念，而是把佛法落實於自己的身心與對眾生的利益。",s:"「如說修行供養，利益眾生供養……不離菩提心供養。」"},
+{type:"單選",q:"經文以什麼來說明大悲與成佛的關係？",a:["大海與小船","樹根、樹幹與花果","火與冰","鳥與天空"],c:1,e:"眾生是根，大悲如水，佛菩薩智慧華果由此成就。這個比喻把「利益眾生」與「成佛」連在一起。",s:"「一切眾生而為樹根，諸佛菩薩而為華果，以大悲水饒益眾生。」"},
+{type:"判斷",q:"普賢行願只要求我們禮拜佛，不需要關心眾生。",a:["正確","錯誤"],c:1,e:"十願中有恒順眾生、普皆回向，而且經文明說：隨順眾生就是隨順供養諸佛。",s:"「菩薩若能隨順眾生，則為隨順供養諸佛。」"},
+{type:"單選",q:"十願中，哪一願最直接教我們「不要嫉妒別人的善與成功」？",a:["禮敬諸佛","隨喜功德","請佛住世","普皆回向"],c:1,e:"隨喜就是對一切佛、菩薩、眾生的善根與功德生歡喜心。",s:"「所有功德，我皆隨喜。」"},
+{type:"單選",q:"偈頌中說「我昔所造諸惡業……一切我今皆忏悔」，屬於十願中的哪一願？",a:["廣修供養","懺悔業障","常隨佛學","稱讚如來"],c:1,e:"這首偈直接對應第四願「懺悔業障」。",s:"「我昔所造諸惡業，皆由無始貪嗔痴……一切我今皆懺悔。」"},
+{type:"判斷",q:"普賢行願的回向只關心自己來世得到好處。",a:["正確","錯誤"],c:1,e:"回向的核心是利益一切眾生，願眾生離苦得樂、走向正道，乃至成就無上菩提。",s:"「普願沉溺諸眾生，速往無量光佛刹。」"},
+{type:"多選",q:"經文說，聽聞、信受、受持、讀誦、書寫、廣為人說此大願王，可以做什麼？",a:["增長行願功德","利益眾生","在煩惱苦海中拔濟眾生","完全不用修行就自動成佛"],c:[0,1,2],e:"經文讚歎受持與弘揚此願王的功德，但並不是說可以完全不修行；核心仍是信受、讀誦、受持、實踐與利益眾生。",s:"「受持讀誦，廣為人說……能於煩惱大苦海中，拔濟眾生。」"},
+{type:"單選",q:"臨命終時，經文說什麼會「不相捨離，引導其前」？",a:["財寶","親屬","權勢","普賢願王"],c:3,e:"經文提醒我們：親屬、威勢、財寶等都不能相隨，唯有願王不相捨離。",s:"「唯此願王，不相捨離，於一切時，引導其前。」"},
+{type:"單選",q:"「禮敬諸佛」的境界有多廣？",a:["只禮敬眼前一尊佛","只禮敬自己認識的佛","十方三世一切佛刹中的諸佛","只在節日禮佛"],c:2,e:"普賢願力遍及盡法界、虛空界、十方三世一切佛刹，深心信解，如對目前。",s:"「所有盡法界、虛空界，十方三世一切佛刹……諸佛世尊……常修禮敬。」"},
+{type:"判斷",q:"「稱讚如來」只是稱讚佛的外貌。",a:["正確","錯誤"],c:1,e:"經文所稱讚的是一切如來的「諸功德海」，並以無盡音聲海廣大讚歎。",s:"「稱揚讚歎一切如來諸功德海。」"},
+{type:"單選",q:"十願中，哪一願是「常學習諸佛如何發心、修行、成道、教化眾生」？",a:["常隨佛學","請轉法輪","懺悔業障","普皆回向"],c:0,e:"第八願「常隨佛學」涵蓋從初發心到成佛、轉法輪、示現涅槃的一切佛行。",s:"「如是一切，我皆隨學。」"},
+{type:"多選",q:"哪些是普賢行願可以帶進現代生活的例子？",a:["看到別人善行就隨喜","做錯事後真誠懺悔並改過","用自己的能力幫助有需要的人","把功勞全部歸自己"],c:[0,1,2],e:"普賢行願不是只在經典裡：隨喜、懺悔、利益眾生、回向，都能在每天的人際與工作生活中實踐。",s:"十種大願的精神可落實於身語意三業。"}
+];
+
+let mode="quick", questions=[], idx=0, score=0, streak=0, answered=false, mistakes=[];
+
+function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active")}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function startGame(m){
+ mode=m; idx=0; score=0; streak=0; mistakes=[];
+ let count=m==="deep"?20:10;
+ if(m==="ten"){
+   const preferred=bank.filter(x=>/十種|第|第一|最後|法供養|懺悔|隨喜|轉法輪|住世|佛學|眾生|回向/.test(x.q+x.s));
+   questions=shuffle(preferred).slice(0,Math.min(15,preferred.length));
+ }else questions=shuffle(bank).slice(0,count);
+ show("game"); render();
+}
+function render(){
+ answered=false;
+ const q=questions[idx];
+ document.getElementById("counter").textContent=`第 ${idx+1} / ${questions.length} 題`;
+ document.getElementById("bar").style.width=(idx/questions.length*100)+"%";
+ document.getElementById("score").textContent=score;
+ document.getElementById("streak").textContent=streak;
+ document.getElementById("qtype").textContent=q.type;
+ document.getElementById("question").textContent=q.q;
+ document.getElementById("source").textContent="📜 經文提示："+q.s;
+ document.getElementById("explain").classList.remove("show");
+ document.getElementById("feedback").textContent="";
+ document.getElementById("next").style.display="none";
+ const box=document.getElementById("answers");box.innerHTML="";
+ let indices=q.a.map((_,i)=>i);
+ shuffle(indices).forEach(i=>{
+   const b=document.createElement("button");b.className="answer";b.textContent=q.a[i];b.dataset.i=i;
+   b.onclick=()=>answer(i,b);box.appendChild(b);
+ });
+}
+function answer(choice,btn){
+ if(answered)return; answered=true;
+ const q=questions[idx];
+ document.querySelectorAll(".answer").forEach(b=>b.classList.add("disabled"));
+ const correct=Array.isArray(q.c)?q.c.includes(choice):choice===q.c;
+ if(correct){
+   btn.classList.add("correct");streak++;
+   const bonus=Math.min(50,(streak-1)*10);
+   score+=100+bonus;
+   document.getElementById("feedback").textContent=`✨ 答對了！ +${100+bonus} 分`;
+ }else{
+   btn.classList.add("wrong");streak=0;
+   document.getElementById("feedback").textContent="🌱 沒關係，看看這個小提示。";
+   mistakes.push(q);
+   document.querySelectorAll(".answer").forEach(b=>{
+     const i=Number(b.dataset.i);
+     if(Array.isArray(q.c)?q.c.includes(i):i===q.c)b.classList.add("correct");
+   });
+ }
+ document.getElementById("score").textContent=score;
+ document.getElementById("streak").textContent=streak;
+ document.getElementById("explain").innerHTML="<strong>🪷 法義小提示</strong><br>"+q.e;
+ document.getElementById("explain").classList.add("show");
+ document.getElementById("next").style.display="inline-block";
+}
+function nextQuestion(){idx++;if(idx>=questions.length)finish();else render()}
+function finish(){
+ show("result");
+ document.getElementById("finalScore").textContent=score;
+ const max=questions.length*100+Math.max(0,questions.length-1)*50;
+ const pct=score/max;
+ let stars=pct>=.9?5:pct>=.75?4:pct>=.6?3:pct>=.4?2:1;
+ document.getElementById("stars").textContent="★".repeat(stars)+"☆".repeat(5-stars);
+ let title=stars===5?"普賢行者！太厲害了！":stars>=4?"智慧花開！":"再走一程，會更熟悉。";
+ document.getElementById("resultTitle").textContent=title;
+ document.getElementById("resultText").textContent=`你完成了 ${questions.length} 題，得到 ${score} 分。${streak>=3?"而且最後保持了連勝，漂亮！":"再玩一次，題目會重新抽取，挑戰更高分吧！"}`;
+ const rl=document.getElementById("reviewList");
+ rl.innerHTML=mistakes.length?mistakes.slice(0,5).map(q=>`<details><summary>${q.q}</summary><p>${q.e}</p></details>`).join(""):"<p>🎉 本局沒有錯題！你可以挑戰更高分。</p>";
+}
+function replay(){startGame(mode)}
+function goHome(){show("home")}
+</script>
+</body>
+</html>
