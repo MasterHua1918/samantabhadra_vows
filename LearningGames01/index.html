@@ -1,41 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>普贤行愿 · 净心修证 - Trilingual Samantabhadra Vows Game</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        gold: {
-                            100: '#fef3c7',
-                            300: '#fcd34d',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                            700: '#b45309',
-                            800: '#92400e',
-                        },
-                        lotus: {
-                            light: '#fce7f3',
-                            pink: '#f472b6',
-                            deep: '#db2777',
-                        },
-                        buddha: {
-                            dark: '#111827',
-                            card: '#1f2937',
-                            accent: '#fef08a'
-                        }
+                        gold: { 100: '#fef3c7', 300: '#fcd34d', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+                            800: '#92400e' },
+                        lotus: { light: '#fce7f3', pink: '#f472b6', deep: '#db2777' },
+                        buddha: { dark: '#111827', card: '#1f2937', accent: '#fef08a' }
                     },
                     fontFamily: {
                         serif: ['"Noto Serif SC"', 'serif'],
@@ -88,18 +75,54 @@
             border-radius: 3px;
         }
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(1deg);
+            }
         }
         .animate-float {
             animation: float 5s ease-in-out infinite;
         }
         @keyframes pulseGlow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
         }
         .pulse-bg {
             animation: pulseGlow 4s infinite;
+        }
+
+        /* Language button active state */
+        .lang-btn {
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            color: #9ca3af;
+            font-family: inherit;
+        }
+        .lang-btn:hover {
+            color: #fcd34d;
+            background: rgba(245, 158, 11, 0.08);
+        }
+        .lang-btn.active {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
         }
     </style>
 </head>
@@ -123,16 +146,15 @@
             </div>
         </div>
 
-        <!-- Language Selector, Audio & User Stats -->
+        <!-- Language Buttons, Audio & User Stats -->
         <div class="flex items-center space-x-2 md:space-x-3">
-            <!-- Language Selector -->
+
+            <!-- Language Buttons (replaces dropdown) -->
             <div class="flex items-center space-x-1 bg-amber-950/80 px-2 py-1 rounded-lg border border-gold-500/40 text-xs">
-                <i class="fas fa-globe text-gold-400"></i>
-                <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-transparent text-gold-300 outline-none cursor-pointer font-sans text-xs">
-                    <option value="zh" class="bg-gray-900 text-gold-300">中文 (Chinese)</option>
-                    <option value="en" class="bg-gray-900 text-gold-300">English</option>
-                    <option value="vi" class="bg-gray-900 text-gold-300">Tiếng Việt</option>
-                </select>
+                <i class="fas fa-globe text-gold-400 mr-1 text-[10px]"></i>
+                <button onclick="changeLanguage('zh')" id="langBtnZh" class="lang-btn active">中文</button>
+                <button onclick="changeLanguage('en')" id="langBtnEn" class="lang-btn">English</button>
+                <button onclick="changeLanguage('vi')" id="langBtnVi" class="lang-btn">Tiếng Việt</button>
             </div>
 
             <!-- Audio Toggle -->
@@ -165,7 +187,7 @@
                     十大愿王 · 导归极乐
                 </h2>
                 <p id="uiHeroDesc" class="mt-2 text-xs md:text-sm text-gray-300 max-w-xl mx-auto leading-relaxed">
-                    “入普贤行愿海，成无上菩提果。”<br>
+                    “入普贤行愿海，成无上菩提果。”<br />
                     请选择修学模式，深入《普贤行愿品》妙义，聚无量功德，开启净土菩提智慧。
                 </p>
             </div>
@@ -376,7 +398,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div class="p-4 overflow-y-auto custom-scrollbar flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3" id="cardsGrid">
                 <!-- Cards dynamically populated via JS -->
             </div>
@@ -398,7 +420,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div id="sutraModalBody" class="p-6 overflow-y-auto custom-scrollbar flex-grow text-xs md:text-sm leading-relaxed space-y-4 text-gray-300 font-serif">
                 <!-- Populated via JS according to language -->
             </div>
@@ -570,7 +592,10 @@
         const questionBank = [
             // Question 1: Vow 1
             {
-                id: "q1", vowIndex: 1, type: "single", correct: [0],
+                id: "q1",
+                vowIndex: 1,
+                type: "single",
+                correct: [0],
                 zh: {
                     vowName: "第一大愿：礼敬诸佛",
                     text: "在《普贤行愿品》中，普贤菩萨教导修“礼敬诸佛”时，应当以何种心与身量来进行礼拜？",
@@ -607,7 +632,10 @@
             },
             // Question 2: Vow 2
             {
-                id: "q2", vowIndex: 2, type: "single", correct: [1],
+                id: "q2",
+                vowIndex: 2,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "第二大愿：称赞如来",
                     text: "关于“称赞如来”，普贤菩萨说要以怎样的辩才与音声来赞叹一切如来诸功德海？",
@@ -644,7 +672,10 @@
             },
             // Question 3: Vow 3 (Multi-select)
             {
-                id: "q3", vowIndex: 3, type: "multi", correct: [0, 1, 2, 3],
+                id: "q3",
+                vowIndex: 3,
+                type: "multi",
+                correct: [0, 1, 2, 3],
                 zh: {
                     vowName: "第三大愿：广修供养",
                     text: "【多选题】经中明确指出“诸供养中，法供养最”。下列哪些属于经文所列的“法供养”内容？",
@@ -681,7 +712,10 @@
             },
             // Question 4: Vow 3 (Single)
             {
-                id: "q4", vowIndex: 3, type: "single", correct: [0],
+                id: "q4",
+                vowIndex: 3,
+                type: "single",
+                correct: [0],
                 zh: {
                     vowName: "第三大愿：广修供养",
                     text: "普贤菩萨说，前述一切财物上妙供养的无量功德，比法供养一念功德：",
@@ -718,7 +752,10 @@
             },
             // Question 5: Vow 4
             {
-                id: "q5", vowIndex: 4, type: "single", correct: [2],
+                id: "q5",
+                vowIndex: 4,
+                type: "single",
+                correct: [2],
                 zh: {
                     vowName: "第四大愿：忏悔业障",
                     text: "普贤菩萨描述，菩萨自念过去无始劫中由贪嗔痴所造恶业，“若此恶业有体相者”，会产生什么现象？",
@@ -755,7 +792,10 @@
             },
             // Question 6: Vow 5
             {
-                id: "q6", vowIndex: 5, type: "multi", correct: [0, 1, 2, 3],
+                id: "q6",
+                vowIndex: 5,
+                type: "multi",
+                correct: [0, 1, 2, 3],
                 zh: {
                     vowName: "第五大愿：随喜功德",
                     text: "【多选题】普贤菩萨在“随喜功德”中，随喜的对象包括哪些？",
@@ -792,7 +832,10 @@
             },
             // Question 7: Vow 6
             {
-                id: "q7", vowIndex: 6, type: "single", correct: [1],
+                id: "q7",
+                vowIndex: 6,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "第六大愿：请转法轮",
                     text: "在“请转法轮”愿中，普贤菩萨劝请的对象是：",
@@ -829,7 +872,10 @@
             },
             // Question 8: Vow 7 (True/False)
             {
-                id: "q8", vowIndex: 7, type: "single", correct: [0],
+                id: "q8",
+                vowIndex: 7,
+                type: "single",
+                correct: [0],
                 zh: {
                     vowName: "第七大愿：请佛住世",
                     text: "【判断题】“请佛住世”愿中，普贤菩萨不仅劝请将欲示现般涅槃的诸佛莫入涅槃，也劝请菩萨、声闻、缘觉乃至一切诸善知识莫入涅槃。",
@@ -860,7 +906,10 @@
             },
             // Question 9: Vow 8 (Multi-select)
             {
-                id: "q9", vowIndex: 8, type: "multi", correct: [0, 1, 2, 3],
+                id: "q9",
+                vowIndex: 8,
+                type: "multi",
+                correct: [0, 1, 2, 3],
                 zh: {
                     vowName: "第八大愿：常随佛学",
                     text: "【多选题】经中以本师毗卢遮那如来（释迦牟尼佛）因地求法为例，提到了哪些难行苦行？",
@@ -897,7 +946,10 @@
             },
             // Question 10: Vow 9
             {
-                id: "q10", vowIndex: 9, type: "single", correct: [1],
+                id: "q10",
+                vowIndex: 9,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "第九大愿：恒顺众生",
                     text: "经中比喻“生死旷野菩提树王”，其中“树根”和“华果”分别比喻什么？",
@@ -934,7 +986,10 @@
             },
             // Question 11: Vow 9
             {
-                id: "q11", vowIndex: 9, type: "single", correct: [0],
+                id: "q11",
+                vowIndex: 9,
+                type: "single",
+                correct: [0],
                 zh: {
                     vowName: "第九大愿：恒顺众生",
                     text: "为什么普贤菩萨说“菩提属于众生”？其内在逻辑是：",
@@ -971,7 +1026,10 @@
             },
             // Question 12: Vow 10
             {
-                id: "q12", vowIndex: 10, type: "single", correct: [1],
+                id: "q12",
+                vowIndex: 10,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "第十大愿：普皆回向",
                     text: "在“普皆回向”愿中，菩萨对于众生积集恶业所感得的极重苦果，发何等大愿？",
@@ -1008,7 +1066,10 @@
             },
             // Question 13: Benefit at death
             {
-                id: "q13", vowIndex: 10, type: "single", correct: [1],
+                id: "q13",
+                vowIndex: 10,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "愿王功德：临终引导",
                     text: "经中文殊与普贤菩萨特别指出，人在临命终时，一切亲属、威势、珍宝皆悉舍离，唯有什么不相舍离，于一切时引导其前，一刹那中即得往生极乐世界？",
@@ -1045,7 +1106,10 @@
             },
             // Question 14: Verse Metaphor
             {
-                id: "q14", vowIndex: 8, type: "single", correct: [0],
+                id: "q14",
+                vowIndex: 8,
+                type: "single",
+                correct: [0],
                 zh: {
                     vowName: "偈颂精粹：处世无著",
                     text: "偈颂中形容菩萨于世间道中得解脱，如同“莲华不著水”的下一句是：",
@@ -1082,7 +1146,10 @@
             },
             // Question 15: Sins Erasure
             {
-                id: "q15", vowIndex: 4, type: "single", correct: [1],
+                id: "q15",
+                vowIndex: 4,
+                type: "single",
+                correct: [1],
                 zh: {
                     vowName: "愿王功德：灭罪除障",
                     text: "经中提及，若人以深信心受持读诵乃至书写此大愿王一四句偈，能速疾除灭什么极重恶业？",
@@ -1123,55 +1190,75 @@
            3. DHARMA CARDS / WISDOM GALLERY DATA (ZH / EN / VI)
            ========================================================================= */
         const dharmaCards = [
-            { id: 1, vow: "1", 
-              zh: { title: "礼敬诸佛", subtitle: "一身复现刹尘身", text: "我以普贤行愿力故，深心信解，如对目前...悉现不可说不可说佛刹极微尘数身，遍礼不可说不可说佛刹极微尘数佛。" },
-              en: { title: "Revere All Buddhas", subtitle: "Manifesting Dust-mote Bodies", text: "Through Samantabhadra's vows, with deep faith as if right before my eyes, I manifest bodies as numerous as atoms to bow to all Buddhas." },
-              vi: { title: "Lễ Kính Chư Phật", subtitle: "Một Thân Hiện Hiện Bụi Thân", text: "Tôi do sức hạnh nguyện Phổ Hiền, phát lòng tin sâu như đối trước chư Phật... hóa hiện thân nhiều như số vi trần để lễ khắp chư Phật." }
+            { id: 1, vow: "1",
+                zh: { title: "礼敬诸佛", subtitle: "一身复现刹尘身", text: "我以普贤行愿力故，深心信解，如对目前...悉现不可说不可说佛刹极微尘数身，遍礼不可说不可说佛刹极微尘数佛。" },
+                en: { title: "Revere All Buddhas", subtitle: "Manifesting Dust-mote Bodies",
+                text: "Through Samantabhadra's vows, with deep faith as if right before my eyes, I manifest bodies as numerous as atoms to bow to all Buddhas." },
+                vi: { title: "Lễ Kính Chư Phật", subtitle: "Một Thân Hiện Hiện Bụi Thân",
+                text: "Tôi do sức hạnh nguyện Phổ Hiền, phát lòng tin sâu như đối trước chư Phật... hóa hiện thân nhiều như số vi trần để lễ khắp chư Phật." }
             },
-            { id: 2, vow: "2", 
-              zh: { title: "称赞如来", subtitle: "出无尽音声言辞海", text: "各以出过辩才天女微妙舌根，一一舌根出无尽音声海，一一音声出一切言辞海，称扬赞叹一切如来诸功德海。" },
-              en: { title: "Proclaim Praises", subtitle: "Ocean of Inexhaustible Voices", text: "Surpassing Sarasvati's tongue, sending forth inexhaustible oceans of voices and words to praise all Tathagatas' ocean of merits." },
-              vi: { title: "Xưng Tán Như Lai", subtitle: "Xuất Vô Tận Biển Âm Thanh", text: "Dùng lưỡi vi diệu vượt hơn Biện Tài Thiên Nữ, phát ra vô tận biển âm thanh và biển ngôn từ để khen ngợi biển công đức chư Phật." }
+            { id: 2, vow: "2",
+                zh: { title: "称赞如来", subtitle: "出无尽音声言辞海", text: "各以出过辩才天女微妙舌根，一一舌根出无尽音声海，一一音声出一切言辞海，称扬赞叹一切如来诸功德海。" },
+                en: { title: "Proclaim Praises", subtitle: "Ocean of Inexhaustible Voices",
+                text: "Surpassing Sarasvati's tongue, sending forth inexhaustible oceans of voices and words to praise all Tathagatas' ocean of merits." },
+                vi: { title: "Xưng Tán Như Lai", subtitle: "Xuất Vô Tận Biển Âm Thanh",
+                text: "Dùng lưỡi vi diệu vượt hơn Biện Tài Thiên Nữ, phát ra vô tận biển âm thanh và biển ngôn từ để khen ngợi biển công đức chư Phật." }
             },
-            { id: 3, vow: "3", 
-              zh: { title: "广修供养", subtitle: "诸供养中法供养最", text: "所谓如说修行供养，利益众生供养，摄受众生供养，代众生苦供养，勤修善根供养，不舍菩萨业供养，不离菩提心供养。" },
-              en: { title: "Extensive Offerings", subtitle: "Dharma Offering Supreme", text: "Dharma offering includes practicing as taught, benefiting beings, taking on sufferings, cultivating roots of goodness, and keeping bodhi resolve." },
-              vi: { title: "Quảng Tu Cúng Ràng", subtitle: "Pháp Cúng Ràng Hơn Hết", text: "Đó là như thuyết tu hành cúng ràng, lợi ích chúng sinh, thay chúng sinh chịu khổ, siêng tu căn lành và không rời tâm Bồ-đề." }
+            { id: 3, vow: "3",
+                zh: { title: "广修供养", subtitle: "诸供养中法供养最", text: "所谓如说修行供养，利益众生供养，摄受众生供养，代众生苦供养，勤修善根供养，不舍菩萨业供养，不离菩提心供养。" },
+                en: { title: "Extensive Offerings", subtitle: "Dharma Offering Supreme",
+                text: "Dharma offering includes practicing as taught, benefiting beings, taking on sufferings, cultivating roots of goodness, and keeping bodhi resolve." },
+                vi: { title: "Quảng Tu Cúng Ràng", subtitle: "Pháp Cúng Ràng Hơn Hết",
+                text: "Đó là như thuyết tu hành cúng ràng, lợi ích chúng sinh, thay chúng sinh chịu khổ, siêng tu căn lành và không rời tâm Bồ-đề." }
             },
-            { id: 4, vow: "4", 
-              zh: { title: "忏悔业障", subtitle: "清净三业诚心忏", text: "我于过去无始劫中，由贪嗔痴，发身口意，作诸恶业无量无边...我今悉以清净三业，诚心忏悔，后不复造。" },
-              en: { title: "Repent Obstacles", subtitle: "Pure Three Karma Repentance", text: "All bad karma committed through greed, anger, and delusion since beginningless time—I now sincerely repent with pure body, speech, and mind." },
-              vi: { title: "Sám Hối Nghiệp Chướng", subtitle: "Ba Nghiệp Thanh Tịnh Sám Hối", text: "Tôi từ vô始 kiếp do tham sân si phát ra thân miệng ý làm các ác nghiệp... Nay thảy đều dùng ba nghiệp thanh tịnh thành tâm sám hối." }
+            { id: 4, vow: "4",
+                zh: { title: "忏悔业障", subtitle: "清净三业诚心忏", text: "我于过去无始劫中，由贪嗔痴，发身口意，作诸恶业无量无边...我今悉以清净三业，诚心忏悔，后不复造。" },
+                en: { title: "Repent Obstacles", subtitle: "Pure Three Karma Repentance",
+                text: "All bad karma committed through greed, anger, and delusion since beginningless time—I now sincerely repent with pure body, speech, and mind." },
+                vi: { title: "Sám Hối Nghiệp Chướng", subtitle: "Ba Nghiệp Thanh Tịnh Sám Hối",
+                text: "Tôi từ vô始 kiếp do tham sân si phát ra thân miệng ý làm các ác nghiệp... Nay thảy đều dùng ba nghiệp thanh tịnh thành tâm sám hối." }
             },
-            { id: 5, vow: "5", 
-              zh: { title: "随喜功德", subtitle: "六趣四生咸随喜", text: "十方一切诸众生，二乘有学及无学，一切如来与菩萨，所有功德我皆随喜。" },
-              en: { title: "Rejoice in Merit", subtitle: "Rejoicing in All Beings", text: "All merits of all buddhas, bodhisattvas, śrāvakas, pratyekabuddhas, and every single sentient being in six destinies—I rejoice in them all." },
-              vi: { title: "Tùy Hỷ Công Đức", subtitle: "Sáu Đường Bốn Loài Thảy Tùy Hỷ", text: "Tất cả công đức của chư Phật, Bồ-tát, Nhị thừa Thánh nhân và thảy cả chúng sinh trong năm loài sáu đường, tôi đều xin tùy hỷ." }
+            { id: 5, vow: "5",
+                zh: { title: "随喜功德", subtitle: "六趣四生咸随喜", text: "十方一切诸众生，二乘有学及无学，一切如来与菩萨，所有功德我皆随喜。" },
+                en: { title: "Rejoice in Merit", subtitle: "Rejoicing in All Beings",
+                text: "All merits of all buddhas, bodhisattvas, śrāvakas, pratyekabuddhas, and every single sentient being in six destinies—I rejoice in them all." },
+                vi: { title: "Tùy Hỷ Công Đức", subtitle: "Sáu Đường Bốn Loài Thảy Tùy Hỷ",
+                text: "Tất cả công đức của chư Phật, Bồ-tát, Nhị thừa Thánh nhân và thảy cả chúng sinh trong năm loài sáu đường, tôi đều xin tùy hỷ." }
             },
-            { id: 6, vow: "6", 
-              zh: { title: "请转法轮", subtitle: "殷勤劝请正法雷", text: "所有尽法界虚空界，十方三世一切佛刹...念念有一切诸佛成等正觉，我悉以身口意业，殷勤劝请转妙法轮。" },
-              en: { title: "Turn Dharma Wheel", subtitle: "Earnestly Requesting Teaching", text: "Before all buddhas realizing right enlightenment in every mind-moment throughout space, I earnestly request them to turn the sublime wheel of Dharma." },
-              vi: { title: "Thỉnh Chuyển Pháp Luân", subtitle: "Ân Cần Thỉnh Diệu Pháp Luân", text: "Mỗi niệm có chư Phật thành Đẳng Chánh Giác khắp pháp giới hư空, tôi đều dùng thân khẩu ý ân cần thỉnh chuyển bánh xe Pháp diệu." }
+            { id: 6, vow: "6",
+                zh: { title: "请转法轮", subtitle: "殷勤劝请正法雷", text: "所有尽法界虚空界，十方三世一切佛刹...念念有一切诸佛成等正觉，我悉以身口意业，殷勤劝请转妙法轮。" },
+                en: { title: "Turn Dharma Wheel", subtitle: "Earnestly Requesting Teaching",
+                text: "Before all buddhas realizing right enlightenment in every mind-moment throughout space, I earnestly request them to turn the sublime wheel of Dharma." },
+                vi: { title: "Thỉnh Chuyển Pháp Luân", subtitle: "Ân Cần Thỉnh Diệu Pháp Luân",
+                text: "Mỗi niệm có chư Phật thành Đẳng Chánh Giác khắp pháp giới hư空, tôi đều dùng thân khẩu ý ân cần thỉnh chuyển bánh xe Pháp diệu." }
             },
-            { id: 7, vow: "7", 
-              zh: { title: "请佛住世", subtitle: "利乐一切诸群生", text: "诸佛如来将欲示现般涅槃者，及诸菩萨、声闻、缘觉，乃至一切诸善知识，我悉劝请莫入涅槃。" },
-              en: { title: "Remain in World", subtitle: "Benefiting All Living Beings", text: "All Buddhas, Bodhisattvas, Śrāvakas, and Good Spiritual Friends about to enter Parinirvāṇa, I beseech them all to refrain from entering Nirvāṇa." },
-              vi: { title: "Thỉnh Phật Trụ Thế", subtitle: "Lợi Lạc Tất Cả Chúng Sinh", text: "Chư Phật Như Lai sắp thị hiện nhập Niết-bàn, cùng chư Bồ-tát, Nhị thừa, Thiện Tri Thức, tôi đều khuyên thỉnh đừng nhập Niết-bàn." }
+            { id: 7, vow: "7",
+                zh: { title: "请佛住世", subtitle: "利乐一切诸群生", text: "诸佛如来将欲示现般涅槃者，及诸菩萨、声闻、缘觉，乃至一切诸善知识，我悉劝请莫入涅槃。" },
+                en: { title: "Remain in World", subtitle: "Benefiting All Living Beings",
+                text: "All Buddhas, Bodhisattvas, Śrāvakas, and Good Spiritual Friends about to enter Parinirvāṇa, I beseech them all to refrain from entering Nirvāṇa." },
+                vi: { title: "Thỉnh Phật Trụ Thế", subtitle: "Lợi Lạc Tất Cả Chúng Sinh",
+                text: "Chư Phật Như Lai sắp thị hiện nhập Niết-bàn, cùng chư Bồ-tát, Nhị thừa, Thiện Tri Thức, tôi đều khuyên thỉnh đừng nhập Niết-bàn." }
             },
-            { id: 8, vow: "8", 
-              zh: { title: "常随佛学", subtitle: "剥皮为纸刺血墨", text: "剥皮为纸，析骨为笔，刺血为墨，书写经典，积如须弥。为重法故，不惜身命。" },
-              en: { title: "Always Follow Buddhas", subtitle: "Peeling Skin and Drawing Blood", text: "Peeling skin as paper, breaking bones as pens, drawing blood as ink to write scriptures piled high as Sumeru; unsparing of life for the Dharma." },
-              vi: { title: "Thường Tùy Phật Học", subtitle: "Lột Da Làm Giấy Trích Máu Mực", text: "Lột da làm giấy, chẻ xương làm bút, chích máu làm mực, viết chép kinh điển cao bằng núi Tu Mộc. Vì coi trọng Pháp không tiếc thân mạng." }
+            { id: 8, vow: "8",
+                zh: { title: "常随佛学", subtitle: "剥皮为纸刺血墨", text: "剥皮为纸，析骨为笔，刺血为墨，书写经典，积如须弥。为重法故，不惜身命。" },
+                en: { title: "Always Follow Buddhas", subtitle: "Peeling Skin and Drawing Blood",
+                text: "Peeling skin as paper, breaking bones as pens, drawing blood as ink to write scriptures piled high as Sumeru; unsparing of life for the Dharma." },
+                vi: { title: "Thường Tùy Phật Học", subtitle: "Lột Da Làm Giấy Trích Máu Mực",
+                text: "Lột da làm giấy, chẻ xương làm bút, chích máu làm mực, viết chép kinh điển cao bằng núi Tu Mộc. Vì coi trọng Pháp không tiếc thân mạng." }
             },
-            { id: 9, vow: "9", 
-              zh: { title: "恒顺众生", subtitle: "菩提树王众生根", text: "因于众生而起大悲，因于大悲生菩提心，因菩提心成等正觉...菩提属于众生，若无众生，一切菩萨终不能成无上正觉。" },
-              en: { title: "Accord with Beings", subtitle: "Beings are Roots of Bodhi", text: "Great compassion arises because of beings, bodhi mind arises from compassion, enlightenment arises from bodhi mind. Bodhi depends on beings." },
-              vi: { title: "Hằng Thuận Chúng Sinh", subtitle: "Chúng Sinh Là Rễ Cây Bồ-Đề", text: "Vì chúng sinh mà sinh Đại bi, do Đại bi sinh tâm Bồ-đề, do tâm Bồ-đề thành Đẳng Chánh Giác. Bồ-đề thuộc về chúng sinh." }
+            { id: 9, vow: "9",
+                zh: { title: "恒顺众生", subtitle: "菩提树王众生根", text: "因于众生而起大悲，因于大悲生菩提心，因菩提心成等正觉...菩提属于众生，若无众生，一切菩萨终不能成无上正觉。" },
+                en: { title: "Accord with Beings", subtitle: "Beings are Roots of Bodhi",
+                text: "Great compassion arises because of beings, bodhi mind arises from compassion, enlightenment arises from bodhi mind. Bodhi depends on beings." },
+                vi: { title: "Hằng Thuận Chúng Sinh", subtitle: "Chúng Sinh Là Rễ Cây Bồ-Đề",
+                text: "Vì chúng sinh mà sinh Đại bi, do Đại bi sinh tâm Bồ-đề, do tâm Bồ-đề thành Đẳng Chánh Giác. Bồ-đề thuộc về chúng sinh." }
             },
-            { id: 10, vow: "10", 
-              zh: { title: "普皆回向", subtitle: "导归极乐成正觉", text: "唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。" },
-              en: { title: "Universal Dedication", subtitle: "Guiding to the Pure Land", text: "These Kings of Vows do not abandon one at death; in a single kṣaṇa, they lead one forth to immediate rebirth in the Land of Ultimate Bliss." },
-              vi: { title: "Phổ Giai Hồi Hướng", subtitle: "Dẫn Đường Sinh Cực Lạc", text: "Duy có Nguyện Vương này không rời bỏ, tại mọi thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc." }
+            { id: 10, vow: "10",
+                zh: { title: "普皆回向", subtitle: "导归极乐成正觉", text: "唯此愿王，不相舍离，于一切时，引导其前。一刹那中，即得往生极乐世界。" },
+                en: { title: "Universal Dedication", subtitle: "Guiding to the Pure Land",
+                text: "These Kings of Vows do not abandon one at death; in a single kṣaṇa, they lead one forth to immediate rebirth in the Land of Ultimate Bliss." },
+                vi: { title: "Phổ Giai Hồi Hướng", subtitle: "Dẫn Đường Sinh Cực Lạc",
+                text: "Duy có Nguyện Vương này không rời bỏ, tại mọi thời dẫn đường đi trước, trong một sát-na liền được sinh về cõi Cực Lạc." }
             }
         ];
 
@@ -1196,23 +1283,41 @@
 
         // Initialize UI on window load
         window.onload = function() {
-            document.getElementById('langSelect').value = gameState.lang;
             applyLanguageUI();
             document.getElementById('totalMeritDisplay').innerText = gameState.totalMerit;
             updateGalleryBadge();
             initBackgroundCanvas();
             initWebAudio();
+            // Make sure the language buttons reflect the current lang
+            updateLanguageButtons();
         };
 
         function changeLanguage(lang) {
             gameState.lang = lang;
             localStorage.setItem('puxian_lang', lang);
             applyLanguageUI();
+            updateLanguageButtons();
 
             // Refresh current question UI if in active quiz mode
             if (!document.getElementById('quizScreen').classList.contains('hidden')) {
                 renderCurrentQuestionText();
             }
+        }
+
+        /* ---- update language button active states ---- */
+        function updateLanguageButtons() {
+            const lang = gameState.lang;
+            const btnZh = document.getElementById('langBtnZh');
+            const btnEn = document.getElementById('langBtnEn');
+            const btnVi = document.getElementById('langBtnVi');
+
+            // Remove active class from all
+            [btnZh, btnEn, btnVi].forEach(btn => btn.classList.remove('active'));
+
+            // Add active class to the matching button
+            if (lang === 'zh') btnZh.classList.add('active');
+            else if (lang === 'en') btnEn.classList.add('active');
+            else if (lang === 'vi') btnVi.classList.add('active');
         }
 
         function applyLanguageUI() {
@@ -1221,7 +1326,7 @@
             document.getElementById('uiHeaderTitle').childNodes[0].nodeValue = t.headerTitle + " ";
             document.getElementById('uiHeaderSubtitle').innerText = t.headerSubtitle;
             document.getElementById('uiMeritLabel').innerText = t.meritLabel;
-            
+
             document.getElementById('uiHeroTitle').innerText = t.heroTitle;
             document.getElementById('uiHeroDesc').innerHTML = t.heroDesc;
 
@@ -1250,7 +1355,7 @@
             document.getElementById('uiStatAccuracy').innerText = t.statAccuracy;
             document.getElementById('uiStatMerit').innerText = t.statMerit;
             document.getElementById('uiStatRank').innerText = t.statRank;
-            
+
             document.getElementById('uiBlessingHeader').innerHTML = `<i class="fas fa-star mr-1"></i> ${t.blessingHeader}`;
             document.getElementById('uiBlessingSubHeader').innerText = t.blessingSubHeader;
 
@@ -1310,7 +1415,7 @@
                 const gain = audioCtx.createGain();
                 osc.type = type;
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                
+
                 gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
                 gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
@@ -1370,7 +1475,7 @@
 
             document.getElementById('explanationPanel').classList.add('hidden');
             document.getElementById('multiSubmitBtnContainer').classList.add('hidden');
-            
+
             renderCurrentQuestionText();
 
             // Speed Mode Timer Start
@@ -1400,7 +1505,7 @@
             document.getElementById('vowBadge').innerText = q.vowIndex || (gameState.currentIndex + 1);
             document.getElementById('questionCategory').innerText = langData.vowName;
             document.getElementById('questionCount').innerText = `${gameState.currentIndex + 1} / ${gameState.questions.length}`;
-            
+
             const progPercent = ((gameState.currentIndex) / gameState.questions.length) * 100;
             document.getElementById('progressBar').style.width = `${progPercent}%`;
 
@@ -1408,7 +1513,8 @@
             if (q.type === 'multi') {
                 typeTag.innerText = t.typeMulti;
                 typeTag.className = 'text-[11px] px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 font-semibold';
-            } else if (langData.text.includes('判断题') || langData.text.includes('True / False') || langData.text.includes('Đúng / Sai')) {
+            } else if (langData.text.includes('判断题') || langData.text.includes('True / False') || langData.text.includes(
+                    'Đúng / Sai')) {
                 typeTag.innerText = t.typeBool;
                 typeTag.className = 'text-[11px] px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold';
             } else {
@@ -1428,7 +1534,7 @@
                 const btn = document.createElement('button');
                 btn.id = `opt-${idx}`;
                 btn.className = 'w-full text-left p-4 rounded-xl glass-card flex items-start space-x-3 transition border border-gray-700/60 hover:border-gold-500/50';
-                
+
                 if (q.type === 'multi') {
                     btn.onclick = () => toggleMultiOption(idx);
                     const isSelected = gameState.selectedMultiOptions.includes(idx);
@@ -1464,12 +1570,14 @@
 
             if (pos > -1) {
                 gameState.selectedMultiOptions.splice(pos, 1);
-                checkElem.className = 'w-6 h-6 rounded bg-gray-800 border border-gray-600 flex items-center justify-center text-xs shrink-0 mt-0.5 text-gray-400';
-                checkElem.innerText = ['A','B','C','D'][idx];
+                checkElem.className =
+                'w-6 h-6 rounded bg-gray-800 border border-gray-600 flex items-center justify-center text-xs shrink-0 mt-0.5 text-gray-400';
+                checkElem.innerText = ['A', 'B', 'C', 'D'][idx];
                 btnElem.classList.remove('border-purple-500', 'bg-purple-950/30');
             } else {
                 gameState.selectedMultiOptions.push(idx);
-                checkElem.className = 'w-6 h-6 rounded bg-purple-500 border border-purple-300 flex items-center justify-center text-xs shrink-0 mt-0.5 text-white font-bold';
+                checkElem.className =
+                    'w-6 h-6 rounded bg-purple-500 border border-purple-300 flex items-center justify-center text-xs shrink-0 mt-0.5 text-white font-bold';
                 checkElem.innerHTML = '<i class="fas fa-check"></i>';
                 btnElem.classList.add('border-purple-500', 'bg-purple-950/30');
             }
@@ -1507,8 +1615,8 @@
             userAnswers.sort();
             const correctAnswers = [...q.correct].sort();
 
-            const isCorrect = userAnswers.length === correctAnswers.length && 
-                              userAnswers.every((val, index) => val === correctAnswers[index]);
+            const isCorrect = userAnswers.length === correctAnswers.length &&
+                userAnswers.every((val, index) => val === correctAnswers[index]);
 
             const optionBtns = document.getElementById('optionsContainer').children;
             for (let i = 0; i < optionBtns.length; i++) {
@@ -1519,9 +1627,11 @@
             for (let i = 0; i < langData.options.length; i++) {
                 const btn = document.getElementById(`opt-${i}`);
                 if (correctAnswers.includes(i)) {
-                    btn.className = 'w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 flex items-start space-x-3 text-emerald-200';
+                    btn.className =
+                        'w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 flex items-start space-x-3 text-emerald-200';
                 } else if (userAnswers.includes(i)) {
-                    btn.className = 'w-full text-left p-4 rounded-xl bg-rose-950/60 border-2 border-rose-500 flex items-start space-x-3 text-rose-200';
+                    btn.className =
+                        'w-full text-left p-4 rounded-xl bg-rose-950/60 border-2 border-rose-500 flex items-start space-x-3 text-rose-200';
                 }
             }
 
@@ -1529,7 +1639,7 @@
                 playCorrectSound();
                 gameState.streak++;
                 gameState.correctCount++;
-                
+
                 const baseMerit = 100;
                 const streakBonus = Math.floor(baseMerit * (gameState.streak * 0.2));
                 const gainedMerit = baseMerit + streakBonus;
@@ -1635,9 +1745,10 @@
                 const isUnlocked = gameState.unlockedCards.includes(card.id);
                 const langCard = card[gameState.lang] || card.zh;
                 const cardElem = document.createElement('div');
-                
+
                 if (isUnlocked) {
-                    cardElem.className = 'glass-panel p-4 rounded-xl border border-gold-500/40 relative overflow-hidden bg-gradient-to-br from-amber-950/40 to-purple-950/40';
+                    cardElem.className =
+                        'glass-panel p-4 rounded-xl border border-gold-500/40 relative overflow-hidden bg-gradient-to-br from-amber-950/40 to-purple-950/40';
                     cardElem.innerHTML = `
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-[10px] text-gold-400 font-semibold px-2 py-0.5 rounded bg-gold-500/20">Vow ${card.vow}</span>
@@ -1648,7 +1759,8 @@
                         <p class="text-xs text-gray-300 italic font-serif leading-relaxed line-clamp-3">“${langCard.text}”</p>
                     `;
                 } else {
-                    cardElem.className = 'glass-card p-4 rounded-xl border border-gray-700/50 opacity-60 flex flex-col justify-center items-center text-center py-6';
+                    cardElem.className =
+                        'glass-card p-4 rounded-xl border border-gray-700/50 opacity-60 flex flex-col justify-center items-center text-center py-6';
                     cardElem.innerHTML = `
                         <i class="fas fa-lock text-gray-500 text-xl mb-2"></i>
                         <span class="text-xs text-gray-400 font-semibold">Vow ${card.vow} Locked</span>
@@ -1723,7 +1835,7 @@
         function initBackgroundCanvas() {
             canvas = document.getElementById('bgCanvas');
             ctx = canvas.getContext('2d');
-            
+
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
