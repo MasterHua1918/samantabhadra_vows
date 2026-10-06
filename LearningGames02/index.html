@@ -52,15 +52,21 @@ transition:.15s;line-height:1.5}.answer:hover{border-color:#d2a34e;transform:tra
 .result h2{font-size:30px}.result p{line-height:1.7}
 .review{margin-top:18px;text-align:left}.review details{background:#fff;border:1px solid #eadfca;border-radius:13px;padding:10px;margin:8px 0}
 .tip{margin-top:16px;color:#6e604f;font-size:14px}
+/* Language buttons */
+.lang-switch{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.lang-btn{border:1px solid #d7c7a6;background:#fffdf8;color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px;transition:.15s}
+.lang-btn.active{background:var(--gold);color:white;border-color:var(--gold)}
+.lang-btn:hover{background:#f5e6c4}
+.home-btn-row{display:flex;justify-content:flex-start;margin-bottom:12px}
 @media(max-width:700px){.mode-grid{grid-template-columns:1fr}.card{padding:18px}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <h1>普賢行願 Quest</h1>
-  <div class="subtitle">十願闖關・每一次遊戲，都多懂一點《普賢行願品》</div>
-  <div class="badges">
+  <h1 id="appTitle">普賢行願 Quest</h1>
+  <div class="subtitle" id="appSubtitle">十願闖關・每一次遊戲，都多懂一點《普賢行願品》</div>
+  <div class="badges" id="badgeContainer">
     <div class="badge">🌸 善財童子同行</div><div class="badge">✨ 連勝 Bonus</div>
     <div class="badge">🪷 無限重玩</div><div class="badge">📖 經文學習</div>
   </div>
@@ -68,20 +74,28 @@ transition:.15s;line-height:1.5}.answer:hover{border-color:#d2a34e;transform:tra
 
 <section id="home" class="screen active">
  <div class="card">
-  <h2>選一種玩法</h2>
-  <p>不用死背。答題、看解釋，再挑戰一次。題目會從題庫中隨機抽取，所以每次都可能不一樣。</p>
-  <div class="mode-grid">
-   <button class="mode" onclick="startGame('quick')"><strong>⚡ 10 題快問快答</strong><span>適合第一次玩，約 3–5 分鐘。</span></button>
-   <button class="mode" onclick="startGame('deep')"><strong>🪷 20 題深度挑戰</strong><span>更多經文理解題，挑戰高分。</span></button>
-   <button class="mode" onclick="startGame('ten')"><strong>🌟 十大願修行</strong><span>專攻「十種廣大行願」與實踐意義。</span></button>
+  <h2 id="homeTitle">選一種玩法</h2>
+  <p id="homeDesc">不用死背。答題、看解釋，再挑戰一次。題目會從題庫中隨機抽取，所以每次都可能不一樣。</p>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh" onclick="setLanguage('zh')">中文</button>
+    <button class="lang-btn" data-lang="vi" onclick="setLanguage('vi')">Tiếng Việt</button>
+    <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">English</button>
   </div>
-  <div class="tip">小提示：答對會累積連勝；連勝越高，Bonus 越多。答錯也沒關係——解釋就是你的下一個小法寶。</div>
+  <div class="mode-grid">
+   <button class="mode" onclick="startGame('quick')"><strong id="modeQuickTitle">⚡ 10 題快問快答</strong><span id="modeQuickDesc">適合第一次玩，約 3–5 分鐘。</span></button>
+   <button class="mode" onclick="startGame('deep')"><strong id="modeDeepTitle">🪷 20 題深度挑戰</strong><span id="modeDeepDesc">更多經文理解題，挑戰高分。</span></button>
+   <button class="mode" onclick="startGame('ten')"><strong id="modeTenTitle">🌟 十大願修行</strong><span id="modeTenDesc">專攻「十種廣大行願」與實踐意義。</span></button>
+  </div>
+  <div class="tip" id="homeTip">小提示：答對會累積連勝；連勝越高，Bonus 越多。答錯也沒關係——解釋就是你的下一個小法寶。</div>
  </div>
 </section>
 
 <section id="game" class="screen">
  <div class="card">
-  <div class="topline"><div class="progress"><i id="bar"></i></div><div class="score">⭐ <span id="score">0</span></div><div class="streak">🔥 <span id="streak">0</span> 連勝</div></div>
+  <div class="home-btn-row">
+    <button class="secondary" onclick="goHome()" id="backHomeBtn">← 返回玩法</button>
+  </div>
+  <div class="topline"><div class="progress"><i id="bar"></i></div><div class="score">⭐ <span id="score">0</span></div><div class="streak">🔥 <span id="streak">0</span> <span id="streakLabel">連勝</span></div></div>
   <div class="topline"><span id="counter" class="mini"></span><span id="qtype" class="qtype"></span></div>
   <div id="question" class="question"></div>
   <div id="source" class="source"></div>
@@ -97,15 +111,16 @@ transition:.15s;line-height:1.5}.answer:hover{border-color:#d2a34e;transform:tra
   <div class="stars" id="stars">☆☆☆☆☆</div>
   <h2 id="resultTitle">完成！</h2>
   <p id="resultText"></p>
-  <button class="primary" onclick="replay()">🔄 再玩一次</button>
-  <button class="secondary" onclick="goHome()">返回玩法</button>
-  <div class="review"><h3>📖 本局學習重點</h3><div id="reviewList"></div></div>
+  <button class="primary" onclick="replay()" id="replayBtn">🔄 再玩一次</button>
+  <button class="secondary" onclick="goHome()" id="resultHomeBtn">返回玩法</button>
+  <div class="review"><h3 id="reviewTitle">📖 本局學習重點</h3><div id="reviewList"></div></div>
  </div>
 </section>
 </div>
 
 <script>
-const bank=[
+// ---------- 題庫（中文） ----------
+const bank = [
 {type:"單選",q:"普賢菩薩所說的十種廣大行願，第一願是什麼？",a:["稱讚如來","禮敬諸佛","廣修供養","隨喜功德"],c:1,e:"十願依次為：禮敬諸佛、稱讚如來、廣修供養、懺悔業障、隨喜功德、請轉法輪、請佛住世、常隨佛學、恒順眾生、普皆回向。",s:"「一者、禮敬諸佛。二者、稱讚如來……」"},
 {type:"單選",q:"十種行願中的最後一願是？",a:["恒順眾生","常隨佛學","普皆回向","請佛住世"],c:2,e:"第十願是「普皆回向」，把從禮拜到恒順眾生等一切功德，回向盡法界、虛空界一切眾生。",s:"「十者、普皆回向。」"},
 {type:"判斷",q:"《普賢行願品》說：在所有供養中，「法供養最」。",a:["正確","錯誤"],c:0,e:"經文特別指出法供養最勝，包括如說修行、利益眾生、攝受眾生、代眾生苦、勤修善根、不舍菩薩業、不離菩提心等。",s:"「善男子！諸供養中，法供養最。」"},
@@ -138,29 +153,243 @@ const bank=[
 {type:"多選",q:"哪些是普賢行願可以帶進現代生活的例子？",a:["看到別人善行就隨喜","做錯事後真誠懺悔並改過","用自己的能力幫助有需要的人","把功勞全部歸自己"],c:[0,1,2],e:"普賢行願不是只在經典裡：隨喜、懺悔、利益眾生、回向，都能在每天的人際與工作生活中實踐。",s:"十種大願的精神可落實於身語意三業。"}
 ];
 
-let mode="quick", questions=[], idx=0, score=0, streak=0, answered=false, mistakes=[];
+// ---------- 越南文翻譯（直接從中文翻譯） ----------
+const bankVi = [
+{type:"Trắc nghiệm",q:"Mười đại hạnh nguyện rộng lớn mà Bồ Tát Phổ Hiền nói, nguyện thứ nhất là gì?",a:["Xưng tán Như Lai","Lễ kính chư Phật","Quảng tu cúng dường","Tùy hỷ công đức"],c:1,e:"Mười nguyện lần lượt là: Lễ kính chư Phật, Xưng tán Như Lai, Quảng tu cúng dường, Sám hối nghiệp chướng, Tùy hỷ công đức, Thỉnh chuyển pháp luân, Thỉnh Phật trụ thế, Thường tùy Phật học, Hằng thuận chúng sinh, Phổ giai hồi hướng.",s:"“Nhất giả, lễ kính chư Phật. Nhị giả, xưng tán Như Lai…”"},
+{type:"Trắc nghiệm",q:"Nguyện cuối cùng trong mười đại hạnh nguyện là gì?",a:["Hằng thuận chúng sinh","Thường tùy Phật học","Phổ giai hồi hướng","Thỉnh Phật trụ thế"],c:2,e:"Nguyện thứ mười là “Phổ giai hồi hướng”, hồi hướng tất cả công đức từ lễ bái đến hằng thuận chúng sinh cho tất cả chúng sinh trong pháp giới và hư không giới.",s:"“Thập giả, phổ giai hồi hướng.”"},
+{type:"Đúng/Sai",q:"Kinh Phổ Hiền Hạnh Nguyện nói: Trong tất cả các loại cúng dường, “pháp cúng dường là tối thắng”.",a:["Đúng","Sai"],c:0,e:"Kinh đặc biệt chỉ ra pháp cúng dường là tối thắng, bao gồm y giáo tu hành, lợi ích chúng sinh, nhiếp thọ chúng sinh, thay chúng sinh chịu khổ, siêng tu thiện căn, không bỏ nghiệp Bồ Tát, không lìa tâm bồ đề, v.v.",s:"“Thiện nam tử! Chư cúng dường trung, pháp cúng dường tối.”"},
+{type:"Trắc nghiệm",q:"Điều nào sau đây thuộc về “pháp cúng dường”?",a:["Chỉ cúng dường trân bảo","Y giáo tu hành cúng dường","Chỉ đốt hương đắt nhất","Chỉ cúng dường thiên y"],c:1,e:"Điều quan trọng không chỉ là vật phẩm bên ngoài, mà là thực hành Phật pháp: y giáo tu hành, lợi ích chúng sinh, v.v.",s:"“Sở vị y giáo tu hành cúng dường, lợi ích chúng sinh cúng dường…”"},
+{type:"Trắc nghiệm",q:"Khi sám hối nghiệp chướng, Bồ Tát Phổ Hiền nói mình phải làm gì?",a:["Sám hối rồi tái phạm cũng không sao","Thành tâm sám hối, về sau không tái phạm","Chỉ xin lỗi người thân","Chỉ sám hối thân nghiệp"],c:1,e:"Trọng điểm không chỉ là hối hận, mà là “thành tâm sám hối, về sau không tái phạm”, và luôn an trụ trong tất cả công đức của giới thanh tịnh.",s:"“Thành tâm sám hối, hậu bất phục tạo, hằng trụ tịnh giới nhất thiết công đức.”"},
+{type:"Trắc nghiệm",q:"Ý nghĩa của “tùy hỷ công đức” gần nhất với điều nào?",a:["Thấy người khác thành công thì ghen tị","Thấy hạnh lành và công đức, thật tâm hoan hỷ tán thán","Chỉ thưởng thức công đức của mình","Chỉ vui khi được lợi"],c:1,e:"Bồ Tát Phổ Hiền đối với công đức của chư Phật, Bồ Tát, Thanh Văn, Bích Chi Phật và tất cả chúng sinh, đều sinh tâm hoan hỷ.",s:"“Sở hữu công đức, ngã giai tùy hỷ.”"},
+{type:"Đúng/Sai",q:"“Thỉnh chuyển pháp luân” là thỉnh chư Phật thuyết chánh pháp, lợi ích chúng sinh.",a:["Đúng","Sai"],c:0,e:"Phổ Hiền hạnh nguyện không chỉ tự học pháp, mà còn ân cần thỉnh chư Phật chuyển diệu pháp luân, khiến chánh pháp lợi ích rộng lớn chúng sinh.",s:"“Ân cần khuyến thỉnh, chuyển diệu pháp luân.”"},
+{type:"Trắc nghiệm",q:"Nguyện vọng cốt lõi của “thỉnh Phật trụ thế” là gì?",a:["Thỉnh Phật kéo dài tuổi thọ chỉ vì mình","Thỉnh Phật và thiện tri thức đừng vội nhập niết bàn, lâu dài lợi ích chúng sinh","Thỉnh Phật chỉ ở chùa","Thỉnh Phật chỉ dạy Bồ Tát"],c:1,e:"Kinh nói, đối với chư Phật, Bồ Tát, Thanh Văn, Duyên Giác và thiện tri thức sắp thị hiện niết bàn, đều khuyến thỉnh chớ nhập niết bàn, vì muốn lợi lạc tất cả chúng sinh.",s:"“Ngã tất khuyến thỉnh mạc nhập niết bàn. Kinh ư… kiếp, vị dục lợi lạc nhất thiết chúng sinh.”"},
+{type:"Trắc nghiệm",q:"Tinh thần quan trọng nhất của “thường tùy Phật học” là gì?",a:["Chỉ nghiên cứu thần thông của Phật","Học tập phát tâm, tu hành, hành vi lợi ích chúng sinh của chư Phật","Chỉ tụng danh hiệu Phật","Chỉ bắt chước ngoại hình của Phật"],c:1,e:"Kinh liệt kê Như Lai Tỳ Lô Giá Na từ sơ phát tâm, tinh tấn không thối chuyển, khổ hạnh khó làm, đến thành đạo, chuyển pháp luân, thành thục chúng sinh, tất cả hạnh ấy con đều học theo.",s:"“Như thị nhất thiết, ngã giai tùy học.”"},
+{type:"Đúng/Sai",q:"“Hằng thuận chúng sinh” đồng nghĩa với “người khác làm gì cũng làm theo”.",a:["Đúng","Sai"],c:1,e:"Không phải mù quáng làm theo. Kinh nói là dùng tâm bình đẳng lợi ích chúng sinh, phụng sự chúng sinh, giúp người bệnh khổ, người lạc đường, người nghèo khó, và dẫn dắt chúng sinh đi vào chánh đạo.",s:"“Bồ Tát như thị bình đẳng nhiêu ích nhất thiết chúng sinh.”"},
+{type:"Trắc nghiệm",q:"Kinh dùng ví dụ gì để nói rõ mối quan hệ giữa “chúng sinh” và “hoa quả trí tuệ của Phật Bồ Tát”?",a:["Núi cao và dòng nước","Rễ và hoa quả của cây lớn","Trăng sáng và tinh tú","Thuyền và biển lớn"],c:1,e:"Chúng sinh như rễ của cây lớn, Phật Bồ Tát như hoa quả; dùng nước đại bi lợi ích chúng sinh, mới thành tựu hoa quả trí tuệ của Phật Bồ Tát.",s:"“Nhất thiết chúng sinh nhi vi thụ căn, chư Phật Bồ Tát nhi vi hoa quả.”"},
+{type:"Nhiều lựa chọn",q:"Những điều nào thuộc về cách làm cụ thể của “hằng thuận chúng sinh” trong kinh?",a:["Với người bệnh khổ, làm thầy thuốc giỏi","Với người lạc đường, chỉ đường chánh","Trong đêm tối, làm ánh sáng","Chỉ giúp người mình thích"],c:[0,1,2],e:"Hằng thuận chúng sinh là bình đẳng nhiêu ích: người bệnh khổ như thầy thuốc giỏi, người lạc đường chỉ đường chánh, trong đêm tối làm ánh sáng, người nghèo khó cho được kho báu ẩn.",s:"“Ư chư bệnh khổ, vi tác lương y. Ư thất đạo giả, thị kỳ chánh lộ…”"},
+{type:"Đúng/Sai",q:"Kinh nói: “Nếu không có chúng sinh, tất cả Bồ Tát rốt cuộc không thể thành vô thượng chánh giác.”",a:["Đúng","Sai"],c:0,e:"Đây là cốt lõi của nguyện hằng thuận chúng sinh: do chúng sinh mà khởi đại bi, do đại bi sinh tâm bồ đề, do tâm bồ đề thành đẳng chánh giác.",s:"“Nhược vô chúng sinh, nhất thiết Bồ Tát chung bất năng thành vô thượng chánh giác.”"},
+{type:"Trắc nghiệm",q:"“Phổ giai hồi hướng” chủ yếu hồi hướng công đức cho ai?",a:["Chỉ hồi hướng cho mình","Chỉ hồi hướng cho người thân","Tất cả chúng sinh trong tận pháp giới, hư không giới","Chỉ hồi hướng cho người có công đức"],c:2,e:"Bồ Tát Phổ Hiền nguyện hồi hướng tất cả công đức cho tất cả chúng sinh, nguyện chúng sinh an lạc, lìa khổ, thành tựu vô thượng bồ đề.",s:"“Giai tất hồi hướng, tận pháp giới, hư không giới nhất thiết chúng sinh.”"},
+{type:"Nhiều lựa chọn",q:"Những nguyện nào được phát trong phổ giai hồi hướng?",a:["Nguyện chúng sinh thường được an lạc","Nguyện ác nghiệp không thành tựu","Nguyện thiện nghiệp mau thành tựu","Nguyện tất cả chúng sinh rốt cuộc thành vô thượng bồ đề"],c:[0,1,2,3],e:"Nguyện này rất rộng lớn: an lạc, lìa bệnh khổ, ác pháp không thành, thiện nghiệp thành tựu, đóng cửa ác thú, chỉ bày chánh lộ, cho đến rốt cuộc thành vô thượng bồ đề.",s:"“Nguyện linh chúng sinh, thường đắc an lạc, vô chư bệnh khổ… cứu cánh thành tựu vô thượng bồ đề.”"},
+{type:"Trắc nghiệm",q:"Bồ Tát Phổ Hiền nói đặc điểm chung của mười nguyện tu hành là gì?",a:["Làm một lần là xong","Niệm niệm tương tục, không có gián đoạn, thân ngữ ý nghiệp không có mệt mỏi","Chỉ làm trước Phật","Chỉ làm khi trẻ"],c:1,e:"Sau mỗi nguyện đều lặp lại: niệm niệm tương tục, không có gián đoạn, thân ngữ ý nghiệp không có mệt mỏi. Điều này biểu thị nguyện tâm liên tục không dứt.",s:"“Niệm niệm tương tục, vô hữu gián đoạn, thân ngữ ý nghiệp, vô hữu bì yếm.”"},
+{type:"Đúng/Sai",q:"Kinh cho rằng cúng dường tài vật bên ngoài nhất định thù thắng hơn pháp cúng dường.",a:["Đúng","Sai"],c:1,e:"Kinh ngược lại nói rõ pháp cúng dường là tối thắng, vì y giáo tu hành có thể sinh ra chư Phật; Bồ Tát hành pháp cúng dường chính là thành tựu cúng dường Như Lai.",s:"“Chư cúng dường trung, pháp cúng dường tối.”"},
+{type:"Trắc nghiệm",q:"Nếu hôm nay thấy người khác làm một việc thiện, bạn muốn thực hành Phổ Hiền hạnh nguyện, thích hợp nhất làm gì?",a:["Tìm cách chứng minh mình giỏi hơn","Thật tâm tùy hỷ, tán thán hạnh lành ấy","Giả vờ không thấy","Mong họ thất bại"],c:1,e:"Đây là đem “tùy hỷ công đức” vào đời thường: thấy thiện, không ghen tị; thấy công đức, sinh tâm hoan hỷ.",s:"“Nhất thiết Bồ Tát sở tu vô lượng nan hành khổ hạnh… quảng đại công đức, ngã giai tùy hỷ.”"},
+{type:"Nhiều lựa chọn",q:"Những điều nào sau đây có thể coi là “pháp cúng dường” trong đời sống hằng ngày?",a:["Tu hành theo Phật pháp và thay đổi bản thân","Giúp đỡ người cần thiết","Không bỏ nghiệp Bồ Tát","Không lìa tâm bồ đề"],c:[0,1,2,3],e:"Pháp cúng dường không phải khái niệm trừu tượng, mà là đem Phật pháp thực hành nơi thân tâm mình và lợi ích chúng sinh.",s:"“Như thuyết tu hành cúng dường, lợi ích chúng sinh cúng dường… bất ly bồ đề tâm cúng dường.”"},
+{type:"Trắc nghiệm",q:"Kinh dùng gì để nói rõ mối quan hệ giữa đại bi và thành Phật?",a:["Biển lớn và thuyền nhỏ","Rễ, thân và hoa quả của cây","Lửa và băng","Chim và bầu trời"],c:1,e:"Chúng sinh là rễ, đại bi như nước, hoa quả trí tuệ của Phật Bồ Tát do đây thành tựu. Ví dụ này nối liền “lợi ích chúng sinh” với “thành Phật”.",s:"“Nhất thiết chúng sinh nhi vi thụ căn, chư Phật Bồ Tát nhi vi hoa quả, dĩ đại bi thủy nhiêu ích chúng sinh.”"},
+{type:"Đúng/Sai",q:"Phổ Hiền hạnh nguyện chỉ yêu cầu chúng ta lễ bái Phật, không cần quan tâm chúng sinh.",a:["Đúng","Sai"],c:1,e:"Mười nguyện có hằng thuận chúng sinh, phổ giai hồi hướng, và kinh nói rõ: tùy thuận chúng sinh chính là tùy thuận cúng dường chư Phật.",s:"“Bồ Tát nhược năng tùy thuận chúng sinh, tắc vi tùy thuận cúng dường chư Phật.”"},
+{type:"Trắc nghiệm",q:"Trong mười nguyện, nguyện nào trực tiếp dạy chúng ta “đừng ghen tị với điều thiện và thành công của người khác”?",a:["Lễ kính chư Phật","Tùy hỷ công đức","Thỉnh Phật trụ thế","Phổ giai hồi hướng"],c:1,e:"Tùy hỷ là đối với thiện căn và công đức của tất cả Phật, Bồ Tát, chúng sinh đều sinh tâm hoan hỷ.",s:"“Sở hữu công đức, ngã giai tùy hỷ.”"},
+{type:"Trắc nghiệm",q:"Trong kệ tụng nói “Ngã tích sở tạo chư ác nghiệp… nhất thiết ngã kim giai sám hối”, thuộc nguyện nào trong mười nguyện?",a:["Quảng tu cúng dường","Sám hối nghiệp chướng","Thường tùy Phật học","Xưng tán Như Lai"],c:1,e:"Kệ này trực tiếp tương ứng với nguyện thứ tư “Sám hối nghiệp chướng”.",s:"“Ngã tích sở tạo chư ác nghiệp, giai do vô thủy tham sân si… nhất thiết ngã kim giai sám hối.”"},
+{type:"Đúng/Sai",q:"Hồi hướng của Phổ Hiền hạnh nguyện chỉ quan tâm đến lợi ích cho mình ở đời sau.",a:["Đúng","Sai"],c:1,e:"Cốt lõi của hồi hướng là lợi ích tất cả chúng sinh, nguyện chúng sinh lìa khổ được vui, đi vào chánh đạo, cho đến thành tựu vô thượng bồ đề.",s:"“Phổ nguyện trầm nịch chư chúng sinh, tốc vãng vô lượng quang Phật sát.”"},
+{type:"Nhiều lựa chọn",q:"Kinh nói, nghe, tin nhận, thọ trì, đọc tụng, viết chép, rộng vì người khác nói đại nguyện vương này, có thể làm gì?",a:["Tăng trưởng hạnh nguyện công đức","Lợi ích chúng sinh","Cứu giúp chúng sinh trong biển khổ phiền não","Hoàn toàn không cần tu hành tự nhiên thành Phật"],c:[0,1,2],e:"Kinh tán thán công đức thọ trì và hoằng dương nguyện vương này, nhưng không nói có thể hoàn toàn không tu hành; cốt lõi vẫn là tin nhận, đọc tụng, thọ trì, thực hành và lợi ích chúng sinh.",s:"“Thọ trì độc tụng, quảng vi nhân thuyết… năng ư phiền não đại khổ hải trung, bạt tế chúng sinh.”"},
+{type:"Trắc nghiệm",q:"Khi lâm chung, kinh nói cái gì sẽ “không rời xa, dẫn dắt trước mặt”?",a:["Tài bảo","Người thân","Quyền thế","Phổ Hiền nguyện vương"],c:3,e:"Kinh nhắc nhở chúng ta: người thân, uy thế, tài bảo đều không thể đi theo, chỉ có nguyện vương không rời xa.",s:"“Duy thử nguyện vương, bất tương xả ly, ư nhất thiết thời, dẫn đạo kỳ tiền.”"},
+{type:"Trắc nghiệm",q:"Cảnh giới của “lễ kính chư Phật” rộng lớn đến đâu?",a:["Chỉ lễ kính một vị Phật trước mắt","Chỉ lễ kính Phật mình quen","Chư Phật trong mười phương ba đời tất cả Phật sát","Chỉ lễ Phật vào ngày lễ"],c:2,e:"Nguyện lực Phổ Hiền trùm khắp tận pháp giới, hư không giới, mười phương ba đời tất cả Phật sát, thâm tín như đối trước mắt.",s:"“Sở hữu tận pháp giới, hư không giới, thập phương tam thế nhất thiết Phật sát… chư Phật Thế Tôn… thường tu lễ kính.”"},
+{type:"Đúng/Sai",q:"“Xưng tán Như Lai” chỉ là khen ngợi ngoại hình của Phật.",a:["Đúng","Sai"],c:1,e:"Kinh xưng tán là “chư công đức hải” của tất cả Như Lai, và dùng vô tận âm thanh hải rộng lớn tán thán.",s:"“Xưng dương tán thán nhất thiết Như Lai chư công đức hải.”"},
+{type:"Trắc nghiệm",q:"Trong mười nguyện, nguyện nào là “thường học chư Phật phát tâm, tu hành, thành đạo, giáo hóa chúng sinh”?",a:["Thường tùy Phật học","Thỉnh chuyển pháp luân","Sám hối nghiệp chướng","Phổ giai hồi hướng"],c:0,e:"Nguyện thứ tám “Thường tùy Phật học” bao gồm từ sơ phát tâm đến thành Phật, chuyển pháp luân, thị hiện niết bàn, tất cả Phật hạnh.",s:"“Như thị nhất thiết, ngã giai tùy học.”"},
+{type:"Nhiều lựa chọn",q:"Những ví dụ nào cho thấy Phổ Hiền hạnh nguyện có thể đem vào đời sống hiện đại?",a:["Thấy người khác làm việc thiện thì tùy hỷ","Sau khi làm sai, thành tâm sám hối và sửa đổi","Dùng khả năng của mình giúp người cần thiết","Đem hết công lao về mình"],c:[0,1,2],e:"Phổ Hiền hạnh nguyện không chỉ ở trong kinh: tùy hỷ, sám hối, lợi ích chúng sinh, hồi hướng đều có thể thực hành trong giao tiếp và công việc hằng ngày.",s:"Tinh thần mười đại nguyện có thể thực hành nơi thân ngữ ý."}
+];
+
+// ---------- 英文翻譯（參考英文經文） ----------
+const bankEn = [
+{type:"Multiple Choice",q:"Among the ten vast practices and vows spoken by Samantabhadra Bodhisattva, what is the first vow?",a:["Praising the Tathāgata","Revering all buddhas","Extensively cultivating offerings","Rejoicing in others' merit"],c:1,e:"The ten vows are: revering all buddhas, praising the Tathāgata, extensively cultivating offerings, repenting of karmic obstacles, rejoicing in others' merit, requesting the turning of the Dharma wheel, requesting the buddhas to remain in the world, always following the buddhas' course of training, constantly according with beings, and universally dedicating all merit.",s:"\"The first is to revere all buddhas; the second is to proclaim the praises of the Tathāgata...\""},
+{type:"Multiple Choice",q:"What is the last of the ten vows?",a:["Constantly according with beings","Always following the buddhas' course of training","Universally dedicating all merit","Requesting the buddhas to remain in the world"],c:2,e:"The tenth vow is \"universally dedicating all merit\", dedicating all merit from the first vow of revering all buddhas up to constantly according with beings to all beings throughout the Dharma realm and the realms of space.",s:"\"The tenth is to universally dedicate all merit.\""},
+{type:"True/False",q:"The Conduct and Vows of Samantabhadra says: Among all kinds of offerings, the offering of Dharma is supreme.",a:["True","False"],c:0,e:"The text specifically points out that the offering of Dharma is supreme, including cultivating in accordance with what was taught, benefiting beings, gathering in beings, substituting for beings in taking on their sufferings, diligently cultivating roots of goodness, never forsaking the bodhisattva's works, and never abandoning the bodhi resolve.",s:"\"Son of Good Family, among all the kinds of offerings, the offering of Dharma is supreme.\""},
+{type:"Multiple Choice",q:"Which of the following belongs to the \"offering of Dharma\"?",a:["Only offering precious jewels","Cultivating in accordance with what was taught","Only burning the most expensive incense","Only offering heavenly garments"],c:1,e:"What truly matters is not just external offerings, but living out the Dharma: cultivating in accordance with what was taught, benefiting beings, etc.",s:"\"...the offering of cultivating in accordance with what was taught, the offering of benefiting beings...\""},
+{type:"Multiple Choice",q:"When repenting of karmic obstacles, what does Samantabhadra Bodhisattva say one should do?",a:["It's okay to commit again after repenting","Sincerely repent, resolving never to commit again","Only apologize to relatives","Only repent of bodily karma"],c:1,e:"The key is not just regret, but \"sincerely repent, resolving to never commit them again\", and always abide in all the meritorious qualities of the pure moral precepts.",s:"\"...I sincerely repent [of these bad karmic actions], resolving to never commit them again and resolving to always abide in all the meritorious qualities of the pure moral precepts.\""},
+{type:"Multiple Choice",q:"The meaning of \"rejoicing in others' merit\" is closest to which of the following?",a:["Being jealous when seeing others succeed","Truly rejoicing and praising when seeing good deeds and merit","Only appreciating one's own merit","Only being happy when getting benefits"],c:1,e:"Samantabhadra Bodhisattva rejoices in the merit of all buddhas, bodhisattvas, śrāvaka disciples, pratyekabuddhas, and all beings.",s:"\"I rejoice in all their roots of goodness...\""},
+{type:"True/False",q:"\"Requesting the turning of the Dharma wheel\" means earnestly requesting the buddhas to proclaim the right Dharma for the benefit of beings.",a:["True","False"],c:0,e:"Samantabhadra's vows are not just about learning the Dharma oneself, but also earnestly requesting all buddhas to turn the wheel of the sublime Dharma, so that the right Dharma widely benefits beings.",s:"\"I earnestly request them to turn the wheel of the sublime Dharma.\""},
+{type:"Multiple Choice",q:"What is the core wish of \"requesting the buddhas to remain in the world\"?",a:["Requesting the Buddha to extend his life only for oneself","Requesting the buddhas and good spiritual guides not to hurry into parinirvāṇa, but to remain long for the benefit of beings","Requesting the Buddha to stay only in the monastery","Requesting the Buddha to teach only bodhisattvas"],c:1,e:"The text says that for all buddhas, bodhisattvas, śrāvaka disciples, pratyekabuddhas, and good spiritual guides who are about to enter parinirvāṇa, one should beseech them all to refrain from entering nirvāṇa, in order to benefit and gladden all beings.",s:"\"...I then beseech them all to refrain from entering nirvāṇa and to remain for kalpas... in order to benefit and gladden all beings.\""},
+{type:"Multiple Choice",q:"What is the most important spirit of \"always following the buddhas' course of training\"?",a:["Only studying the Buddha's spiritual powers","Learning the buddhas' resolve, practice, and actions that benefit beings","Only reciting the Buddha's name","Only imitating the Buddha's appearance"],c:1,e:"The text describes Vairocana Tathāgata's entire course from first resolving to attain bodhi, nonretreating vigor, difficult austerities, to attaining enlightenment, turning the Dharma wheel, and ripening beings—I follow all such ways of training.",s:"\"I follow all such ways of training as these.\""},
+{type:"True/False",q:"\"Constantly according with beings\" is equivalent to \"following whatever others do\".",a:["True","False"],c:1,e:"It is not blind following. The text speaks of benefiting beings with an equal mind, serving beings, helping the sick, those who have lost the path, the poor, and guiding beings to the right path.",s:"\"...the bodhisattva benefits all beings equally.\""},
+{type:"Multiple Choice",q:"What analogy does the text use to explain the relationship between \"beings\" and \"the blossoms and fruit of the buddhas' and bodhisattvas' wisdom\"?",a:["High mountains and flowing water","The roots and blossoms/fruit of a great tree","The bright moon and stars","A boat and the great ocean"],c:1,e:"Beings are like the roots of a great tree, and buddhas and bodhisattvas are like its blossoms and fruit; using the water of great compassion to benefit beings produces the fully developed blossoms and fruit of wisdom.",s:"\"It is all beings who form the roots of this tree and it is all buddhas and bodhisattvas who form its blossoms and fruit.\""},
+{type:"Multiple Select",q:"Which of the following are specific practices of \"constantly according with beings\" mentioned in the text?",a:["For those suffering from illnesses, serve as an especially good physician","For those who have lost the path, show them the right road","For those in the dark of night, produce illumination","Only help those you like"],c:[0,1,2],e:"Constantly according with beings means equally benefiting: for the sick, be a good physician; for the lost, show the right road; in the dark night, produce illumination; for the poor, enable them to find hidden treasure.",s:"\"For those suffering from any of the many kinds of illnesses, I serve as an especially good physician. For those who have lost the path, I show them the right road. For those who are in the dark of night, I produce illumination. And for those who are poor, I enable them to find hidden treasure.\""},
+{type:"True/False",q:"The text says: \"If there were no beings, then none of the bodhisattvas would ever become able to gain the utmost right enlightenment.\"",a:["True","False"],c:0,e:"This is the core of the vow to constantly accord with beings: it is because of beings that they produce great compassion; because of great compassion, they produce the resolve to attain bodhi; and because of that resolve, they realize universal and right enlightenment.",s:"\"If there were no beings, then none of the bodhisattvas would ever become able to gain the utmost right enlightenment.\""},
+{type:"Multiple Choice",q:"To whom does \"universally dedicating all merit\" mainly dedicate merit?",a:["Only to oneself","Only to relatives","To all beings throughout the Dharma realms and the realms of space","Only to those with merit"],c:2,e:"Samantabhadra Bodhisattva vows to dedicate all merit to all beings, wishing them peace and happiness, freedom from suffering, and ultimate realization of unexcelled bodhi.",s:"\"...dedicating it to all beings throughout the Dharma realms and the realms of space...\""},
+{type:"Multiple Select",q:"What wishes are included in the dedication of all merit?",a:["Wishing beings to always gain peace and happiness","Wishing evil dharmas not to succeed","Wishing good karmic actions to swiftly succeed","Wishing all beings to ultimately realize unexcelled bodhi"],c:[0,1,2,3],e:"This vow is vast: peace and happiness, freedom from sickness, evil dharmas not succeeding, good karma swiftly succeeding, closing the gates to wretched rebirth destinies, revealing the right road, and ultimately realizing unexcelled bodhi.",s:"\"...wishing thereby to enable beings to always gain peace and happiness and remain free of the sufferings of sickness... wishing thereby to enable all those beings to attain liberation and ultimately realize unexcelled bodhi.\""},
+{type:"Multiple Choice",q:"What common feature of the ten vows does Samantabhadra Bodhisattva describe?",a:["Doing it once completes it","Continuing in each successive mind-moment, without interruption, free of any weariness in body, speech, or mind","Only doing it before the Buddha","Only doing it when young"],c:1,e:"After each vow, it is repeatedly stated: continuing on in each successive mind-moment, without interruption, free of any weariness in the actions of body, speech, or mind. This represents the continuous, unbroken nature of the vow.",s:"\"It continues on in each successive mind-moment, without interruption, free of any weariness in the actions of body, speech, or mind.\""},
+{type:"True/False",q:"The text considers external material offerings to be definitely superior to the offering of Dharma.",a:["True","False"],c:1,e:"The text explicitly states that the offering of Dharma is supreme, because cultivating in accordance with what was taught gives birth to all buddhas; when bodhisattvas practice making offerings of Dharma, they thereby succeed in making offerings to the Tathāgata.",s:"\"...among all the kinds of offerings, the offering of Dharma is supreme...\""},
+{type:"Multiple Choice",q:"If today you see someone do a good deed and want to practice Samantabhadra's vows, what is most suitable to do?",a:["Find a chance to prove you are better","Truly rejoice and praise their good deed","Pretend not to see it","Hope they fail"],c:1,e:"This is bringing \"rejoicing in others' merit\" into daily life: seeing good, not being jealous; seeing merit, giving rise to joy.",s:"\"I rejoice in all their roots of goodness...\""},
+{type:"Multiple Select",q:"Which of the following can be considered \"offering of Dharma\" in daily life?",a:["Cultivating according to the Dharma and changing oneself","Helping those in need","Never forsaking the bodhisattva's works","Never abandoning the bodhi resolve"],c:[0,1,2,3],e:"The offering of Dharma is not an abstract concept, but putting the Dharma into practice in one's body and mind and benefiting beings.",s:"\"...the offering of cultivating in accordance with what was taught, the offering of benefiting beings, the offering of gathering in beings... the offering of never forsaking the bodhisattva's works, and the offering of never abandoning the bodhi resolve.\""},
+{type:"Multiple Choice",q:"What analogy does the text use to explain the relationship between great compassion and attaining buddhahood?",a:["The great ocean and a small boat","The roots, trunk, and blossoms/fruit of a tree","Fire and ice","A bird and the sky"],c:1,e:"Beings are the roots, great compassion is the water, and the wisdom blossoms and fruit of buddhas and bodhisattvas are accomplished thereby. This analogy connects \"benefiting beings\" with \"attaining buddhahood\".",s:"\"It is all beings who form the roots of this tree and it is all buddhas and bodhisattvas who form its blossoms and fruit. So long as the waters of the great compassion benefit beings, then it is able to produce the fully developed blossoms and fruit of all buddhas' and bodhisattvas' wisdom.\""},
+{type:"True/False",q:"Samantabhadra's vows only require us to worship the Buddha, not to care about beings.",a:["True","False"],c:1,e:"The ten vows include constantly according with beings and universally dedicating all merit, and the text explicitly says: if one accords with beings, this is to accord with and make offerings to all buddhas.",s:"\"...if the bodhisattva is able to accord with beings, then this is to accord with and make offerings to all buddhas.\""},
+{type:"Multiple Choice",q:"Among the ten vows, which one most directly teaches us \"not to be jealous of others' goodness and success\"?",a:["Revering all buddhas","Rejoicing in others' merit","Requesting the buddhas to remain in the world","Universally dedicating all merit"],c:1,e:"Rejoicing means giving rise to joy at the roots of goodness and merit of all buddhas, bodhisattvas, and beings.",s:"\"I rejoice in all their roots of goodness...\""},
+{type:"Multiple Choice",q:"The verse \"All the bad karmic actions that I have committed throughout the past... Of them all I do now repent\" corresponds to which of the ten vows?",a:["Extensively cultivating offerings","Repenting of karmic obstacles","Always following the buddhas' course of training","Praising the Tathāgata"],c:1,e:"This verse directly corresponds to the fourth vow, \"repenting of karmic obstacles\".",s:"\"All the bad karmic actions that I have committed throughout the past have arisen because of beginningless greed, hatred, and delusion... Of them all I do now repent.\""},
+{type:"True/False",q:"The dedication of merit in Samantabhadra's vows only cares about one's own benefit in the next life.",a:["True","False"],c:1,e:"The core of dedication is benefiting all beings, wishing them to escape suffering and attain happiness, to walk the right path, and ultimately to realize unexcelled bodhi.",s:"\"I dedicate all the boundless supreme merit gained by my practice... wishing that all beings who have become sunken in the floods may swiftly go forth to the land of the Buddha of Measureless Light.\""},
+{type:"Multiple Select",q:"The text says that hearing, having faith in, accepting, upholding, reading, reciting, writing out, and extensively explaining this king of vows to others can do what?",a:["Increase the merit of practice and vows","Benefit beings","Rescue beings from the great ocean of afflictions and suffering","Automatically become a buddha without any practice"],c:[0,1,2],e:"The text praises the merit of upholding and spreading this king of vows, but does not say one can completely avoid practice; the core is still faith, reading, reciting, upholding, practicing, and benefiting beings.",s:"\"...they will be able to rescue beings from the afflictions and the great ocean of sufferings...\""},
+{type:"Multiple Choice",q:"At the end of life, what does the text say will \"not abandon him\" and \"always lead him forth\"?",a:["Wealth","Relatives","Power","The king of vows"],c:3,e:"The text reminds us: relatives, power, wealth, etc., cannot follow, but only the king of vows does not abandon him.",s:"\"...it is only these kings of vows that do not abandon him. They always lead him forth...\""},
+{type:"Multiple Choice",q:"How vast is the scope of \"revering all buddhas\"?",a:["Only revering one buddha before one's eyes","Only revering buddhas one knows","All buddhas in all buddha kṣetras of the ten directions and three periods of time","Only revering the Buddha on holidays"],c:2,e:"Samantabhadra's vow power extends throughout the Dharma realm, the realms of space, and all buddha kṣetras of the ten directions and three periods of time, with deep resolute faith as if they were right before one's eyes.",s:"\"...I arouse deeply resolute faith in all the buddhas... as numerous as the atoms in all buddha kṣetras of the ten directions and three periods of time throughout the Dharma realm and the realms of space...\""},
+{type:"True/False",q:"\"Praising the Tathāgata\" only means praising the Buddha's appearance.",a:["True","False"],c:1,e:"The text praises all tathāgatas' \"oceans of meritorious qualities\", and uses an inexhaustible ocean of voices to praise them extensively.",s:"\"...proclaiming the praises of all tathāgatas' oceans of meritorious qualities.\""},
+{type:"Multiple Choice",q:"Among the ten vows, which one is \"always learning how the buddhas resolved, practiced, attained enlightenment, and taught beings\"?",a:["Always following the buddhas' course of training","Requesting the turning of the Dharma wheel","Repenting of karmic obstacles","Universally dedicating all merit"],c:0,e:"The eighth vow, \"always following the buddhas' course of training\", covers everything from the first resolve to attaining buddhahood, turning the Dharma wheel, and manifesting nirvāṇa—all buddha actions.",s:"\"I follow all such ways of training as these.\""},
+{type:"Multiple Select",q:"Which are examples of how Samantabhadra's vows can be brought into modern life?",a:["Rejoicing when seeing others do good deeds","Sincerely repenting and correcting after making mistakes","Using one's abilities to help those in need","Taking all the credit for oneself"],c:[0,1,2],e:"Samantabhadra's vows are not only in the scriptures: rejoicing, repenting, benefiting beings, and dedicating merit can all be practiced in daily interactions and work.",s:"The spirit of the ten great vows can be practiced through body, speech, and mind."}
+];
+
+// ---------- 語言設定 ----------
+let currentLang = 'zh';
+
+const translations = {
+  zh: {
+    title: "普賢行願 Quest",
+    subtitle: "十願闖關・每一次遊戲，都多懂一點《普賢行願品》",
+    homeTitle: "選一種玩法",
+    homeDesc: "不用死背。答題、看解釋，再挑戰一次。題目會從題庫中隨機抽取，所以每次都可能不一樣。",
+    modeQuickTitle: "⚡ 10 題快問快答",
+    modeQuickDesc: "適合第一次玩，約 3–5 分鐘。",
+    modeDeepTitle: "🪷 20 題深度挑戰",
+    modeDeepDesc: "更多經文理解題，挑戰高分。",
+    modeTenTitle: "🌟 十大願修行",
+    modeTenDesc: "專攻「十種廣大行願」與實踐意義。",
+    homeTip: "小提示：答對會累積連勝；連勝越高，Bonus 越多。答錯也沒關係——解釋就是你的下一個小法寶。",
+    streakLabel: "連勝",
+    backHomeBtn: "← 返回玩法",
+    nextBtn: "下一題 →",
+    replayBtn: "🔄 再玩一次",
+    resultHomeBtn: "返回玩法",
+    reviewTitle: "📖 本局學習重點",
+    counter: (idx, total) => `第 ${idx} / ${total} 題`,
+    score: (s) => `⭐ ${s}`,
+    streak: (s) => `🔥 ${s} 連勝`,
+    feedbackCorrect: (score) => `✨ 答對了！ +${score} 分`,
+    feedbackWrong: "🌱 沒關係，看看這個小提示。",
+    sourcePrefix: "📜 經文提示：",
+    explainTitle: "🪷 法義小提示",
+    resultTitle5: "普賢行者！太厲害了！",
+    resultTitle4: "智慧花開！",
+    resultTitleOther: "再走一程，會更熟悉。",
+    resultText: (q, s, streak) => `你完成了 ${q} 題，得到 ${s} 分。${streak >= 3 ? "而且最後保持了連勝，漂亮！" : "再玩一次，題目會重新抽取，挑戰更高分吧！"}`,
+    reviewNoMistakes: "🎉 本局沒有錯題！你可以挑戰更高分。",
+    resultStars: (stars) => "★".repeat(stars) + "☆".repeat(5 - stars)
+  },
+  vi: {
+    title: "Phổ Hiền Hạnh Nguyện Quest",
+    subtitle: "Vượt ải mười nguyện・Mỗi lần chơi, hiểu thêm một chút về Phẩm Phổ Hiền Hạnh Nguyện",
+    homeTitle: "Chọn cách chơi",
+    homeDesc: "Không cần học thuộc lòng. Trả lời, xem giải thích, rồi thử lại. Câu hỏi được rút ngẫu nhiên từ ngân hàng đề, nên mỗi lần có thể khác nhau.",
+    modeQuickTitle: "⚡ 10 câu nhanh",
+    modeQuickDesc: "Phù hợp cho lần đầu chơi, khoảng 3–5 phút.",
+    modeDeepTitle: "🪷 20 câu thử thách sâu",
+    modeDeepDesc: "Nhiều câu hỏi hiểu kinh hơn, thử thách điểm cao.",
+    modeTenTitle: "🌟 Tu hành mười đại nguyện",
+    modeTenDesc: "Tập trung vào \"mười đại hạnh nguyện rộng lớn\" và ý nghĩa thực hành.",
+    homeTip: "Gợi ý nhỏ: Trả lời đúng sẽ tích lũy chuỗi thắng; chuỗi càng cao, điểm thưởng càng nhiều. Trả lời sai cũng không sao—giải thích chính là pháp bảo nhỏ tiếp theo của bạn.",
+    streakLabel: "chuỗi thắng",
+    backHomeBtn: "← Quay lại",
+    nextBtn: "Câu tiếp →",
+    replayBtn: "🔄 Chơi lại",
+    resultHomeBtn: "Quay lại",
+    reviewTitle: "📖 Trọng điểm học tập ván này",
+    counter: (idx, total) => `Câu ${idx} / ${total}`,
+    score: (s) => `⭐ ${s}`,
+    streak: (s) => `🔥 ${s} chuỗi thắng`,
+    feedbackCorrect: (score) => `✨ Đúng rồi! +${score} điểm`,
+    feedbackWrong: "🌱 Không sao, xem gợi ý nhỏ này nhé.",
+    sourcePrefix: "📜 Gợi ý kinh văn: ",
+    explainTitle: "🪷 Gợi ý pháp nghĩa",
+    resultTitle5: "Hành giả Phổ Hiền! Tuyệt vời!",
+    resultTitle4: "Trí tuệ nở hoa!",
+    resultTitleOther: "Đi thêm một đoạn nữa, sẽ quen hơn.",
+    resultText: (q, s, streak) => `Bạn đã hoàn thành ${q} câu, được ${s} điểm.${streak >= 3 ? " Và giữ được chuỗi thắng cuối cùng, tuyệt đẹp!" : " Chơi lại, câu hỏi sẽ được rút mới, thử thách điểm cao hơn nhé!"}`,
+    reviewNoMistakes: "🎉 Ván này không có câu sai! Bạn có thể thử thách điểm cao hơn.",
+    resultStars: (stars) => "★".repeat(stars) + "☆".repeat(5 - stars)
+  },
+  en: {
+    title: "Samantabhadra's Conduct & Vows Quest",
+    subtitle: "Ten Vows Challenge・Each game, understand a little more of the Conduct and Vows of Samantabhadra",
+    homeTitle: "Choose a mode",
+    homeDesc: "No need to memorize. Answer, read the explanation, then challenge again. Questions are randomly drawn from the bank, so each time may be different.",
+    modeQuickTitle: "⚡ 10-Question Quick Quiz",
+    modeQuickDesc: "Great for first-time players, about 3–5 minutes.",
+    modeDeepTitle: "🪷 20-Question Deep Challenge",
+    modeDeepDesc: "More scripture comprehension questions, challenge for a high score.",
+    modeTenTitle: "🌟 Ten Great Vows Practice",
+    modeTenDesc: "Focus on the \"ten kinds of vast practices and vows\" and their practical meaning.",
+    homeTip: "Tip: Correct answers build a streak; the higher the streak, the more bonus points. Wrong answers are okay—the explanation is your next little Dharma treasure.",
+    streakLabel: "streak",
+    backHomeBtn: "← Back to Modes",
+    nextBtn: "Next →",
+    replayBtn: "🔄 Play Again",
+    resultHomeBtn: "Back to Modes",
+    reviewTitle: "📖 Key Learning Points",
+    counter: (idx, total) => `Q ${idx} / ${total}`,
+    score: (s) => `⭐ ${s}`,
+    streak: (s) => `🔥 ${s} streak`,
+    feedbackCorrect: (score) => `✨ Correct! +${score} points`,
+    feedbackWrong: "🌱 It's okay, check this little hint.",
+    sourcePrefix: "📜 Scripture hint: ",
+    explainTitle: "🪷 Dharma Insight",
+    resultTitle5: "Samantabhadra Practitioner! Amazing!",
+    resultTitle4: "Wisdom Blooms!",
+    resultTitleOther: "Keep going, you'll get more familiar.",
+    resultText: (q, s, streak) => `You completed ${q} questions and scored ${s} points.${streak >= 3 ? " And you kept a streak at the end—beautiful!" : " Play again, questions will be redrawn, challenge a higher score!"}`,
+    reviewNoMistakes: "🎉 No mistakes this round! You can challenge a higher score.",
+    resultStars: (stars) => "★".repeat(stars) + "☆".repeat(5 - stars)
+  }
+};
+
+// ---------- 遊戲狀態 ----------
+let mode = "quick", questions = [], idx = 0, score = 0, streak = 0, answered = false, mistakes = [];
+
+function getBank() {
+  if (currentLang === 'vi') return bankVi;
+  if (currentLang === 'en') return bankEn;
+  return bank;
+}
 
 function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active")}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+
+function updateUILanguage() {
+  const t = translations[currentLang];
+  document.getElementById('appTitle').textContent = t.title;
+  document.getElementById('appSubtitle').textContent = t.subtitle;
+  document.getElementById('homeTitle').textContent = t.homeTitle;
+  document.getElementById('homeDesc').textContent = t.homeDesc;
+  document.getElementById('modeQuickTitle').textContent = t.modeQuickTitle;
+  document.getElementById('modeQuickDesc').textContent = t.modeQuickDesc;
+  document.getElementById('modeDeepTitle').textContent = t.modeDeepTitle;
+  document.getElementById('modeDeepDesc').textContent = t.modeDeepDesc;
+  document.getElementById('modeTenTitle').textContent = t.modeTenTitle;
+  document.getElementById('modeTenDesc').textContent = t.modeTenDesc;
+  document.getElementById('homeTip').textContent = t.homeTip;
+  document.getElementById('streakLabel').textContent = t.streakLabel;
+  document.getElementById('backHomeBtn').textContent = t.backHomeBtn;
+  document.getElementById('next').textContent = t.nextBtn;
+  document.getElementById('replayBtn').textContent = t.replayBtn;
+  document.getElementById('resultHomeBtn').textContent = t.resultHomeBtn;
+  document.getElementById('reviewTitle').textContent = t.reviewTitle;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  updateUILanguage();
+  // If game is active, re-render current question with new language
+  if (document.getElementById('game').classList.contains('active')) {
+    startGame(mode);
+  }
+}
+
 function startGame(m){
  mode=m; idx=0; score=0; streak=0; mistakes=[];
+ const bankData = getBank();
  let count=m==="deep"?20:10;
  if(m==="ten"){
-   const preferred=bank.filter(x=>/十種|第|第一|最後|法供養|懺悔|隨喜|轉法輪|住世|佛學|眾生|回向/.test(x.q+x.s));
+   const preferred=bankData.filter(x=>/十種|第|第一|最後|法供養|懺悔|隨喜|轉法輪|住世|佛學|眾生|回向/.test(x.q+x.s));
    questions=shuffle(preferred).slice(0,Math.min(15,preferred.length));
- }else questions=shuffle(bank).slice(0,count);
+ }else questions=shuffle(bankData).slice(0,count);
  show("game"); render();
 }
+
 function render(){
  answered=false;
+ const t = translations[currentLang];
  const q=questions[idx];
- document.getElementById("counter").textContent=`第 ${idx+1} / ${questions.length} 題`;
+ document.getElementById("counter").textContent=t.counter(idx+1, questions.length);
  document.getElementById("bar").style.width=(idx/questions.length*100)+"%";
- document.getElementById("score").textContent=score;
- document.getElementById("streak").textContent=streak;
+ document.getElementById("score").textContent=t.score(score);
+ document.getElementById("streak").textContent=t.streak(streak);
  document.getElementById("qtype").textContent=q.type;
  document.getElementById("question").textContent=q.q;
- document.getElementById("source").textContent="📜 經文提示："+q.s;
+ document.getElementById("source").textContent=t.sourcePrefix+q.s;
  document.getElementById("explain").classList.remove("show");
  document.getElementById("feedback").textContent="";
  document.getElementById("next").style.display="none";
@@ -171,8 +400,10 @@ function render(){
    b.onclick=()=>answer(i,b);box.appendChild(b);
  });
 }
+
 function answer(choice,btn){
  if(answered)return; answered=true;
+ const t = translations[currentLang];
  const q=questions[idx];
  document.querySelectorAll(".answer").forEach(b=>b.classList.add("disabled"));
  const correct=Array.isArray(q.c)?q.c.includes(choice):choice===q.c;
@@ -180,38 +411,45 @@ function answer(choice,btn){
    btn.classList.add("correct");streak++;
    const bonus=Math.min(50,(streak-1)*10);
    score+=100+bonus;
-   document.getElementById("feedback").textContent=`✨ 答對了！ +${100+bonus} 分`;
+   document.getElementById("feedback").textContent=t.feedbackCorrect(100+bonus);
  }else{
    btn.classList.add("wrong");streak=0;
-   document.getElementById("feedback").textContent="🌱 沒關係，看看這個小提示。";
+   document.getElementById("feedback").textContent=t.feedbackWrong;
    mistakes.push(q);
    document.querySelectorAll(".answer").forEach(b=>{
      const i=Number(b.dataset.i);
      if(Array.isArray(q.c)?q.c.includes(i):i===q.c)b.classList.add("correct");
    });
  }
- document.getElementById("score").textContent=score;
- document.getElementById("streak").textContent=streak;
- document.getElementById("explain").innerHTML="<strong>🪷 法義小提示</strong><br>"+q.e;
+ document.getElementById("score").textContent=t.score(score);
+ document.getElementById("streak").textContent=t.streak(streak);
+ document.getElementById("explain").innerHTML="<strong>"+t.explainTitle+"</strong><br>"+q.e;
  document.getElementById("explain").classList.add("show");
  document.getElementById("next").style.display="inline-block";
 }
+
 function nextQuestion(){idx++;if(idx>=questions.length)finish();else render()}
+
 function finish(){
  show("result");
+ const t = translations[currentLang];
  document.getElementById("finalScore").textContent=score;
  const max=questions.length*100+Math.max(0,questions.length-1)*50;
  const pct=score/max;
  let stars=pct>=.9?5:pct>=.75?4:pct>=.6?3:pct>=.4?2:1;
- document.getElementById("stars").textContent="★".repeat(stars)+"☆".repeat(5-stars);
- let title=stars===5?"普賢行者！太厲害了！":stars>=4?"智慧花開！":"再走一程，會更熟悉。";
+ document.getElementById("stars").textContent=t.resultStars(stars);
+ let title=stars===5?t.resultTitle5:stars>=4?t.resultTitle4:t.resultTitleOther;
  document.getElementById("resultTitle").textContent=title;
- document.getElementById("resultText").textContent=`你完成了 ${questions.length} 題，得到 ${score} 分。${streak>=3?"而且最後保持了連勝，漂亮！":"再玩一次，題目會重新抽取，挑戰更高分吧！"}`;
+ document.getElementById("resultText").textContent=t.resultText(questions.length, score, streak);
  const rl=document.getElementById("reviewList");
- rl.innerHTML=mistakes.length?mistakes.slice(0,5).map(q=>`<details><summary>${q.q}</summary><p>${q.e}</p></details>`).join(""):"<p>🎉 本局沒有錯題！你可以挑戰更高分。</p>";
+ rl.innerHTML=mistakes.length?mistakes.slice(0,5).map(q=>`<details><summary>${q.q}</summary><p>${q.e}</p></details>`).join(""):"<p>"+t.reviewNoMistakes+"</p>";
 }
+
 function replay(){startGame(mode)}
 function goHome(){show("home")}
+
+// Initialize
+updateUILanguage();
 </script>
 </body>
 </html>
