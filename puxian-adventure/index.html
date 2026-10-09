@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="善財童子 × 普賢十願互動冒險遊戲"
+  >
+
+  <title>善財童子 × 普賢十願</title>
+
+  <link
+    rel="stylesheet"
+    href="css/game.css"
+  >
+  <link
+    rel="stylesheet"
+    href="css/vow01.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       LANGUAGE GATEWAY
+       ===================================================== -->
+
+  <main
+    id="language-gateway"
+    class="screen language-gateway is-active"
+    data-screen="language"
+  >
+
+    <div class="gateway-overlay"></div>
+
+
+    <div class="gateway-layout">
+
+
+      <!-- Sudhana -->
+
+      <div class="gateway-character-wrap">
+
+        <img
+          class="gateway-sudhana"
+          src="assets/characters/sudhana-idle.webp"
+          alt="Sudhana"
+        >
+
+      </div>
+
+
+      <!-- Language selection -->
+
+      <section
+        class="language-card"
+        aria-labelledby="language-heading"
+      >
+
+        <div
+          class="language-lotus"
+          aria-hidden="true"
+        >
+          🪷
+        </div>
+
+
+        <h1 id="language-heading">
+          Choose your language
+        </h1>
+
+
+        <p class="language-subtitle">
+          選擇語言 · Chọn ngôn ngữ
+        </p>
+
+
+        <div class="language-buttons">
+
+          <button
+            type="button"
+            class="lang-btn"
+            data-language="zh"
+          >
+            繁體中文
+          </button>
+
+
+          <button
+            type="button"
+            class="lang-btn"
+            data-language="en"
+          >
+            English
+          </button>
+
+
+          <button
+            type="button"
+            class="lang-btn"
+            data-language="vi"
+          >
+            Tiếng Việt
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- =====================================================
+       SCREEN 01
+       Opening / Start Journey — Adventure World Redesign
+       ===================================================== -->
+
+  <section
+    id="opening-screen"
+    class="screen vow-opening adventure-opening"
+    data-screen="opening"
+    hidden
+  >
+
+    <!--
+      Visual layers are intentionally separated from text/UI.
+      The approved Adventure World artwork can later be placed in CSS as the
+      background without baking any language into the image.
+    -->
+    <div class="opening-world" aria-hidden="true">
+      <div class="opening-world-sky"></div>
+      <div class="opening-world-landscape"></div>
+      <div class="opening-world-sunlight"></div>
+      <div class="opening-world-sparkles"></div>
+    </div>
+
+    <!-- Persistent game controls: menu/sound are prepared for later JS work. -->
+    <div class="opening-controls">
+      <button
+        id="opening-menu-button"
+        class="game-control-button opening-menu-button"
+        type="button"
+        aria-label="Game menu"
+        title="Game menu"
+      >
+        ☰
+      </button>
+
+      <button
+        id="opening-sound-button"
+        class="game-control-button opening-sound-button"
+        type="button"
+        aria-label="Sound"
+        title="Sound"
+        aria-pressed="true"
+      >
+        🔊
+      </button>
+
+      <div class="game-language-control opening-language-control">
+        <label class="sr-only" for="language-select">Language</label>
+        <span class="language-globe" aria-hidden="true">🌐</span>
+        <select
+          id="language-select"
+          aria-label="Language"
+          title="Language"
+        >
+          <option value="zh">繁體中文</option>
+          <option value="en">English</option>
+          <option value="vi">Tiếng Việt</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sudhana remains a separate character asset. Never bake him into the background. -->
+    <div class="opening-character-stage">
+      <img
+        class="opening-sudhana"
+        src="assets/characters/sudhana-idle.webp"
+        alt="Sudhana"
+      >
+
+      <div class="opening-character-glow" aria-hidden="true"></div>
+    </div>
+
+    <!-- Opening title / invitation -->
+    <div class="opening-content adventure-opening-content">
+
+      <div
+        class="journey-label adventure-journey-label"
+        data-i18n="progress"
+      >
+        善財童子
+      </div>
+
+      <h1
+        class="game-title adventure-game-title"
+        data-i18n="journeyTitle"
+      >
+        普賢十願大冒險
+      </h1>
+
+
+      <p
+        class="opening-hook adventure-opening-hook"
+        data-i18n="hook"
+      >
+        「你來了！一起出發吧！」
+      </p>
+
+      <button
+        id="start-button"
+        class="primary-btn start-btn adventure-start-btn"
+        type="button"
+        data-i18n="start"
+      >
+        出發！
+      </button>
+
+      <div class="opening-path-cue" aria-hidden="true">
+        <span class="opening-path-dot"></span>
+        <span class="opening-path-dot"></span>
+        <span class="opening-path-dot"></span>
+        <span class="opening-path-arrow">➜</span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 02
+       First Vow Introduction
+       ===================================================== -->
+
+  <section
+    id="vow-screen"
+    class="screen vow-screen"
+    data-screen="vow"
+    hidden
+  >
+
+    <div class="vow-background-overlay"></div>
+
+
+    <!-- Back -->
+
+    <button
+      id="back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+
+    <!-- Language indicator -->
+
+    <div
+      class="game-language-control"
+      aria-label="Language"
+      title="Language"
+    >
+
+      <span
+        class="language-globe"
+        aria-hidden="true"
+      >
+        🌐
+      </span>
+
+    </div>
+
+
+    <div class="vow-content">
+
+      <div
+        class="vow-number"
+        data-i18n="vowNumber"
+      >
+        第一願
+      </div>
+
+
+      <blockquote
+        class="sutra-line"
+        data-i18n="sutraLine"
+      >
+        「一者、禮敬諸佛。」
+      </blockquote>
+
+
+      <div class="dialogue-card">
+
+        <div class="dialogue-speaker">
+
+          <span
+            class="speaker-icon"
+            aria-hidden="true"
+          >
+            🪷
+          </span>
+
+          <strong data-i18n="speaker">
+            善財
+          </strong>
+
+        </div>
+
+
+        <p
+          class="sudhana-dialogue"
+          data-i18n="dialogue"
+        >
+          禮敬諸佛……是不是只要見到佛，
+          就恭恭敬敬地拜呢？
+        </p>
+
+      </div>
+
+
+      <button
+        id="explore-button"
+        class="primary-btn explore-button"
+        type="button"
+      >
+        🔍
+
+        <span data-i18n="explore">
+          和善財一起尋找答案
+        </span>
+
+      </button>
+
+
+      <p
+        id="prototype-note"
+        class="prototype-note"
+        hidden
+      ></p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       SCREEN 03
+       Challenge 1
+       四個人都在拜佛
+       ===================================================== -->
+
+  <section id="challenge-one-screen" class="screen challenge-screen prototype-b" data-screen="challenge-one" hidden>
+    <button id="challenge-back-button" class="back-button" type="button" aria-label="Back" title="Back">←</button>
+    <button id="challenge-language-button" class="challenge-language-button" type="button" aria-label="Change language" title="Change language">🌐</button>
+    <header class="challenge-header">
+      <div class="challenge-label">第一願・禮敬諸佛</div>
+      <h2 id="challenge-one-title">他們都在拜佛。你看得出有什麼不同嗎？</h2>
+      <p id="challenge-one-instruction">先看看他們的神情。你想先觀察誰？</p>
+      <div class="challenge-progress" aria-live="polite"><span id="challenge-progress-label">已觀察</span><strong id="challenge-progress-count">0 / 4</strong></div>
+    </header>
+    <div class="pb-scene">
+      <div id="worshipper-stage" class="worshipper-stage">
+      <button class="worshipper worshipper-pride" type="button" data-person="pride" aria-label="觀察第 1 位拜佛的人" aria-pressed="false" style="--art-width: 204.8000%; --art-left: -57.3333%; --art-top: -1.8051%; --figure-ratio: 750 / 831;">
+        <span class="pb-figure"><img src="assets/vows/vow01/prototype-b/worshipper-pride.webp" alt="" draggable="false"></span>
+        <span class="worshipper-marker" hidden></span>
+      </button>
+      <button class="worshipper worshipper-fame" type="button" data-person="recognition" aria-label="觀察第 2 位拜佛的人" aria-pressed="false" style="--art-width: 142.6596%; --art-left: -27.0213%; --art-top: -4.9120%; --figure-ratio: 940 / 1079;">
+        <span class="pb-figure"><img src="assets/vows/vow01/prototype-b/worshipper-recognition.webp" alt="" draggable="false"></span>
+        <span class="worshipper-marker" hidden></span>
+      </button>
+      <button class="worshipper worshipper-distracted" type="button" data-person="distracted" aria-label="觀察第 3 位拜佛的人" aria-pressed="false" style="--art-width: 162.1964%; --art-left: -47.7297%; --art-top: -2.5720%; --figure-ratio: 947 / 972;">
+        <span class="pb-figure"><img src="assets/vows/vow01/prototype-b/worshipper-distracted.webp" alt="" draggable="false"></span>
+        <span class="worshipper-marker" hidden></span>
+      </button>
+      <button class="worshipper worshipper-sincere" type="button" data-person="sincere" aria-label="觀察第 4 位拜佛的人" aria-pressed="false" style="--art-width: 112.4248%; --art-left: -9.3186%; --art-top: -14.2230%; --figure-ratio: 998 / 1139;">
+        <span class="pb-figure"><img src="assets/vows/vow01/prototype-b/worshipper-sincere.webp" alt="" draggable="false"></span>
+        <span class="worshipper-marker" hidden></span>
+      </button>
+      </div>
+      <div class="challenge-sudhana-observer" aria-hidden="true" style="--art-width: 357.2093%; --art-left: -172.5581%; --art-top: -1.6888%; --figure-ratio: 430 / 829;">
+        <span class="pb-figure"><img src="assets/vows/vow01/prototype-b/sudhana-observing.webp" alt="" draggable="false"></span>
+      </div>
+      <aside id="discovery-panel" class="discovery-panel" aria-live="polite" hidden>
+        <span id="thought-label" class="pb-visually-hidden">他心裡正在想……</span>
+        <p id="person-thought" class="person-thought"></p>
+        <button id="close-discovery-button" class="close-discovery-button" type="button" aria-label="Close" title="Close">×</button>
+      </aside>
+      <aside id="pb-reaction" class="pb-reaction" aria-live="polite" hidden>
+        <strong id="discovery-sudhana-name">善財</strong><p id="sudhana-reaction-text"></p>
+      </aside>
+    </div>
+    <p id="pb-support" class="pb-support" aria-live="polite" hidden><span id="discovery-label" class="pb-visually-hidden">發現</span><strong id="discovery-result-text"></strong></p>
+    <button id="continue-observing-button" class="secondary-btn" type="button" hidden>繼續觀察其他人</button>
+    <div id="challenge-complete-panel" class="challenge-complete-panel" aria-live="polite" hidden>
+      <span id="challenge-learning-label" class="pb-visually-hidden">善財的發現</span>
+      <p class="pb-discoveries"><span id="learning-pride-title">我慢</span>｜<span id="learning-fame-title">求名</span>｜<span id="learning-distracted-title">心不在場</span>｜<span id="learning-sincere-title">至誠</span></p>
+      <h3 id="challenge-complete-title">「原來，同樣是『拜佛』，心可以完全不同！」</h3>
+      <div class="pb-visually-hidden"><span id="learning-pride-text"></span><span id="learning-fame-text"></span><span id="learning-distracted-text"></span><span id="learning-sincere-text"></span></div>
+      <p id="challenge-key-discovery" class="key-discovery"><span class="key-discovery-label" hidden>第一個發現</span><strong>真正的禮敬，不只看「做了什麼」，還要看「用什麼心去做」。</strong></p>
+      <button id="challenge-next-button" class="primary-btn" type="button">那麼，經文怎麼說？</button>
+    </div>
+  </section>
+
+
+
+  <!-- =====================================================
+       SCREEN 04
+       Sutra Revelation
+       經文怎麼說？身・語・意
+       ===================================================== -->
+
+  <section
+    id="sutra-screen"
+    class="screen sutra-revelation-screen"
+    data-screen="sutra-body-speech-mind"
+    hidden
+  >
+
+
+    <!-- Background atmosphere -->
+
+    <div class="sutra-revelation-overlay"></div>
+
+
+
+    <!-- Back to Challenge 1 -->
+
+    <button
+      id="sutra-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+
+
+    <!-- Language -->
+
+    <button
+      id="sutra-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+
+
+    <!-- ===================================================
+         Main Screen 04 content
+         =================================================== -->
+
+    <div class="sutra-revelation-content">
+
+
+      <div
+        id="sutra-screen-label"
+        class="sutra-revelation-label"
+      >
+        經文怎麼說？
+      </div>
+
+
+      <h2
+        id="sutra-screen-title"
+        class="sutra-revelation-title"
+      >
+        普賢菩薩把答案說得更深了一層
+      </h2>
+
+
+
+      <!-- Sutra quotation -->
+
+      <div class="sutra-quote-card">
+
+        <div
+          id="sutra-source-label"
+          class="sutra-source-label"
+        >
+          《普賢行願品》
+        </div>
+
+
+        <blockquote
+          id="sutra-main-quote"
+          class="sutra-main-quote"
+        >
+          深心信解，如對目前，
+          悉以清淨身語意業，常修禮敬。
+        </blockquote>
+
+      </div>
+
+
+
+      <!-- Sudhana asks -->
+
+      <div class="sutra-sudhana-question">
+
+        <span
+          class="sutra-sudhana-icon"
+          aria-hidden="true"
+        >
+          🪷
+        </span>
+
+
+        <div>
+
+          <strong id="sutra-sudhana-name">
+            善財
+          </strong>
+
+          <p id="sutra-sudhana-question-text">
+            原來真正的禮敬，不只是身體做了一個動作。
+            那麼「身、語、意」究竟是什麼意思呢？
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <p
+        id="sutra-instruction"
+        class="sutra-instruction"
+      >
+        點擊「身、語、意」，和善財一起看看。
+      </p>
+
+
+
+      <!-- =================================================
+           Three Karma / 身語意
+           ================================================= -->
+
+      <div class="three-karma-grid">
+
+
+        <!-- 身 -->
+
+        <button
+          class="karma-card"
+          data-karma="body"
+          type="button"
+        >
+
+          <span
+            class="karma-lotus"
+            aria-hidden="true"
+          >
+            🪷
+          </span>
+
+
+          <strong
+            id="karma-body-title"
+            class="karma-title"
+          >
+            身
+          </strong>
+
+
+          <span
+            id="karma-body-short"
+            class="karma-short"
+          >
+            我的行動
+          </span>
+
+
+          <span
+            class="karma-status"
+            aria-hidden="true"
+          >
+            ?
+          </span>
+
+        </button>
+
+
+
+        <!-- 語 -->
+
+        <button
+          class="karma-card"
+          data-karma="speech"
+          type="button"
+        >
+
+          <span
+            class="karma-lotus"
+            aria-hidden="true"
+          >
+            🪷
+          </span>
+
+
+          <strong
+            id="karma-speech-title"
+            class="karma-title"
+          >
+            語
+          </strong>
+
+
+          <span
+            id="karma-speech-short"
+            class="karma-short"
+          >
+            我的言語
+          </span>
+
+
+          <span
+            class="karma-status"
+            aria-hidden="true"
+          >
+            ?
+          </span>
+
+        </button>
+
+
+
+        <!-- 意 -->
+
+        <button
+          class="karma-card"
+          data-karma="mind"
+          type="button"
+        >
+
+          <span
+            class="karma-lotus"
+            aria-hidden="true"
+          >
+            🪷
+          </span>
+
+
+          <strong
+            id="karma-mind-title"
+            class="karma-title"
+          >
+            意
+          </strong>
+
+
+          <span
+            id="karma-mind-short"
+            class="karma-short"
+          >
+            我的心念
+          </span>
+
+
+          <span
+            class="karma-status"
+            aria-hidden="true"
+          >
+            ?
+          </span>
+
+        </button>
+
+      </div>
+
+
+
+      <!-- Progress -->
+
+      <div
+        class="karma-progress"
+        aria-live="polite"
+      >
+
+        <span id="karma-progress-label">
+          已理解
+        </span>
+
+        <strong id="karma-progress-count">
+          0 / 3
+        </strong>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         身 / 語 / 意 Detail Panel
+         =================================================== -->
+
+    <aside
+      id="karma-detail-panel"
+      class="karma-detail-panel"
+      aria-live="polite"
+      hidden
+    >
+
+      <button
+        id="karma-detail-close"
+        class="close-discovery-button"
+        type="button"
+        aria-label="Close"
+        title="Close"
+      >
+        ×
+      </button>
+
+
+      <div
+        id="karma-detail-icon"
+        class="karma-detail-icon"
+        aria-hidden="true"
+      >
+        🪷
+      </div>
+
+
+      <h3 id="karma-detail-title">
+        身
+      </h3>
+
+
+      <p
+        id="karma-detail-explanation"
+        class="karma-detail-explanation"
+      ></p>
+
+
+
+      <!-- Connect back to Challenge 1 -->
+
+      <div class="karma-example-box">
+
+        <span
+          id="karma-example-label"
+          class="karma-example-label"
+        >
+          回看剛才
+        </span>
+
+        <p id="karma-example-text"></p>
+
+      </div>
+
+
+
+      <button
+        id="karma-detail-continue"
+        class="primary-btn karma-detail-continue"
+        type="button"
+      >
+        我明白了
+      </button>
+
+    </aside>
+
+
+
+    <!-- ===================================================
+         Completion after 身語意 3/3
+         =================================================== -->
+
+    <div
+      id="karma-complete-panel"
+      class="karma-complete-panel"
+      hidden
+    >
+
+      <div
+        class="completion-lotus"
+        aria-hidden="true"
+      >
+        🪷
+      </div>
+
+
+      <div
+        id="karma-complete-label"
+        class="learning-label"
+      >
+        善財明白了
+      </div>
+
+
+      <h3 id="karma-complete-title">
+        真正的禮敬，要讓身、語、意一起恭敬。
+      </h3>
+
+
+      <p
+        id="karma-complete-explanation"
+        class="karma-complete-explanation"
+      >
+        所以問題不只是「我有沒有拜」，
+        而是當我禮敬時，身體、言語和心念，
+        是否都在清淨而專一地恭敬。
+      </p>
+
+
+
+      <!-- Sutra connection -->
+
+      <div class="sutra-connection-box">
+
+        <span id="sutra-connection-label">
+          再看一次經文
+        </span>
+
+
+        <strong id="sutra-connection-text">
+          「悉以清淨身語意業，常修禮敬。」
+        </strong>
+
+      </div>
+
+
+
+      <!-- First learning petal -->
+
+      <div class="dharma-petal-reward cc-first" id="cc-first">
+
+        <div class="cc-first-art"><img class="cc-first-petal" src="assets/vows/vow01/checkpoint-c/C02_Dharma_Petal_01_Qingjing_Shen_Yu_Yi_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div>
+
+
+        <div>
+
+          <span id="dharma-petal-label">
+            獲得第一片行願花瓣
+          </span>
+
+
+          <strong id="dharma-petal-name">
+            清淨身・語・意
+          </strong>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Leads to the NEXT part of Vow 1 -->
+
+      <button
+        id="karma-next-button"
+        class="primary-btn"
+        type="button"
+      >
+        可是，要禮敬多少佛？
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       SCREEN 05
+       How many Buddhas are there to honor?
+       第一願・禮敬諸佛 — 第二個探索
+       ===================================================== -->
+
+  <section
+    id="countless-buddhas-screen"
+    class="screen countless-buddhas-screen"
+    data-screen="countless-buddhas-intro"
+    hidden
+  >
+
+    <div class="countless-buddhas-overlay"></div>
+
+    <button
+      id="countless-buddhas-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="countless-buddhas-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="countless-buddhas-content">
+
+      <div
+        id="countless-buddhas-label"
+        class="sutra-revelation-label"
+      >
+        第一願・禮敬諸佛
+      </div>
+
+      <h2
+        id="countless-buddhas-title"
+        class="sutra-revelation-title"
+      >
+        可是，要禮敬多少佛？
+      </h2>
+
+      <div class="countless-buddhas-focus">
+        <div class="countless-buddhas-halo" aria-hidden="true">✦</div>
+        <img
+          class="countless-buddhas-image"
+          src="assets/vows/vow01-one-buddha.webp"
+          alt="A serene Buddha seated on a lotus throne"
+        >
+      </div>
+
+      <div class="sutra-sudhana-question countless-buddhas-question">
+
+        <span
+          class="sutra-sudhana-icon"
+          aria-hidden="true"
+        >
+          🪷
+        </span>
+
+        <div>
+          <strong id="countless-buddhas-sudhana-name">
+            善財
+          </strong>
+
+          <p id="countless-buddhas-question-text">
+            普賢菩薩說「禮敬諸佛」……
+            那究竟要禮敬多少佛呢？
+          </p>
+        </div>
+
+      </div>
+
+      <p
+        id="countless-buddhas-hint"
+        class="sutra-instruction"
+      >
+        眼前先出現了一尊佛。答案會只是一尊嗎？
+      </p>
+
+      <button
+        id="countless-buddhas-explore-button"
+        class="primary-btn"
+        type="button"
+      >
+        🔍 <span id="countless-buddhas-explore-text">開始尋找</span>
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 06
+       Challenge 2 — From one Buddha to countless Buddhas
+       第一願・禮敬諸佛 — 無量諸佛探索
+       ===================================================== -->
+
+  <section
+    id="buddha-expansion-screen"
+    class="screen buddha-expansion-screen"
+    data-screen="buddha-expansion"
+    hidden
+  >
+
+    <div class="buddha-expansion-overlay"></div>
+
+    <button
+      id="buddha-expansion-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="buddha-expansion-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="buddha-expansion-content">
+
+      <div
+        id="buddha-expansion-label"
+        class="sutra-revelation-label"
+      >
+        第二個探索
+      </div>
+
+      <h2
+        id="buddha-expansion-title"
+        class="sutra-revelation-title"
+      >
+        從一尊佛開始尋找
+      </h2>
+
+      <p
+        id="buddha-expansion-instruction"
+        class="sutra-instruction"
+      >
+        點擊眼前的佛，看看善財的視野會發生什麼變化。
+      </p>
+
+      <div
+        id="buddha-expansion-stage"
+        class="buddha-expansion-stage"
+        aria-live="polite"
+      >
+
+        <button
+          id="buddha-expansion-focus"
+          class="buddha-expansion-focus"
+          type="button"
+          aria-label="Explore the Buddha"
+        >
+          <img
+            id="buddha-expansion-image"
+            class="buddha-expansion-image"
+            src="assets/vows/vow01-one-buddha.webp"
+            alt=""
+          >
+
+          <span
+            id="buddha-expansion-marker"
+            class="buddha-expansion-marker"
+            aria-hidden="true"
+          >
+            ✦
+          </span>
+          <img id="buddha-discovery-hint-hand" class="vow01-discovery-hint-hand"
+            alt="" aria-hidden="true" width="948" height="948" hidden>
+        </button>
+
+        <div
+          id="buddha-expansion-count"
+          class="buddha-expansion-count"
+          aria-live="polite"
+        >
+          <span id="buddha-expansion-count-label">
+            目前看見
+          </span>
+
+          <strong id="buddha-expansion-count-value">
+            1
+          </strong>
+
+          <span id="buddha-expansion-count-unit">
+            尊佛
+          </span>
+        </div>
+
+      </div>
+
+      <div
+        id="buddha-expansion-sudhana"
+        class="sutra-sudhana-question buddha-expansion-sudhana"
+      >
+
+        <span
+          class="sutra-sudhana-icon"
+          aria-hidden="true"
+        >
+          🪷
+        </span>
+
+        <div>
+          <strong id="buddha-expansion-sudhana-name">
+            善財
+          </strong>
+
+          <p id="buddha-expansion-sudhana-text">
+            先從這一尊佛開始……再仔細看看。
+          </p>
+        </div>
+
+      </div>
+
+      <div
+        id="buddha-expansion-discovery"
+        class="buddha-expansion-discovery"
+        hidden
+      >
+
+        <div
+          id="buddha-expansion-discovery-label"
+          class="learning-label"
+        >
+          善財的發現
+        </div>
+
+        <p id="buddha-expansion-discovery-text">
+          原來，眼前的一尊佛並不是探索的終點。
+        </p>
+
+        <button
+          id="buddha-expansion-next-button"
+          class="primary-btn"
+          type="button"
+        >
+          繼續向外尋找
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 07
+       Challenge 2 — Expanding through Buddha lands
+       第一願・禮敬諸佛 — 從多佛到十方三世
+       ===================================================== -->
+
+  <section
+    id="buddha-realms-screen"
+    class="screen buddha-realms-screen"
+    data-screen="buddha-realms"
+    hidden
+  >
+
+    <div class="buddha-realms-overlay"></div>
+
+    <button
+      id="buddha-realms-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="buddha-realms-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="buddha-realms-content">
+
+      <div
+        id="buddha-realms-label"
+        class="sutra-revelation-label"
+      >
+        第二個探索
+      </div>
+
+      <h2
+        id="buddha-realms-title"
+        class="sutra-revelation-title"
+      >
+        再往外看，會看見多少佛？
+      </h2>
+
+      <p
+        id="buddha-realms-instruction"
+        class="sutra-instruction"
+      >
+        每一次向外探索，視野都會再擴大一層。
+      </p>
+
+      <div
+        id="buddha-realms-stage"
+        class="buddha-realms-stage"
+        aria-live="polite"
+      >
+
+        <div
+          id="buddha-realms-visual"
+          class="buddha-realms-visual"
+          aria-hidden="true"
+        >
+          <img
+            id="buddha-realms-main-image"
+            class="buddha-realms-main-image"
+            src="assets/vows/vow01-one-buddha.webp"
+            alt=""
+          >
+
+          <img id="buddha-realms-next-image" class="buddha-realms-next-image" alt="" aria-hidden="true">
+          <div id="buddha-realms-light" class="buddha-realms-light" aria-hidden="true"></div>
+        </div>
+
+        <div
+          id="buddha-realms-count"
+          class="buddha-expansion-count buddha-realms-count"
+        >
+          <span id="buddha-realms-count-label">
+            看見
+          </span>
+
+          <strong id="buddha-realms-count-value">
+            1
+          </strong>
+
+          <span id="buddha-realms-count-unit">
+            尊佛
+          </span>
+        </div>
+
+        <button
+          id="buddha-realms-expand-button"
+          class="primary-btn"
+          type="button"
+        >
+          再往外看
+        </button>
+
+      </div>
+
+      <div
+        id="buddha-realms-sudhana"
+        class="sutra-sudhana-question buddha-realms-sudhana"
+      >
+        <span
+          class="sutra-sudhana-icon"
+          aria-hidden="true"
+        >
+          🪷
+        </span>
+
+        <div>
+          <strong id="buddha-realms-sudhana-name">
+            善財
+          </strong>
+
+          <p id="buddha-realms-sudhana-text">
+            一尊之外，還有更多佛。那麼再往外看呢？
+          </p>
+        </div>
+      </div>
+
+      <div
+        id="buddha-realms-sutra"
+        class="buddha-expansion-discovery buddha-realms-sutra"
+        hidden
+      >
+        <div
+          id="buddha-realms-sutra-label"
+          class="learning-label"
+        >
+          經文揭示
+        </div>
+
+        <blockquote
+          id="buddha-realms-sutra-text"
+          class="sutra-main-quote"
+        >
+          盡法界、虛空界，十方三世一切佛剎極微塵數諸佛世尊……
+        </blockquote>
+
+        <p id="buddha-realms-realization">
+          原來普賢菩薩的禮敬，沒有一個「最後」。
+        </p>
+
+        <div class="dharma-petal-reward buddha-realms-reward cc-first cc-second" id="cc-second">
+          <div class="cc-first-art"><img class="cc-first-petal" src="assets/vows/vow01/checkpoint-c/C03_Dharma_Petal_02_Lijing_Wujin_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div>
+
+          <div>
+            <span id="buddha-realms-reward-label">
+              獲得第二片行願花瓣
+            </span>
+
+            <strong id="buddha-realms-reward-name">
+              禮敬無盡
+            </strong>
+          </div>
+        </div>
+
+        <button
+          id="buddha-realms-next-button"
+          class="primary-btn"
+          type="button"
+        >
+          繼續理解普賢菩薩的行願
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 08 — Third Discovery: 念念相續
+       ===================================================== -->
+  <section id="continuous-reverence-screen" class="screen continuous-reverence-screen"
+    data-screen="continuous-reverence" hidden>
+    <div class="continuous-reverence-overlay"></div>
+    <button id="continuous-reverence-back-button" class="back-button" type="button"
+      aria-label="Back" title="Back">←</button>
+    <button id="continuous-reverence-language-button" class="challenge-language-button"
+      type="button" aria-label="Change language" title="Change language">🌐</button>
+
+    <div class="continuous-reverence-content">
+      <div id="continuous-reverence-label" class="sutra-revelation-label">第三個發現</div>
+      <h2 id="continuous-reverence-title" class="sutra-revelation-title">
+        可是，這份禮敬要持續多久？
+      </h2>
+
+      <div id="continuous-reverence-question"
+        class="sutra-sudhana-question continuous-reverence-question">
+        <span class="sutra-sudhana-icon" aria-hidden="true">🪷</span>
+        <div>
+          <strong id="continuous-reverence-sudhana-name">善財</strong>
+          <p id="continuous-reverence-sudhana-text">
+            如果今天我能恭敬地禮佛，可是明天忘了呢？
+          </p>
+        </div>
+      </div>
+
+      <p id="continuous-reverence-instruction" class="sutra-instruction">
+        和善財一起向前走，看看這份禮敬能走多遠。
+      </p>
+
+      <div id="continuous-reverence-stage" class="continuous-reverence-stage"
+        aria-live="polite">
+        <div id="continuous-reverence-time-track" class="continuous-reverence-time-track">
+          <div id="continuous-reverence-time-icon" class="continuous-reverence-time-icon"
+            aria-hidden="true">☀️</div>
+          <strong id="continuous-reverence-time-label"
+            class="continuous-reverence-time-label">今天</strong>
+          <p id="continuous-reverence-time-text" class="continuous-reverence-time-text">
+            此刻，我願意恭敬。
+          </p>
+        </div>
+
+        <div id="continuous-reverence-progress" class="continuous-reverence-progress"
+          aria-hidden="true">
+          <span class="continuous-reverence-dot is-active"></span>
+          <span class="continuous-reverence-line"></span>
+          <span class="continuous-reverence-dot"></span>
+          <span class="continuous-reverence-line"></span>
+          <span class="continuous-reverence-dot"></span>
+          <span class="continuous-reverence-line"></span>
+          <span class="continuous-reverence-dot"></span>
+          <span class="continuous-reverence-line"></span>
+          <span class="continuous-reverence-dot"></span>
+        </div>
+
+        <button id="continuous-reverence-forward-button" class="primary-btn" type="button">
+          走到明天
+        </button>
+      </div>
+
+      <div id="continuous-reverence-sutra"
+        class="buddha-expansion-discovery continuous-reverence-sutra" hidden>
+        <div id="continuous-reverence-sutra-label" class="learning-label">經文揭示</div>
+        <blockquote id="continuous-reverence-quote-one" class="sutra-main-quote">
+          我此禮敬，無有窮盡。
+        </blockquote>
+        <blockquote id="continuous-reverence-quote-two" class="sutra-main-quote">
+          念念相續，無有間斷，身語意業，無有疲厭。
+        </blockquote>
+
+        <div id="continuous-reverence-discovery" class="key-discovery">
+          <span id="continuous-reverence-discovery-label" class="key-discovery-label">
+            善財的發現
+          </span>
+          <strong id="continuous-reverence-discovery-text">
+            原來「無盡」不只是佛很多，也是我的禮敬不能只停在某一次。
+          </strong>
+        </div>
+
+        <div class="dharma-petal-reward continuous-reverence-reward cc-continuity" id="cc-continuity">
+          <div class="cc-stage"><div class="cc-petals"><img class="cc-petal cc-petal-1" src="assets/vows/vow01/checkpoint-c/C02_Dharma_Petal_01_Qingjing_Shen_Yu_Yi_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-petal cc-petal-2" src="assets/vows/vow01/checkpoint-c/C03_Dharma_Petal_02_Lijing_Wujin_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-petal cc-petal-3" src="assets/vows/vow01/checkpoint-c/C04_Dharma_Petal_03_Niannian_Xiangxu_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div><img class="cc-formation" src="assets/vows/vow01/checkpoint-c/C05_Three_Petal_Synthesis_Formation_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div>
+          <div>
+            <span id="continuous-reverence-reward-label">獲得第三片行願花瓣</span>
+            <strong id="continuous-reverence-reward-name">念念相續</strong>
+          </div>
+        </div>
+
+        <button id="continuous-reverence-next-button" class="primary-btn" type="button">
+          把這份禮敬帶回生活
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 09 — Back to Daily Life
+       第一願・禮敬諸佛 — 把禮敬帶出佛堂
+       ===================================================== -->
+
+<section id="daily-reverence-screen" class="screen daily-reverence-screen cb-modern-screen" data-screen="daily-reverence" hidden>
+  <button id="daily-reverence-back-button" class="back-button" type="button" aria-label="返回">←</button>
+  <button id="daily-reverence-language-button" class="challenge-language-button" type="button" aria-label="切換語言">🌐</button>
+  <div class="cb-content">
+    <header><p id="daily-reverence-label" class="section-label">留意</p><h2 id="daily-reverence-title">回到日常途中</h2></header>
+    <div class="cb-scene" id="cb-scene-0" data-state="">
+      <img class="cb-art" id="cb-art-0" src="assets/vows/vow01/checkpoint-b/b02.webp" alt="" width="1672" height="941">
+      <button class="cb-object" id="cb-object-0" type="button" hidden><img class="cb-hand" alt="" aria-hidden="true" hidden></button>
+    </div>
+    <div class="cb-reflection" id="cb-reflection-0" aria-live="polite" hidden></div>
+    <div class="cb-actions">
+      
+      <button id="daily-reverence-start-button" class="next-button" type="button" hidden>繼續</button>
+    </div>
+  </div>
+</section>
+
+<section id="daily-choice-screen" class="screen daily-choice-screen cb-modern-screen" data-screen="daily-choice" hidden>
+  <button id="daily-choice-back-button" class="back-button" type="button" aria-label="返回">←</button>
+  <button id="daily-choice-language-button" class="challenge-language-button" type="button" aria-label="切換語言">🌐</button>
+  <div class="cb-content">
+    <header><p id="daily-choice-label" class="section-label">回應</p><h2 id="daily-choice-title">眼前的兩顆橘子</h2></header>
+    <div class="cb-scene" id="cb-scene-1" data-state="">
+      <img class="cb-art" id="cb-art-1" src="assets/vows/vow01/checkpoint-b/b05a.webp" alt="" width="1672" height="941">
+      <button class="cb-object" id="cb-object-1" type="button" hidden><img class="cb-hand" alt="" aria-hidden="true" hidden></button>
+          <p class="cb-text-hint" id="cb-text-hint-1" role="status" hidden></p>
+    </div>
+    <div class="cb-reflection" id="cb-reflection-1" aria-live="polite" hidden></div>
+    <div class="cb-actions">
+      
+      <button id="daily-choice-next-button" class="next-button" type="button" hidden>繼續</button>
+    </div>
+  </div>
+</section>
+
+<section id="equal-respect-screen" class="screen equal-respect-screen cb-modern-screen" data-screen="equal-respect" hidden>
+  <button id="equal-respect-back-button" class="back-button" type="button" aria-label="返回">←</button>
+  <button id="equal-respect-language-button" class="challenge-language-button" type="button" aria-label="切換語言">🌐</button>
+  <div class="cb-content">
+    <header><p id="equal-respect-label" class="section-label">察看</p><h2 id="equal-respect-title">同一扇門</h2></header>
+    <div class="cb-scene" id="cb-scene-2" data-state="">
+      <img class="cb-art" id="cb-art-2" src="assets/vows/vow01/checkpoint-b/b07a.webp" alt="" width="1672" height="941">
+      <button class="cb-object" id="cb-object-2" type="button" hidden><img class="cb-hand" alt="" aria-hidden="true" hidden></button>
+          <p class="cb-text-hint" id="cb-text-hint-2" role="status" hidden></p>
+    </div>
+    <div class="cb-reflection" id="cb-reflection-2" aria-live="polite" hidden></div>
+    <div class="cb-actions">
+      <button id="cb-reflect-next" class="next-button" type="button" hidden>再想一想</button>
+      <button id="equal-respect-next-button" class="next-button" type="button" hidden>繼續</button>
+    </div>
+  </div>
+</section>
+
+  <section
+    id="vow01-synthesis-screen"
+    class="screen vow01-synthesis-screen"
+    data-screen="vow01-synthesis"
+    hidden
+  >
+    <div class="vow01-synthesis-overlay"></div>
+
+    <button
+      id="vow01-synthesis-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="vow01-synthesis-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="vow01-synthesis-content">
+
+      <div
+        id="vow01-synthesis-label"
+        class="sutra-revelation-label"
+      >
+        第一願・回看這段旅程
+      </div>
+
+      <h2
+        id="vow01-synthesis-title"
+        class="sutra-revelation-title"
+      >
+        三片行願花瓣，原來在說同一件事
+      </h2>
+
+      <p
+        id="vow01-synthesis-instruction"
+        class="sutra-instruction"
+      >
+        和善財一起，把一路得到的三個發現重新放在一起。
+      </p>
+
+      <div
+        id="vow01-synthesis-petals"
+        class="vow01-synthesis-petals cc-synthesis"
+      >
+        <div class="cc-stage"><div class="cc-petals"><img class="cc-petal cc-petal-1" src="assets/vows/vow01/checkpoint-c/C02_Dharma_Petal_01_Qingjing_Shen_Yu_Yi_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-petal cc-petal-2" src="assets/vows/vow01/checkpoint-c/C03_Dharma_Petal_02_Lijing_Wujin_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-petal cc-petal-3" src="assets/vows/vow01/checkpoint-c/C04_Dharma_Petal_03_Niannian_Xiangxu_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div><img class="cc-formation" src="assets/vows/vow01/checkpoint-c/C05_Three_Petal_Synthesis_Formation_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"></div>
+        <article class="vow01-synthesis-petal">
+          
+          <span id="vow01-synthesis-petal-one-question" class="vow01-synthesis-petal-question">
+            用什麼來禮敬？
+          </span>
+          <strong id="vow01-synthesis-petal-one-name">
+            清淨身・語・意
+          </strong>
+        </article>
+
+        <article class="vow01-synthesis-petal">
+          
+          <span id="vow01-synthesis-petal-two-question" class="vow01-synthesis-petal-question">
+            要禮敬多少佛？
+          </span>
+          <strong id="vow01-synthesis-petal-two-name">
+            禮敬無盡
+          </strong>
+        </article>
+
+        <article class="vow01-synthesis-petal">
+          
+          <span id="vow01-synthesis-petal-three-question" class="vow01-synthesis-petal-question">
+            要持續多久？
+          </span>
+          <strong id="vow01-synthesis-petal-three-name">
+            念念相續
+          </strong>
+        </article>
+      </div>
+
+      <div
+        id="vow01-synthesis-sudhana"
+        class="sutra-sudhana-question vow01-synthesis-sudhana"
+      >
+        <span class="sutra-sudhana-icon" aria-hidden="true">🪷</span>
+
+        <div>
+          <strong id="vow01-synthesis-sudhana-name">善財</strong>
+
+          <p id="vow01-synthesis-sudhana-line-one">
+            我開始明白了。禮敬不是只在佛前做一次恭敬的動作。
+          </p>
+
+          <p id="vow01-synthesis-sudhana-line-two">
+            我要學習讓身、語、意都清淨恭敬，而且把這份恭敬一直帶下去。
+          </p>
+        </div>
+      </div>
+
+      <div
+        id="vow01-synthesis-realization"
+        class="key-discovery vow01-synthesis-realization"
+      >
+        <span
+          id="vow01-synthesis-realization-label"
+          class="key-discovery-label"
+        >
+          善財真正明白了
+        </span>
+
+        <strong id="vow01-synthesis-realization-text">
+          原來這一拜，要改變的是我自己。
+        </strong>
+      </div>
+
+      <button
+        id="vow01-synthesis-next-button"
+        class="primary-btn"
+        type="button"
+      >
+        完成第一願
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 13 — First Vow Seal
+       第一行願法印・禮敬諸佛
+       ===================================================== -->
+
+  <section
+    id="vow01-seal-screen"
+    class="screen vow01-seal-screen"
+    data-screen="vow01-seal"
+    hidden
+  >
+    <div class="vow01-seal-overlay"></div>
+
+    <button
+      id="vow01-seal-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="vow01-seal-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="vow01-seal-content">
+
+      <div
+        id="vow01-seal-label"
+        class="sutra-revelation-label"
+      >
+        第一願・完成
+      </div>
+
+      <h2
+        id="vow01-seal-title"
+        class="sutra-revelation-title"
+      >
+        三片行願花瓣，凝聚成第一枚法印
+      </h2>
+
+      <div
+        id="vow01-seal-emblem"
+        class="vow01-seal-emblem cc-seal cc-seal-pending"
+        aria-hidden="true"
+      >
+        <img class="cc-seal-source" src="assets/vows/vow01/checkpoint-c/C05_Three_Petal_Synthesis_Formation_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-seal-final" src="assets/vows/vow01/checkpoint-c/C06_Vow1_Dharma_Seal_Lijing_Zhufo_v1.webp" alt="" aria-hidden="true" width="1536" height="1024"><img class="cc-seal-celebration" src="assets/characters/vow01/SUD-E06_Vow_Seal_Celebration_Holding_Seal_v1.webp" alt="" aria-hidden="true" width="1536" height="1024">
+      </div>
+
+      <div
+        id="vow01-seal-reward"
+        class="vow01-seal-reward"
+      >
+        <span
+          id="vow01-seal-reward-label"
+          class="vow01-seal-reward-label"
+        >
+          獲得
+        </span>
+
+        <strong id="vow01-seal-reward-name">
+          第一行願法印・禮敬諸佛
+        </strong>
+
+        <div
+          id="vow01-seal-progress"
+          class="vow01-seal-progress cc-journey"
+          aria-label="1 of 10 vows completed"
+        >
+          <ol id="cc-journey-markers" class="cc-journey-markers"></ol>
+          <span id="vow01-seal-progress-label">
+            行願進度
+          </span>
+          <strong id="vow01-seal-progress-value">
+            1 / 10
+          </strong>
+        </div>
+      </div>
+
+      <div
+        id="vow01-seal-daily-practice"
+        class="key-discovery vow01-seal-daily-practice"
+      >
+        <span
+          id="vow01-seal-daily-label"
+          class="key-discovery-label"
+        >
+          今日行願
+        </span>
+
+        <strong id="vow01-seal-daily-text">
+          下一次遇見一個「對你沒有任何好處」的人，看看自己的語氣和態度有沒有改變。
+        </strong>
+      </div>
+
+      <p
+        id="vow01-seal-closing"
+        class="sutra-instruction vow01-seal-closing"
+      >
+        把今天發現的恭敬，帶進下一次真實的相遇。
+      </p>
+
+      <button
+        id="vow01-seal-next-button"
+        class="primary-btn"
+        type="button"
+      >
+        繼續善財的旅程
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       SCREEN 14 — Vow 1 Journey Crossroads
+       第一願完成後：繼續旅程 / 深入第一願
+       ===================================================== -->
+
+  <section
+    id="vow01-crossroads-screen"
+    class="screen vow01-crossroads-screen"
+    data-screen="vow01-crossroads"
+    hidden
+  >
+    <div class="vow01-crossroads-overlay"></div>
+
+    <button
+      id="vow01-crossroads-back-button"
+      class="back-button"
+      type="button"
+      aria-label="Back"
+      title="Back"
+    >
+      ←
+    </button>
+
+    <button
+      id="vow01-crossroads-language-button"
+      class="challenge-language-button"
+      type="button"
+      aria-label="Change language"
+      title="Change language"
+    >
+      🌐
+    </button>
+
+    <div class="vow01-crossroads-content pc-content">
+      <header class="pc-completion">
+        <p id="vow01-crossroads-label" class="pc-vow-name">第一願・禮敬諸佛</p>
+        <h2 id="vow01-crossroads-title" class="pc-complete-title">完成</h2>
+        <img class="pc-seal" src="assets/vows/vow01/prototype-c/C01_Vow01_Completion_Seal.webp" alt="" width="1278" height="1230">
+        <p id="vow01-crossroads-intro" class="pc-realization">真正的禮敬，不只是低頭的一刻。
+是在每一個人面前，都學習放下我慢，生起恭敬。</p>
+        <blockquote id="vow01-crossroads-reflection" class="pc-reflection">「原來，禮敬諸佛，也是在學習怎樣看待眼前的每一個人。」</blockquote>
+      </header>
+
+      <section class="pc-rest-stop" aria-labelledby="vow01-crossroads-rest-title">
+        <h3 id="vow01-crossroads-rest-title">歇一歇，聽聽這一願還能告訴我們什麼。</h3>
+        <div class="pc-videos">
+          <a id="vow01-crossroads-master-video" class="pc-video" href="https://youtu.be/1M6A6vaZi2U" target="_blank" rel="noopener noreferrer">
+            <img id="vow01-crossroads-master-thumbnail" src="https://i.ytimg.com/vi/1M6A6vaZi2U/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+            <span class="pc-video-caption"><strong id="vow01-crossroads-master-video-text">▶ 宣化上人講解</strong><span id="vow01-crossroads-master-video-subtitle">第一願・禮敬諸佛</span></span>
+          </a>
+          <a id="vow01-crossroads-modern-video" class="pc-video" href="https://youtu.be/x7QNTmRwQ0I" target="_blank" rel="noopener noreferrer">
+            <img id="vow01-crossroads-modern-thumbnail" src="https://i.ytimg.com/vi/x7QNTmRwQ0I/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+            <span class="pc-video-caption"><strong id="vow01-crossroads-modern-video-text">▶《行願十日》</strong><span id="vow01-crossroads-modern-video-subtitle">禮敬諸佛｜現代生活篇</span></span>
+          </a>
+        </div>
+        <a id="vow01-crossroads-commentary" class="pc-reading" href="https://www.drbachinese.org/online_reading/sutra_explanation/Universal_Worthy/Universal_Worthy.htm" target="_blank" rel="noopener noreferrer">
+          <img src="assets/vows/vow01/prototype-c/C04_MasterHua_Commentary_Photo.jpg" alt="" width="960" height="1283" loading="lazy">
+          <span class="pc-reading-copy">
+            <strong id="vow01-crossroads-reading-label">📖 深入經藏</strong>
+            <span id="vow01-crossroads-commentary-text">宣化上人《大方廣佛華嚴經淺釋》</span>
+            <span id="vow01-crossroads-reading-subtitle">〈入不思議解脫境界普賢行願品〉</span>
+            <span id="vow01-crossroads-reading-support">想知道「禮敬諸佛」在經文中究竟怎麼說？</span>
+            <span id="vow01-crossroads-reading-cta" class="pc-reading-cta">閱讀原文 →</span>
+          </span>
+        </a>
+      </section>
+
+      <footer class="pc-continuation">
+        <p id="vow01-crossroads-note">你可以現在繼續，也可以先停下來深入探索。</p>
+        <button id="vow01-crossroads-vow02-button" class="primary-btn" type="button">繼續旅程 →</button>
+      </footer>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       JavaScript
+
+       Order matters:
+       1. language
+       2. Dharma/story data
+       3. game logic
+       ===================================================== -->
+
+  <script src="js/language.js"></script>
+  <script src="js/data/vows.js"></script>
+  <script src="js/vows/vow01/content.js"></script>
+  <script src="js/core/navigation.js"></script>
+  <script src="js/core/i18n.js"></script>
+  <script src="js/core/progress.js"></script>
+  <script src="js/vows/vow01/interactions.js"></script>
+  <script src="js/core/audio.js"></script>
+  <script src="js/vows/vow01/rewards.js"></script>
+  <script src="js/vows/vow01/vow01.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/core/journey.js"></script>
+
+
+</body>
+
+</html>
