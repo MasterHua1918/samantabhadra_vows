@@ -7311,7 +7311,9 @@ div strong {
   background: #c9dfb4 url("../assets/vows/vow01/prototype-b/shrine-garden.webp") center / 100% 100% no-repeat;
   box-shadow: 0 10px 28px rgba(51,78,38,.15);
 }
-.prototype-b .worshipper-stage { position: absolute; inset: 0; z-index: 2; }
+/* Older mobile rules give .worshipper-stage min-height:790px and a top margin, which pushed the figures
+   below the picture on phones. Screen 03 must keep the stage exactly the size of the scene. */
+.prototype-b .worshipper-stage { position: absolute; inset: 0; z-index: 2; width: auto; min-height: 0; margin: 0; }
 .prototype-b .worshipper,
 .prototype-b .challenge-sudhana-observer {
   position: absolute; inset: auto; margin: 0; padding: 0;
@@ -7841,3 +7843,61 @@ div strong {
 @keyframes cd-static-hero { 0% { opacity: 0; } 72.222222%, 100% { opacity: 1; } }
 @keyframes cd-static-journey { 0% { opacity: 0; } 100% { opacity: 1; } }
 #vow01-seal-screen.fade-out #vow01-seal-emblem img { visibility: hidden; }
+
+/* Screen 03 phone fixes (added after cleanup/optimisation).
+   1) Small phones held sideways: use the same wide 16:9 composition as larger screens. */
+@media (max-width: 650px) and (orientation: landscape) {
+  #challenge-one-screen.prototype-b { padding-top: 70px; }
+  .prototype-b .pb-scene { aspect-ratio: 16 / 9; background-size: 100% 100%; background-position: center; }
+  .prototype-b .worshipper-pride { left: 29%; bottom: 25%; width: 11.5%; }
+  .prototype-b .worshipper-fame { left: 43%; bottom: 28%; width: 12.4%; }
+  .prototype-b .worshipper-distracted { left: 34%; bottom: 8%; width: 13.3%; }
+  .prototype-b .worshipper-sincere { left: 51%; bottom: 12%; width: 12.8%; }
+  .prototype-b .challenge-sudhana-observer { right: 11%; bottom: 8%; width: 9.5%; }
+  .prototype-b .discovery-panel,
+  .prototype-b .discovery-panel[data-person="recognition"],
+  .prototype-b .discovery-panel[data-person="distracted"],
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="1"],
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="2"],
+  .prototype-b .discovery-panel[data-person="sincere"] { left: 28%; bottom: 60%; width: 29%; }
+  .prototype-b .discovery-panel[data-person="recognition"] { left: 39%; }
+  .prototype-b .discovery-panel[data-person="distracted"] { left: 30%; }
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="1"] { left: 31%; }
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="2"] { left: 29%; }
+  .prototype-b .discovery-panel[data-person="sincere"] { left: 45%; }
+  .prototype-b .discovery-panel::before,
+  .prototype-b .discovery-panel[data-person="recognition"]::before,
+  .prototype-b .discovery-panel[data-person="distracted"]::before,
+  .prototype-b .discovery-panel[data-person="sincere"]::before { left: 40%; }
+  .prototype-b .pb-reaction { right: 3%; bottom: 40%; width: 31%; max-width: 245px; }
+  .prototype-b .person-thought { font-size: 13px; }
+  .prototype-b .pb-reaction p { font-size: 12.5px; }
+}
+/* 2) Very narrow phones (<= 360px): slightly smaller bubble text and a wider reaction bubble. */
+@media (max-width: 360px) and (orientation: portrait) {
+  .prototype-b .person-thought { font-size: 13px; line-height: 1.4; }
+  .prototype-b .pb-reaction { width: 46%; padding: 8px; }
+  .prototype-b .pb-reaction p { font-size: 12.5px; line-height: 1.4; }
+  .prototype-b .pb-reaction strong { font-size: 12.5px; }
+}
+/* 3) Portrait phones: keep the thought bubble at the top and Sudhana's reply in the right column,
+   so the two bubbles never overlap (long English / Vietnamese texts). */
+@media (max-width: 650px) and (orientation: portrait) {
+  .prototype-b .discovery-panel,
+  .prototype-b .discovery-panel[data-person="recognition"],
+  .prototype-b .discovery-panel[data-person="distracted"],
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="1"],
+  .prototype-b .discovery-panel[data-person="distracted"][data-thought="2"],
+  .prototype-b .discovery-panel[data-person="sincere"] { top: 3%; bottom: auto; }
+  .prototype-b .pb-reaction { width: 36%; }
+}
+@media (max-width: 360px) and (orientation: portrait) {
+  .prototype-b .pb-reaction { width: 38%; }
+}
+/* Thought bubble steps aside when it would cover Sudhana's reply (see js/vows/vow01/bubble-fit.js). */
+.prototype-b .discovery-panel.pb-yield { visibility: hidden; }
+@media (max-width: 340px) and (orientation: portrait) {
+  .prototype-b .pb-reaction { width: 42%; padding: 7px; }
+  .prototype-b .pb-reaction p { font-size: 12px; }
+  .prototype-b .person-thought { font-size: 12.5px; }
+}
