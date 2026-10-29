@@ -1,0 +1,1801 @@
+/* =========================================================
+   善財童子 × 普賢十願
+   game.css
+   ========================================================= */
+
+
+/* Prototype A repair #3: official Huninn 1.003, bundled for offline file:// use. */
+@font-face {
+  font-family: "Puxian Huninn";
+  src: url("../assets/fonts/huninn/Huninn-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ---------- Basic setup ---------- */
+
+:root {
+  --gold: #f6d77a;
+  --gold-light: #fff3b4;
+  --gold-deep: #c68d29;
+
+  --cream: #fff9e8;
+  --brown: #4b321c;
+  --brown-dark: #2c1c0e;
+
+  --panel-dark: rgba(45, 29, 14, 0.72);
+  --panel-light: rgba(255, 250, 232, 0.93);
+
+  --shadow:
+    0 18px 50px rgba(31, 18, 7, 0.30);
+
+  --radius-large: 28px;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+
+html,
+body {
+  margin: 0;
+
+  width: 100%;
+  min-height: 100%;
+
+  font-family:
+    "Noto Sans TC",
+    "Noto Sans",
+    "Microsoft JhengHei",
+    "PingFang TC",
+    Arial,
+    sans-serif;
+}
+
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+
+  color: var(--cream);
+
+  background: #392514;
+}
+
+
+button,
+select {
+  font: inherit;
+}
+
+
+button {
+  cursor: pointer;
+}
+
+
+[hidden] {
+  display: none !important;
+}
+
+
+.screen {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+button:focus-visible,
+select:focus-visible {
+  outline: 4px solid #fff0a3;
+  outline-offset: 4px;
+}
+
+
+/* =========================================================
+   LANGUAGE GATEWAY
+   ========================================================= */
+
+.language-gateway {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    clamp(20px, 4vw, 60px);
+
+  background:
+
+    linear-gradient(
+      rgba(30, 20, 10, 0.20),
+      rgba(30, 20, 10, 0.50)
+    ),
+
+    url("../assets/backgrounds/vow01-opening.webp")
+    center center / cover
+    no-repeat;
+
+  isolation: isolate;
+}
+
+
+.gateway-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  background:
+
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(255, 241, 177, 0.10),
+      transparent 35%
+    ),
+
+    linear-gradient(
+      to bottom,
+      rgba(20, 14, 7, 0.02),
+      rgba(20, 14, 7, 0.35)
+    );
+}
+
+
+.gateway-layout {
+
+  position: relative;
+
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(280px, 0.9fr)
+    minmax(420px, 1.1fr);
+
+  align-items: center;
+
+  gap:
+    clamp(10px, 3vw, 55px);
+
+  width:
+    min(1180px, 96vw);
+
+  min-height:
+    min(760px, 90vh);
+}
+
+
+/* ---------- Sudhana on first page ---------- */
+
+.gateway-character-wrap {
+
+  position: relative;
+
+  align-self: end;
+
+  height:
+    min(760px, 84vh);
+
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: center;
+}
+
+
+.gateway-sudhana {
+
+  display: block;
+
+  width:
+    min(470px, 38vw);
+
+  max-height:
+    82vh;
+
+  object-fit: contain;
+
+  object-position:
+    center bottom;
+
+  filter:
+    drop-shadow(
+      0 22px 20px
+      rgba(41, 25, 9, 0.32)
+    );
+
+  user-select: none;
+
+  pointer-events: none;
+}
+
+
+/* ---------- Language panel ---------- */
+
+.language-card {
+
+  width:
+    min(570px, 100%);
+
+  padding:
+    clamp(30px, 5vw, 52px);
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(255, 238, 179, 0.50);
+
+  border-radius:
+    var(--radius-large);
+
+  background:
+    rgba(47, 30, 14, 0.70);
+
+  box-shadow:
+    var(--shadow);
+
+  backdrop-filter:
+    blur(12px);
+
+  -webkit-backdrop-filter:
+    blur(12px);
+}
+
+
+.language-lotus {
+
+  margin-bottom: 8px;
+
+  font-size:
+    clamp(42px, 6vw, 64px);
+}
+
+
+.language-card h1 {
+
+  margin:
+    0;
+
+  color:
+    #fff9e7;
+
+  font-size:
+    clamp(30px, 4.5vw, 48px);
+
+  line-height:
+    1.2;
+}
+
+
+.language-subtitle {
+
+  margin:
+    13px 0 28px;
+
+  color:
+    #f8e7b2;
+
+  font-size:
+    clamp(17px, 2vw, 21px);
+
+  line-height:
+    1.6;
+}
+
+
+.language-buttons {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr;
+
+  gap:
+    14px;
+
+  width:
+    min(390px, 100%);
+
+  margin:
+    0 auto;
+}
+
+
+.lang-btn {
+
+  min-height:
+    60px;
+
+  padding:
+    13px 22px;
+
+  border:
+    1px solid
+    rgba(255, 237, 169, 0.80);
+
+  border-radius:
+    999px;
+
+  color:
+    #402a14;
+
+  background:
+
+    linear-gradient(
+      180deg,
+      #fff8d8,
+      #efd27c
+    );
+
+  box-shadow:
+    0 8px 20px
+    rgba(31, 18, 5, 0.24);
+
+  font-size:
+    clamp(18px, 2.2vw, 22px);
+
+  font-weight:
+    800;
+
+  transition:
+    transform 160ms ease,
+    filter 160ms ease,
+    box-shadow 160ms ease;
+}
+
+
+.lang-btn:hover {
+
+  transform:
+    translateY(-3px);
+
+  filter:
+    brightness(1.05);
+
+  box-shadow:
+    0 12px 25px
+    rgba(31, 18, 5, 0.30);
+}
+
+
+.lang-btn:active {
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   UNIVERSAL LANGUAGE CONTROL
+   ========================================================= */
+
+.game-language-control {
+
+  position: absolute;
+
+  z-index: 50;
+
+  top: 18px;
+  right: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  min-height: 46px;
+
+  padding:
+    6px 11px;
+
+  border:
+    1px solid
+    rgba(255, 242, 194, 0.58);
+
+  border-radius:
+    999px;
+
+  color:
+    #fff9e9;
+
+  background:
+    rgba(53, 35, 17, 0.76);
+
+  box-shadow:
+    0 6px 18px
+    rgba(22, 14, 6, 0.22);
+
+  backdrop-filter:
+    blur(9px);
+
+  -webkit-backdrop-filter:
+    blur(9px);
+}
+
+
+.language-globe {
+
+  font-size:
+    23px;
+
+  line-height:
+    1;
+}
+
+
+#language-select {
+
+  max-width:
+    145px;
+
+  border:
+    0;
+
+  outline:
+    0;
+
+  color:
+    #fff9e9;
+
+  background:
+    transparent;
+
+  cursor:
+    pointer;
+
+  font-weight:
+    700;
+}
+
+
+#language-select option {
+
+  color:
+    #222;
+
+  background:
+    #fff;
+}
+
+
+.language-current {
+
+  font-size:
+    14px;
+
+  font-weight:
+    700;
+}
+
+
+/* =========================================================
+   SCREEN 01 — OPENING
+   ========================================================= */
+
+.vow-opening {
+
+  background:
+
+    linear-gradient(
+      90deg,
+      rgba(30, 21, 11, 0.32),
+      rgba(30, 21, 11, 0.03) 55%,
+      rgba(30, 21, 11, 0.14)
+    ),
+
+    url("../assets/backgrounds/vow01-opening.webp")
+    center center / cover
+    no-repeat;
+}
+
+
+.vow-opening::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+
+    linear-gradient(
+      to top,
+      rgba(24, 17, 8, 0.42),
+      transparent 48%
+    );
+}
+
+
+.opening-content {
+  position: relative;
+  z-index: 4;
+
+  /* Put the title/content toward the centre-right,
+     leaving the stone path for Sudhana */
+  width: min(720px, 52vw);
+
+  margin-left: clamp(390px, 32vw, 540px);
+
+  padding:
+    clamp(110px, 14vh, 150px)
+    30px
+    60px
+    0;
+
+  text-align: center;
+
+  text-shadow:
+    0 3px 15px
+    rgba(38, 23, 9, 0.62);
+}
+
+
+.journey-label {
+
+  display:
+    inline-block;
+
+  margin-bottom:
+    14px;
+
+  padding:
+    7px 15px;
+
+  border:
+    1px solid
+    rgba(255, 239, 181, 0.55);
+
+  border-radius:
+    999px;
+
+  color:
+    #fff4c7;
+
+  background:
+    rgba(67, 43, 19, 0.48);
+
+  font-weight:
+    700;
+}
+
+
+.game-title {
+
+  margin:
+    0;
+
+  color:
+    #fff9e9;
+
+  font-size:
+    clamp(37px, 5vw, 72px);
+
+  line-height:
+    1.08;
+}
+
+
+.vow-title {
+
+  margin:
+    16px 0 0;
+
+  color:
+    var(--gold);
+
+  font-size:
+    clamp(24px, 3.2vw, 40px);
+}
+
+
+.opening-hook {
+
+  max-width:
+    650px;
+
+  margin:
+    26px 0 31px;
+
+  color:
+    #fffdf5;
+
+  font-size:
+    clamp(20px, 2.3vw, 30px);
+
+  font-weight:
+    700;
+
+  line-height:
+    1.55;
+}
+
+
+.primary-btn {
+
+  min-height:
+    60px;
+
+  padding:
+    14px 30px;
+
+  border:
+    1px solid
+    #fff0ae;
+
+  border-radius:
+    999px;
+
+  color:
+    #4a3014;
+
+  background:
+
+    linear-gradient(
+      180deg,
+      #fff3b6,
+      #e6b64b
+    );
+
+  box-shadow:
+
+    0 10px 24px
+    rgba(62, 39, 10, 0.34),
+
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.65);
+
+  font-size:
+    clamp(18px, 2vw, 23px);
+
+  font-weight:
+    900;
+
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
+}
+
+
+.primary-btn:hover {
+
+  transform:
+    translateY(-3px);
+
+  filter:
+    brightness(1.06);
+}
+
+
+/* ---------- Sudhana on opening ---------- */
+
+.opening-sudhana {
+  position: absolute;
+  z-index: 3;
+
+  /* Put Sudhana on the lower-left stone path */
+  left: clamp(3%, 7vw, 9%);
+  right: auto;
+
+  /* Raise his feet onto the visible stone surface */
+  bottom: 3%;
+
+  /* Smaller, closer to our original mockup */
+  width: clamp(220px, 24vw, 390px);
+  max-height: 67vh;
+
+  object-fit: contain;
+  object-position: bottom center;
+
+  pointer-events: none;
+  user-select: none;
+
+  filter:
+    drop-shadow(
+      0 18px 18px
+      rgba(43, 28, 11, 0.25)
+    );
+}
+
+
+.back-button {
+
+  position:
+    absolute;
+
+  z-index:
+    50;
+
+  top:
+    20px;
+
+  left:
+    20px;
+
+  width:
+    48px;
+
+  height:
+    48px;
+
+  border:
+    1px solid
+    rgba(255, 242, 194, 0.58);
+
+  border-radius:
+    50%;
+
+  color:
+    #fff;
+
+  background:
+    rgba(53, 35, 17, 0.76);
+
+  font-size:
+    25px;
+}
+
+
+/* =========================================================
+   TRANSITIONS
+   ========================================================= */
+
+.fade-in {
+
+  animation:
+    fadeIn 420ms ease both;
+}
+
+
+.fade-out {
+
+  animation:
+    fadeOut 280ms ease both;
+}
+
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes fadeOut {
+
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+  .gateway-layout {
+
+    grid-template-columns:
+      0.8fr 1.2fr;
+
+    gap:
+      10px;
+  }
+
+
+  .gateway-sudhana {
+
+    width:
+      min(390px, 42vw);
+  }
+
+
+  .opening-content {
+
+    width:
+      100%;
+
+    padding:
+
+      95px
+      22px
+      390px;
+
+    text-align:
+      center;
+  }
+
+
+  .opening-hook {
+
+    margin-left:
+      auto;
+
+    margin-right:
+      auto;
+  }
+
+
+  .opening-sudhana {
+
+    right:
+      50%;
+
+    bottom:
+      -2%;
+
+    transform:
+      translateX(50%);
+
+    width:
+      min(340px, 70vw);
+
+    max-height:
+      48vh;
+  }
+
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .language-gateway {
+
+    align-items:
+      flex-start;
+
+    overflow-y:
+      auto;
+
+    padding:
+      25px 16px;
+  }
+
+
+  .gateway-layout {
+
+    display:
+      flex;
+
+    flex-direction:
+      column;
+
+    width:
+      100%;
+
+    min-height:
+      auto;
+
+    gap:
+      0;
+  }
+
+
+  /*
+   * On phones Sudhana appears above the language card,
+   * but we keep him smaller so the buttons remain visible.
+   */
+
+  .gateway-character-wrap {
+
+    order:
+      1;
+
+    height:
+      290px;
+
+    width:
+      100%;
+  }
+
+
+  .gateway-sudhana {
+
+    width:
+      min(235px, 60vw);
+
+    max-height:
+      285px;
+  }
+
+
+  .language-card {
+
+    order:
+      2;
+
+    margin-top:
+      -20px;
+
+    padding:
+      25px 18px;
+  }
+
+
+  .language-card h1 {
+
+    font-size:
+      29px;
+  }
+
+
+  .language-subtitle {
+
+    font-size:
+      16px;
+
+    margin-bottom:
+      20px;
+  }
+
+
+  .lang-btn {
+
+    min-height:
+      55px;
+  }
+
+
+  .game-language-control {
+
+    top:
+      10px;
+
+    right:
+      10px;
+  }
+
+
+  #language-select {
+
+    max-width:
+      110px;
+  }
+
+
+  .opening-content {
+
+    padding:
+
+      85px
+      17px
+      310px;
+  }
+
+
+  .game-title {
+
+    font-size:
+      clamp(32px, 10vw, 46px);
+  }
+
+
+  .opening-hook {
+
+    font-size:
+      19px;
+  }
+
+
+  .opening-sudhana {
+
+    width:
+      min(280px, 74vw);
+
+    max-height:
+      42vh;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+
+  *,
+  *::before,
+  *::after {
+
+    animation-duration:
+      0.01ms !important;
+
+    transition-duration:
+      0.01ms !important;
+
+    scroll-behavior:
+      auto !important;
+
+  }
+
+}
+
+
+/* =========================================================
+   TOP CONTROLS
+   ========================================================= */
+
+.challenge-language-button {
+  position: absolute;
+
+  z-index: 60;
+
+  top: 18px;
+  right: 20px;
+
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border:
+    1px solid
+    rgba(255, 242, 194, 0.58);
+
+  border-radius: 50%;
+
+  color: #fff;
+
+  background:
+    rgba(53, 35, 17, 0.76);
+
+  box-shadow:
+    0 6px 18px
+    rgba(22, 14, 6, 0.24);
+
+  backdrop-filter: blur(9px);
+
+  -webkit-backdrop-filter: blur(9px);
+
+  font-size: 23px;
+
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+
+.challenge-language-button:hover {
+  transform: scale(1.07);
+
+  background:
+    rgba(82, 53, 23, 0.90);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
+
+.secondary-btn {
+  display: block;
+
+  width: 100%;
+
+  min-height: 52px;
+
+  padding:
+    11px 20px;
+
+  border:
+    1px solid
+    rgba(151, 101, 26, 0.45);
+
+  border-radius:
+    999px;
+
+  color: #674313;
+
+  background:
+    #fff8df;
+
+  font-weight: 800;
+
+  font-size: 17px;
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+
+.secondary-btn:hover {
+  transform:
+    translateY(-2px);
+
+  background:
+    #fff1bd;
+}
+
+
+
+/* =========================================================
+   2026-09-24 — SCREEN 01 ADVENTURE OPENING REDESIGN
+   Visual-only override. Existing Screen 02–14 rules remain intact.
+   ========================================================= */
+
+.vow-opening {
+  isolation: isolate;
+  overflow: hidden;
+  color: #fffdf4;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(19, 73, 52, 0.08) 0%,
+      rgba(24, 99, 69, 0.00) 44%,
+      rgba(20, 91, 105, 0.05) 100%
+    ),
+    url("../assets/backgrounds/vow01-opening.webp")
+    center center / cover no-repeat;
+}
+
+/* Keep the approved adventure-world artwork bright and colourful. */
+.vow-opening::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 72% 29%,
+      rgba(255, 250, 194, 0.28) 0%,
+      rgba(255, 250, 194, 0.08) 24%,
+      transparent 47%
+    ),
+    linear-gradient(
+      to top,
+      rgba(20, 67, 47, 0.17) 0%,
+      transparent 31%
+    );
+}
+
+/* New HTML layer: lets later animation/audio additions remain separate
+   from the background artwork. */
+.opening-adventure-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.opening-sparkle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 247, 172, 0.95);
+  box-shadow:
+    0 0 9px rgba(255, 242, 143, 0.95),
+    0 0 22px rgba(255, 232, 104, 0.72);
+  animation: openingSparkle 3.4s ease-in-out infinite;
+}
+
+.opening-sparkle:nth-child(1) { left: 12%; top: 20%; animation-delay: 0s; }
+.opening-sparkle:nth-child(2) { left: 48%; top: 15%; animation-delay: .8s; }
+.opening-sparkle:nth-child(3) { right: 17%; top: 30%; animation-delay: 1.5s; }
+
+@keyframes openingSparkle {
+  0%, 100% { opacity: .32; transform: translateY(0) scale(.8); }
+  50% { opacity: 1; transform: translateY(-8px) scale(1.18); }
+}
+
+/* Compact game controls prepared by the new opening HTML. */
+.opening-game-controls {
+  position: absolute;
+  z-index: 70;
+  top: 18px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.opening-control-button {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid rgba(255,255,255,.82);
+  border-radius: 50%;
+  color: #274327;
+  background: rgba(255, 252, 225, .92);
+  box-shadow: 0 6px 16px rgba(34, 74, 42, .20);
+  font-size: 22px;
+  font-weight: 900;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.opening-control-button:hover {
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.04);
+}
+
+/* Language control becomes a light adventure UI element rather than
+   the previous dark brown pill. */
+.vow-opening .game-language-control {
+  top: 18px;
+  right: 20px;
+  min-height: 48px;
+  border: 2px solid rgba(255,255,255,.82);
+  color: #24402a;
+  background: rgba(255, 252, 225, .93);
+  box-shadow: 0 6px 16px rgba(34, 74, 42, .20);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.vow-opening #language-select {
+  color: #24402a;
+  font-weight: 900;
+}
+
+/* The opening is now an adventure title screen, not a dark information panel. */
+.opening-content {
+  position: relative;
+  z-index: 5;
+  width: min(720px, 54vw);
+  margin-left: clamp(390px, 35vw, 610px);
+  padding: clamp(86px, 11vh, 120px) 30px 55px 0;
+  text-align: center;
+  text-shadow: none;
+}
+
+.journey-label {
+  margin-bottom: 12px;
+  padding: 7px 17px;
+  border: 2px solid rgba(255,255,255,.86);
+  color: #31552d;
+  background: rgba(255, 252, 222, .91);
+  box-shadow: 0 5px 13px rgba(39, 93, 52, .15);
+  font-size: clamp(14px, 1.35vw, 17px);
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+/* Bright dimensional adventure-title treatment.
+   No text is baked into the background image, so all languages remain live. */
+.game-title {
+  margin: 0 auto;
+  max-width: 760px;
+  color: #fff6a5;
+  font-family:
+    "Arial Rounded MT Bold",
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    sans-serif;
+  font-size: clamp(42px, 5.3vw, 76px);
+  font-weight: 1000;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  -webkit-text-stroke: clamp(1px, .13vw, 2px) #8c5b13;
+  paint-order: stroke fill;
+  text-shadow:
+    0 3px 0 #e69a25,
+    0 6px 0 #9b621a,
+    0 10px 17px rgba(53, 91, 40, .30),
+    0 0 3px rgba(255,255,255,.9);
+  transform: rotate(-1deg);
+}
+
+.vow-title {
+  display: inline-block;
+  margin: 17px 0 0;
+  padding: 8px 21px 9px;
+  border: 2px solid rgba(255,255,255,.88);
+  border-radius: 999px;
+  color: #7a4d0c;
+  background: linear-gradient(180deg, #fff9c7 0%, #ffd96f 100%);
+  box-shadow:
+    0 5px 0 rgba(187, 124, 28, .72),
+    0 10px 19px rgba(52, 88, 39, .20);
+  font-size: clamp(22px, 2.65vw, 36px);
+  font-weight: 1000;
+  line-height: 1.2;
+}
+
+.opening-hook {
+  max-width: 630px;
+  margin: 26px auto 27px;
+  padding: 13px 22px;
+  border: 2px solid rgba(255,255,255,.72);
+  border-radius: 22px;
+  color: #243d2b;
+  background: rgba(255, 253, 235, .90);
+  box-shadow: 0 9px 23px rgba(43, 83, 43, .17);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+/* Opening CTA is intentionally more playful than the generic primary button. */
+.vow-opening .start-btn {
+  position: relative;
+  min-width: min(290px, 82vw);
+  min-height: 67px;
+  padding: 14px 35px;
+  border: 3px solid #fff9d7;
+  color: #75420d;
+  background:
+    linear-gradient(180deg, #fff37e 0%, #ffd244 53%, #f0a82d 100%);
+  box-shadow:
+    0 7px 0 #a9681b,
+    0 12px 25px rgba(45, 89, 42, .27),
+    inset 0 2px 0 rgba(255,255,255,.72);
+  font-size: clamp(20px, 2.15vw, 27px);
+  font-weight: 1000;
+  letter-spacing: .02em;
+  animation: openingStartPulse 2.4s ease-in-out infinite;
+}
+
+.vow-opening .start-btn::after {
+  content: "➜";
+  display: inline-block;
+  margin-left: 10px;
+  transition: transform 160ms ease;
+}
+
+.vow-opening .start-btn:hover {
+  transform: translateY(-3px) scale(1.025);
+  filter: brightness(1.04);
+}
+
+.vow-opening .start-btn:hover::after {
+  transform: translateX(5px);
+}
+
+@keyframes openingStartPulse {
+  0%, 100% {
+    box-shadow:
+      0 7px 0 #a9681b,
+      0 12px 25px rgba(45, 89, 42, .27),
+      0 0 0 0 rgba(255, 220, 78, .20);
+  }
+  50% {
+    box-shadow:
+      0 7px 0 #a9681b,
+      0 14px 28px rgba(45, 89, 42, .30),
+      0 0 0 11px rgba(255, 220, 78, 0);
+  }
+}
+
+/* Keep the user's established Sudhana asset and give him the role of
+   adventure companion rather than decorative mascot. */
+.opening-sudhana {
+  z-index: 4;
+  left: clamp(2.5%, 6.5vw, 8%);
+  bottom: 1.5%;
+  width: clamp(245px, 27vw, 425px);
+  max-height: 72vh;
+  filter:
+    drop-shadow(0 18px 14px rgba(42, 72, 35, .22))
+    drop-shadow(0 0 8px rgba(255, 244, 176, .28));
+  transform-origin: center bottom;
+  animation: openingSudhanaBreath 4.4s ease-in-out infinite;
+}
+
+@keyframes openingSudhanaBreath {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(.3deg); }
+}
+
+/* Small visual cue on the path: a future JS enhancement can time this
+   progressively after the player hesitates. */
+.opening-path-hint {
+  position: absolute;
+  z-index: 4;
+  left: clamp(27%, 30vw, 34%);
+  bottom: 13%;
+  color: #fff6a5;
+  font-size: clamp(28px, 3.5vw, 48px);
+  text-shadow: 0 3px 9px rgba(44, 78, 37, .35);
+  pointer-events: none;
+  animation: openingPathHint 1.8s ease-in-out infinite;
+}
+
+@keyframes openingPathHint {
+  0%, 100% { opacity: .40; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(8px); }
+}
+
+/* Normal laptop / short viewport: all controls and CTA stay visible at 100%. */
+@media (max-height: 760px) and (min-width: 851px) {
+  .opening-content {
+    padding-top: 68px;
+    padding-bottom: 25px;
+  }
+
+  .game-title {
+    font-size: clamp(39px, 4.7vw, 65px);
+  }
+
+  .vow-title {
+    margin-top: 12px;
+    font-size: clamp(20px, 2.3vw, 31px);
+  }
+
+  .opening-hook {
+    margin-top: 18px;
+    margin-bottom: 19px;
+    padding: 10px 18px;
+    font-size: clamp(17px, 1.75vw, 22px);
+  }
+
+  .vow-opening .start-btn {
+    min-height: 58px;
+  }
+
+  .opening-sudhana {
+    max-height: 68vh;
+  }
+}
+
+@media (max-width: 850px) {
+  .opening-content {
+    width: 100%;
+    margin-left: 0;
+    padding: 88px 20px 355px;
+  }
+
+  .game-title {
+    max-width: 720px;
+  }
+
+  .opening-sudhana {
+    left: 50%;
+    right: auto;
+    bottom: -1%;
+    width: min(330px, 66vw);
+    max-height: 47vh;
+    transform: translateX(-50%);
+    animation: none;
+  }
+
+  .opening-path-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .opening-game-controls {
+    top: 10px;
+    left: 10px;
+    gap: 7px;
+  }
+
+  .opening-control-button {
+    width: 43px;
+    height: 43px;
+    font-size: 19px;
+  }
+
+  .vow-opening .game-language-control {
+    top: 10px;
+    right: 10px;
+    min-height: 43px;
+    padding: 5px 8px;
+  }
+
+  .opening-content {
+    padding: 75px 14px 295px;
+  }
+
+  .journey-label {
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .game-title {
+    font-size: clamp(34px, 10.5vw, 48px);
+    line-height: 1.06;
+    -webkit-text-stroke: 1px #8c5b13;
+    text-shadow:
+      0 2px 0 #e69a25,
+      0 4px 0 #9b621a,
+      0 7px 12px rgba(53, 91, 40, .27);
+  }
+
+  .vow-title {
+    margin-top: 11px;
+    padding: 7px 15px 8px;
+    font-size: clamp(19px, 6vw, 27px);
+  }
+
+  .opening-hook {
+    margin: 17px auto 18px;
+    padding: 10px 14px;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .vow-opening .start-btn {
+    min-width: min(255px, 84vw);
+    min-height: 57px;
+    padding: 11px 22px;
+    font-size: 19px;
+  }
+
+  .opening-sudhana {
+    width: min(265px, 70vw);
+    max-height: 40vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening-sparkle,
+  .vow-opening .start-btn,
+  .opening-sudhana,
+  .opening-path-hint {
+    animation: none !important;
+  }
+}
+
+/* Phase B global Journey Menu / Sound utilities. */
+#journey-controls { position: fixed; z-index: 10000; right: 16px; top: 16px; display: flex; gap: 8px; }
+#journey-controls[hidden] { display: none; }
+#journey-controls button { position: static; width: 44px; height: 44px; min-height: 44px; border-radius: 14px;
+  border: 1px solid #b6a279; background: rgba(255,253,241,.96); color: #493321;
+  box-shadow: 0 5px 18px rgba(40,27,9,.16); font-size: 22px; cursor: pointer; }
+.screen .challenge-language-button { right: 122px; }
+#opening-screen .game-language-control { right: 122px; }
+#journey-menu { width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow-y: auto;
+  padding: 24px; box-sizing: border-box; border: 1px solid #bea879; border-radius: 22px;
+  color: #493321; background: #fffdf4; box-shadow: 0 20px 65px rgba(38,26,10,.32); }
+#journey-menu::backdrop { background: rgba(29,25,17,.48); }
+#journey-menu h2 { margin: 0 0 18px; font-size: 24px; }
+#journey-menu button, #journey-menu select { display: block; width: 100%; min-height: 46px; margin: 8px 0;
+  padding: 10px 14px; border: 1px solid #d5c5a6; border-radius: 12px; background: #fff8e8;
+  color: #493321; font: inherit; text-align: left; cursor: pointer; }
+#journey-menu label { display: block; margin-top: 16px; font-weight: 700; }
+#journey-menu #journey-continue { background: #f0d694; font-weight: 700; }
+#journey-menu [hidden] { display: none; }
+#journey-controls button:focus-visible, #journey-menu button:focus-visible, #journey-menu select:focus-visible {
+  outline: 3px solid #795619; outline-offset: 3px; }
+@media (max-width: 650px) { #journey-controls { top: 12px; right: 12px; } #journey-menu { padding: 18px; } }
+
+/* Defensive utility visibility: only the confirmed language gateway sets hidden. */
+#journey-controls:not([hidden]) { display: flex; visibility: visible; opacity: 1; pointer-events: auto; }
+#journey-controls button { visibility: visible; opacity: 1; pointer-events: auto; }
+
+/* Final utility repair: existing language controls share the fixed viewport row. */
+.screen .challenge-language-button,
+.screen .language-button,
+.screen .game-language-control {
+  position: fixed;
+  top: 16px;
+  right: 122px;
+  z-index: 9998;
+}
+@media (max-width: 650px) {
+  .screen .challenge-language-button,
+  .screen .language-button,
+  .screen .game-language-control { top: 12px; }
+}
+
+/* Restrained Opening save/resume actions; existing utilities remain untouched. */
+#journey-start-over { margin-top: 12px; }
+#journey-save-note { max-width: 34rem; margin: 12px auto 0; font-size: .85rem; line-height: 1.5; }
+
+/* Prototype A: existing artwork, live adventure logo and a companion invitation.
+   Screen 01 only; all Screen 02–14 styling remains in vow01.css. */
+.vow-opening > .opening-controls { position: absolute; }
+.vow-opening {
+  display: grid;
+  grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 70px);
+  min-height: 100vh;
+  min-height: 100svh;
+  height: auto;
+  padding: 88px clamp(24px, 5vw, 90px) 46px;
+  background-position: center;
+}
+.vow-opening .opening-world {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+}
+.vow-opening .opening-world-sunlight {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 85% 12%, rgba(255,247,190,.3), transparent 58%);
+  animation: openingLightBreath 9s ease-in-out 2s infinite;
+}
+.vow-opening .opening-world-sparkles {
+  position: absolute; inset: 8% 5%;
+  background:
+    radial-gradient(circle at 21% 30%, #fffbd6 0 2px, transparent 3px),
+    radial-gradient(circle at 57% 16%, #fffbd6 0 1.5px, transparent 3px),
+    radial-gradient(circle at 78% 61%, #fffbd6 0 2px, transparent 4px),
+    radial-gradient(circle at 38% 74%, #fffbd6 0 1.5px, transparent 3px);
+  opacity: .45; animation: openingMotes 8s ease-in-out 2s infinite;
+}
+.vow-opening .opening-character-stage {
+  position: relative; z-index: 3; width: 100%;
+  height: clamp(350px, 72vh, 660px); align-self: end;
+}
+.vow-opening .opening-sudhana {
+  position: absolute; inset: auto auto 0 0; width: 100%; height: 100%;
+  max-height: none; object-fit: contain; object-position: center bottom;
+  animation: openingCompanionBreath 6s ease-in-out infinite; transform: none;
+}
+.vow-opening .opening-character-glow {
+  position: absolute; z-index: -1; inset: 22% 4% 3%;
+  border-radius: 50%; background: radial-gradient(ellipse, rgba(255,250,195,.24), transparent 70%);
+}
+.vow-opening .opening-content {
+  position: relative; z-index: 4; width: 100%; max-width: 780px;
+  min-width: 0; padding: 12px 0; margin: 0; text-align: center;
+  align-self: center; animation: openingLogoSettle 800ms ease-out both;
+}
+.vow-opening .journey-label,
+.vow-opening .game-title {
+  display: block; width: auto; max-width: 100%; margin: 0;
+  padding: 0; border: 0; border-radius: 0; background: none;
+  font-family: "Arial Rounded MT Bold", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-weight: 900; letter-spacing: .015em; line-height: 1.18;
+  color: #ffdc61; -webkit-text-stroke: 1px #854423;
+  text-shadow: 0 -1px 0 #fff6c6, 0 2px 0 #b66c2b, 0 4px 0 #854423,
+    0 6px 0 #68371e, 0 9px 14px rgba(38,56,28,.35);
+  overflow-wrap: anywhere;
+}
+.vow-opening .journey-label { font-size: clamp(30px, 3.2vw, 48px); margin-bottom: 10px; }
+.vow-opening .game-title { font-size: clamp(38px, 4.7vw, 70px); }
+.vow-opening .opening-hook {
+  display: inline-block; width: auto; max-width: 100%; margin: 27px auto 22px;
+  padding: 12px 22px; color: #48321d; font-size: clamp(18px, 1.7vw, 24px);
+  font-weight: 800; line-height: 1.5; border: 1px solid rgba(255,255,237,.9);
+  border-radius: 24px 24px 24px 5px; background: rgba(255,251,225,.92);
+  box-shadow: 0 5px 18px rgba(42,69,33,.12);
+}
+.vow-opening #start-button {
+  display: block; width: min(350px, 100%); min-height: 64px;
+  margin: 0 auto; padding: 14px 24px; border: 2px solid #fff3ba;
+  border-radius: 24px; color: #473015; background: linear-gradient(#ffe78a, #ffc345);
+  font-size: clamp(23px, 2.1vw, 30px); font-weight: 900; line-height: 1.35;
+  box-shadow: 0 6px 0 #a96c24, 0 12px 24px rgba(52,70,31,.25);
+  animation: openingInvitationPulse 3.6s ease-in-out 6s infinite;
+}
+.vow-opening #start-button::after { content: none; }
+.vow-opening #start-button:hover,
+.vow-opening #start-button:focus-visible { transform: translateY(-2px); }
+.vow-opening #start-button:focus-visible,
+.vow-opening #journey-start-over:focus-visible { outline: 3px solid #fffdf1; outline-offset: 5px; }
+.vow-opening #start-button:active { transform: translateY(3px); box-shadow: 0 3px 0 #a96c24; }
+.vow-opening #journey-start-over {
+  display: block; width: auto; min-height: 44px; margin: 22px auto 0; padding: 8px 20px;
+  border: 1px solid rgba(255,253,230,.9); border-radius: 18px; background: rgba(255,252,232,.92);
+  color: #49381f; font-size: 16px; box-shadow: 0 2px 6px rgba(43,66,31,.14);
+  animation: none; transform: none;
+}
+.vow-opening #journey-start-over::after { content: none; }
+.vow-opening #journey-save-note {
+  width: fit-content; max-width: 100%; margin: 12px auto 0; padding: 6px 12px;
+  color: #3b3524; background: rgba(255,252,230,.88); border-radius: 12px;
+}
+.vow-opening .opening-path-cue {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  margin-top: 24px; color: #fff8c9; text-shadow: 0 2px 6px #396029;
+  pointer-events: none; animation: openingPathHint 3.5s ease-in-out 6s infinite;
+}
+.vow-opening .opening-path-dot { width: 5px; height: 5px; border-radius: 50%; background: #fff8c9; }
+.vow-opening .opening-path-arrow { font-size: 26px; }
+.vow-opening.fade-out .opening-world { transform: scale(1.015); transition: transform 280ms ease-out; }
+.vow-opening.fade-out .opening-sudhana { filter: drop-shadow(0 0 20px rgba(255,249,205,.6)); }
+@keyframes openingLightBreath { 0%,100% { opacity: .5; } 50% { opacity: .9; } }
+@keyframes openingMotes { 0%,100% { opacity: .35; transform: translateY(0); } 50% { opacity: .6; transform: translateY(-7px); } }
+@keyframes openingCompanionBreath { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes openingLogoSettle { from { transform: translateY(7px); } to { transform: translateY(0); } }
+@keyframes openingInvitationPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.07); } }
+@media (max-height: 760px) and (min-width: 851px) {
+  .vow-opening { padding-top: 76px; padding-bottom: 24px; gap: 24px; }
+  .vow-opening .opening-character-stage { height: max(320px, 68vh); }
+  .vow-opening .game-title { font-size: clamp(36px, 4.1vw, 60px); }
+  .vow-opening .opening-hook { margin-top: 20px; margin-bottom: 18px; }
+  .vow-opening .opening-path-cue { margin-top: 18px; }
+}
+@media (max-width: 850px) {
+  .vow-opening { grid-template-columns: minmax(190px, .7fr) minmax(0, 1.3fr); gap: 18px; padding: 84px 24px 28px; }
+  .vow-opening .opening-character-stage { height: clamp(320px, 55vh, 500px); }
+  .vow-opening .game-title { font-size: clamp(34px, 5vw, 45px); }
+  .vow-opening .journey-label { font-size: 28px; }
+}
+@media (max-width: 650px) {
+  .vow-opening { display: flex; flex-direction: column; gap: 0; padding: 82px 20px 30px; background-position: 54% center; }
+  .vow-opening .opening-content { order: 1; padding: 0; }
+  .vow-opening .opening-character-stage { order: 2; align-self: center; width: min(250px, 75%); height: 330px; margin-top: 12px; }
+  .vow-opening .game-title { font-size: clamp(31px, 7.5vw, 44px); }
+  .vow-opening .journey-label { font-size: clamp(26px, 6vw, 34px); }
+  .vow-opening .opening-hook { margin: 22px auto 18px; padding: 10px 14px; font-size: 18px; }
+  .vow-opening .opening-path-cue { margin-top: 20px; }
+  .vow-opening #journey-save-note { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vow-opening .opening-world-sunlight,
+  .vow-opening .opening-world-sparkles,
+  .vow-opening .opening-sudhana,
+  .vow-opening .opening-content,
+  .vow-opening #start-button,
+  .vow-opening .opening-path-cue { animation: none !important; transform: none !important; }
+  .vow-opening.fade-out .opening-world { transform: none; transition: none; }
+}
+/* Hidden secondary actions must retain the global hidden semantics. */
+.vow-opening #journey-start-over[hidden] { display: none; }
+
+/* Prototype A repair #2: rounded Chinese live logo; Latin treatment is unchanged. */
+html[lang="zh-Hant"] .vow-opening .journey-label,
+html[lang="zh-Hant"] .vow-opening .game-title {
+  font-family: "Puxian Huninn", "Yuanti TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-weight: 900;
+  -webkit-text-stroke: 1px #854423;
+  paint-order: stroke fill;
+  text-shadow: 0 -1px 0 #fff6c6, 1px 0 0 #854423, -1px 0 0 #854423,
+    0 2px 0 #b66c2b, 0 4px 0 #854423, 0 6px 0 #68371e,
+    0 9px 14px rgba(38,56,28,.35);
+}
